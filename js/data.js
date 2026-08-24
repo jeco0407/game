@@ -8,7 +8,12 @@ const DATA = {
   version: 'v.2.4.17',
 
   /* ---------------- Archive dashboard ---------------- */
-  archiveNav: ['Cases', 'Evidence', 'People', 'Search'],
+  archiveNav: [
+    { key: 'cases', label: '案件' },
+    { key: 'evidence', label: '證據' },
+    { key: 'people', label: '相關人物' },
+    { key: 'search', label: '搜尋' },
+  ],
 
   /* ---------------- @last_seen_0917 feed ---------------- */
   feed: [
@@ -66,9 +71,9 @@ const DATA = {
     id: 'IMG_0917.JPG',
     created: '08 / 19 / 2026',
     modified: '08 / 19 / 2026',
-    camera: 'UNKNOWN',
+    camera: '不明',
     location: '34.XXX',
-    device: 'UNKNOWN',
+    device: '不明',
     doorplate: '0917',
   },
 
@@ -83,8 +88,8 @@ const DATA = {
   yuanProfile: {
     handle: 'last_seen_0917',
     name: 'YUAN',
-    bio: 'inactive.',
-    bioHoverReveal: 'updated 08/18 00:13',
+    bio: '已停用。',
+    bioHoverReveal: '08/18 00:13 更新',
     posts: 17, following: 0, followers: 0,
     lastActive: '08 / 18 / 00:12',
   },
@@ -99,8 +104,8 @@ const DATA = {
 
   chenProfile: {
     handle: 'chen_yc',
-    name: 'CHEN YI-CHEN',
-    status: 'ACCOUNT INACTIVE',
+    name: '陳奕辰',
+    status: '帳號已停用',
     posts: 24,
     bio: "Don't ask me.",
     lastPost: { text: '如果她問起來，\n就說我不知道。', time: '08 / 20 · 23:17' },
@@ -114,47 +119,47 @@ const DATA = {
 
   accessPrompt: {
     contentId: '0917-0820',
-    question: 'The place where\nthey first met.',
+    question: '他們第一次見面的地方。',
     answers: ['convenience store', 'convenience', '便利商店'],
   },
 
   /* ---------------- Case Overview (partial) ---------------- */
   caseOverview: {
     id: '#0917',
-    subject: 'LIN, YU-AN',
+    subject: '林予安',
     age: 19,
-    lastSeenDate: '08 / 17 / 2026',
+    lastSeenDate: '2026 / 08 / 17',
     lastSeenTime: '23:17',
-    status: 'MISSING',
-    lastActivity: { date: '08 / 18 / 2026', time: '00:12' },
+    status: '失蹤',
+    lastActivity: { date: '2026 / 08 / 18', time: '00:12' },
     related: [
-      { name: 'CHEN, YI-CHEN', status: 'UNKNOWN' },
-      { name: 'M', status: 'UNKNOWN' },
+      { name: '陳奕辰', status: '身分不明' },
+      { name: 'M', status: '身分不明' },
     ],
   },
 
   /* ---------------- Case File (full, unlocked later) ---------------- */
   caseFile: {
     id: '#0917',
-    subject: 'LIN, YU-AN',
+    subject: '林予安',
     age: 19,
-    status: 'MISSING',
-    lastSeenDate: '08 / 17 / 2026',
+    status: '失蹤',
+    lastSeenDate: '2026 / 08 / 17',
     lastSeenTime: '23:17',
-    location: 'UNKNOWN',
+    location: '不明',
     related: [
-      { name: 'CHEN, YI-CHEN', status: 'UNKNOWN' },
-      { name: 'M', status: 'UNKNOWN' },
+      { name: '陳奕辰', status: '身分不明' },
+      { name: 'M', status: '身分不明' },
     ],
     digitalActivity: ['08/18 · 00:12', '08/18 · 03:17', '08/18 · 07:41'],
   },
 
   /* ---------------- Evidence Board ---------------- */
   evidenceBoardNodes: [
-    { id: 'yuan', label: 'LIN, YUAN', x: 12, y: 12 },
+    { id: 'yuan', label: '林予安', x: 12, y: 12 },
     { id: 't2317', label: '23:17', x: 60, y: 8 },
     { id: 'm0917', label: 'M_0917', x: 60, y: 45 },
-    { id: 'chen', label: 'CHEN', x: 12, y: 62 },
+    { id: 'chen', label: '陳奕辰', x: 12, y: 62 },
   ],
   evidenceBoardCorrectLinks: [
     ['yuan', 't2317'],
