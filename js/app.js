@@ -342,6 +342,21 @@ const App = (() => {
     const cls = ['comment']; if (c.suspicious) cls.push('suspicious');
     return `<div class="${cls.join(' ')}"><div class="h">@${esc(c.user)} <span class="dim">· ${esc(c.time)}</span></div><div>${nl(c.text)}</div></div>`;
   }
+  function seededShuffle(arr, seed) {
+    const a = arr.slice();
+    let s = seed || 1;
+    for (let i = a.length - 1; i > 0; i--) {
+      s = (s * 9301 + 49297) % 233280;
+      const j = Math.floor((s / 233280) * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function commentsForPost(p) {
+    const pool = p.unlockAfter ? DATA.lateComments : DATA.genericComments;
+    const n = Math.min(p.replies, pool.length);
+    return seededShuffle(pool, p.id).slice(0, n);
+  }
   function viewPost(id) {
     const p = DATA.feed.find(x => x.id === id);
     if (!p) return `<div class="view view-narrow">找不到這則貼文 ${backLink('#/feed','動態')}</div>`;
@@ -373,6 +388,8 @@ const App = (() => {
         body += `<div class="hidden-reply-toggle" onclick="App.revealHidden()">19 則留言<br>1 則隱藏留言</div>`;
       }
       body += `</div>`;
+    } else if (p.replies > 0) {
+      body += `<div class="comments">${commentsForPost(p).map(commentHtml).join('')}</div>`;
     }
 
     body += `</div>${bottomNav()}${hintBar(p.isLast && !window.__hiddenOpen ? 'hiddenReply' : null)}`;
