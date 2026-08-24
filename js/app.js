@@ -110,15 +110,23 @@ const App = (() => {
     return `
     <div class="entry-screen view-wide">
       <div class="entry-bg" style="background-image:url('${img('bgHome')}')"></div>
-      <div class="entry-logo">ECHO</div>
-      <div class="entry-tagline">${DATA.tagline}<br>${DATA.taglineZh}</div>
-      <div class="entry-version">封存系統<br>${DATA.version}</div>
-      <div class="entry-case-reveal">
-        案件 0917<br>
-        狀態 <span class="v">進行中</span>
+      <div class="entry-noise"></div>
+      <div class="entry-corner tl">ECHO 封存系統<br>${DATA.version}</div>
+      <div class="entry-corner tr">系統狀態<br><span class="entry-status-online"><span class="dot"></span>上線中</span></div>
+      <div class="entry-plus left">+</div>
+      <div class="entry-plus right">+</div>
+      <div class="entry-center">
+        <div class="entry-logo">ECHO</div>
+        <div class="entry-tagline">${DATA.taglineZh}</div>
+        <div class="entry-case-reveal">
+          案件 0917<br>
+          <span class="label">狀態</span><br>
+          <span class="v">進行中</span>
+        </div>
+        <button class="entry-access-btn" onclick="location.hash='#/archive'">進入封存庫 <span class="arrow">→</span></button>
       </div>
-      <button class="entry-access-btn" onclick="location.hash='#/archive'">[ 進入封存庫 ]</button>
-      <div class="entry-sysonline">系統上線中</div>
+      <div class="entry-corner bl">安全連線<br><span class="entry-ok">已加密</span></div>
+      <div class="entry-corner br">ECHO 封存庫<br>版權所有</div>
     </div>`;
   }
 
