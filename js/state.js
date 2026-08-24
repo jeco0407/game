@@ -1,20 +1,20 @@
 /* ECHO — 玩家進度狀態（localStorage） */
 
 const STATE = (() => {
-  const KEY = 'echo_0917_progress';
+  const KEY = 'echo_0917_progress_v2';
   const ID_KEY = 'echo_0917_investigator_id';
   const START_KEY = 'echo_0917_start_time';
 
   function defaultState() {
     return {
-      p1: false, // 23:17 → Evidence 01
-      p2: false, // 0917 → Image Data
-      p3: false, // timeline → hidden reply / new posts
-      p4: false, // hidden reply opened → m_0917 unlocked
-      p5: false, // THU_0917 → chen unlocked
-      p6: false, // 便利商店 → case file unlocked
-      p7: false, // audio played → investigator field unlocked
-      p8: false, // final reveal complete
+      photoAnomaly: false, // 點開照片中的人影 → ANOMALY DETECTED
+      metadata: false,     // 看過 Image Metadata → TIMELINE CONFLICT
+      timeline: false,     // 拖曳解開時間衝突 → 解鎖 Chen / M 的 ARCHIVE 連結
+      chenVisited: false,  // 造訪過 Chen 的頁面
+      access: false,       // Access Prompt 答對「便利商店」→ 解鎖 Case File
+      board: false,        // Evidence Board 三條正確連線 → 解鎖 Audio
+      audio: false,        // 播放過錄音 → Case File 的 INVESTIGATOR 欄位從 UNKNOWN 變成 M
+      final: false,        // 完成 M-129 最終揭露
     };
   }
 
@@ -59,7 +59,11 @@ const STATE = (() => {
     get(key) { return state[key]; },
     set(key, val) { state[key] = val; save(); },
     all() { return state; },
-    reset() { state = defaultState(); save(); try { localStorage.removeItem(START_KEY); localStorage.removeItem(ID_KEY); } catch(e){} ensureStart(); },
+    reset() {
+      state = defaultState(); save();
+      try { localStorage.removeItem(START_KEY); localStorage.removeItem(ID_KEY); } catch(e){}
+      ensureStart();
+    },
     investigatorId() { return ensureId(); },
     elapsedMs() {
       try {
