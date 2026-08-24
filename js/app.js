@@ -23,6 +23,29 @@ const App = (() => {
     return { conbini: 'assets/images/evidence-conbini.svg', figure: 'assets/images/evidence-figure.svg' }[key] || '';
   }
 
+  /* ---------------- icon set (feed UI) ---------------- */
+  const ICON_PATHS = {
+    home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/>',
+    search: '<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+    bell: '<path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 21a2 2 0 0 0 4 0"/>',
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+    bookmark: '<path d="M6 3h12v18l-6-4-6 4z"/>',
+    list: '<line x1="5" y1="6" x2="19" y2="6"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="18" x2="13" y2="18"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+    more: '<circle cx="6" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18" cy="12" r="1.4"/>',
+    sparkle: '<path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M16.5 16.5 19 19M19 5l-2.5 2.5M7.5 16.5 5 19"/>',
+    pencil: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+    reply: '<path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    repost: '<path d="M17 2v6h-6"/><path d="M21 8a7 7 0 0 0-13-3.5L5 8"/><path d="M7 22v-6h6"/><path d="M3 16a7 7 0 0 0 13 3.5L19 16"/>',
+    heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
+    share: '<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M16 6l-4-4-4 4"/><line x1="12" y1="2" x2="12" y2="15"/>',
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  };
+  function icon(name, size) {
+    size = size || 20;
+    return `<svg class="icon" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[name] || ''}</svg>`;
+  }
+
   /* ---------------- bottom nav ---------------- */
   function bottomNav(active, wide) {
     const items = [
@@ -147,7 +170,7 @@ const App = (() => {
           <div class="overview-field" style="margin-top:20px"><div class="k">最後數位活動</div><div class="v">${c.lastActivity.date}<br>${c.lastActivity.time}</div></div>
         </div>
       </div>
-      <div class="overview-cta" onclick="location.hash='#/feed'">查看數位封存 →</div>
+      <div class="overview-cta" onclick="location.hash='#/feed'">查看社群媒體 →</div>
     </div>
     ${bottomNav('case', true)}`;
   }
@@ -155,29 +178,122 @@ const App = (() => {
   /* ================================================================
      SCREEN 04 — Social Feed
      ================================================================ */
-  function feedPostHtml(p) {
+  function xPostHtml(p) {
     if (p.unlockAfter && !STATE.get(p.unlockAfter)) return '';
     return `
-    <a class="post" href="#/post/${p.id}">
-      <div class="post-head">
-        <div class="avatar"></div>
-        <div><div class="post-name">YUAN</div><div class="post-handle">@last_seen_0917</div></div>
+    <a class="x-post" href="#/post/${p.id}">
+      <div class="x-post-row">
+        <div class="x-post-avatar"></div>
+        <div class="x-post-main">
+          <div class="x-post-head">
+            <div class="x-post-who"><span class="name">YUAN</span><span class="handle">@last_seen_0917</span><span class="time">· ${p.time}</span></div>
+            <div class="x-post-more">${icon('more', 18)}</div>
+          </div>
+          <div class="x-post-body">${nl(p.text)}</div>
+          ${p.image ? `<img class="x-post-img" src="${img(p.image)}" alt="">` : ''}
+          ${p.isLast ? `<div class="x-post-countdown mono">23:17:42</div>` : ''}
+          <div class="x-post-actions">
+            <span class="x-post-action">${icon('reply', 18)} ${p.replies || 0}</span>
+            <span class="x-post-action">${icon('repost', 18)} ${p.reposts || 0}</span>
+            <span class="x-post-action">${icon('heart', 18)} ${p.likes || 0}</span>
+            <span class="x-post-action">${icon('share', 18)}</span>
+          </div>
+        </div>
       </div>
-      <div class="post-body">${nl(p.text)}</div>
-      ${p.image ? `<img class="post-img" src="${img(p.image)}" alt="">` : ''}
-      ${p.isLast ? `<div class="post-countdown mono">23:17:42</div>` : ''}
-      <div class="post-time mono">${p.time}</div>
-      ${p.isLast ? `<div class="post-meta"><span>♡ ${p.likes}</span><span>↻ ${p.reposts}</span><span>○ ${p.comments} 則留言</span></div>` : ''}
     </a>`;
   }
+
+  function toggleFollow(el) {
+    const following = el.classList.toggle('following');
+    el.textContent = following ? '追蹤中' : '追蹤';
+  }
+
+  function newPostToast() {
+    const toast = document.createElement('div');
+    toast.className = 'new-message-toast';
+    toast.innerHTML = '這個帳號目前是唯讀狀態。';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 1800);
+  }
+
+  function xLeftNav() {
+    const links = [
+      { icon: 'home', label: '首頁', hash: '#/feed' },
+      { icon: 'search', label: '搜尋' },
+      { icon: 'bell', label: '通知', dot: true },
+      { icon: 'mail', label: '訊息' },
+      { icon: 'bookmark', label: '書籤' },
+      { icon: 'list', label: '清單' },
+      { icon: 'user', label: '個人資料', hash: '#/profile/yuan' },
+      { icon: 'more', label: '更多' },
+    ];
+    return `
+    <div class="x-col-left">
+      <div>
+        <div class="x-logo">ECHO</div>
+        <div class="x-nav-list">
+          ${links.map(l => `<div class="x-nav-link ${l.hash ? '' : 'disabled'}" ${l.hash ? `onclick="location.hash='${l.hash}'"` : ''}>
+            <span class="icon">${icon(l.icon, 24)}${l.dot ? '<span class="dot"></span>' : ''}</span>
+            <span>${l.label}</span>
+          </div>`).join('')}
+        </div>
+        <button class="x-newpost-btn" onclick="App.newPostToast()">${icon('pencil', 18)} 發布貼文</button>
+      </div>
+      <div class="x-left-footer">© 2026 ECHO<br>Everything leaves a trace.</div>
+    </div>`;
+  }
+
+  function xRightRail() {
+    const p = DATA.yuanProfile;
+    return `
+    <div class="x-col-right">
+      <div class="x-profile-card">
+        <div class="x-profile-card-top">
+          <div class="x-avatar-lg"></div>
+          <div style="display:flex; gap:8px; align-items:center">
+            <button class="x-follow-btn" onclick="App.toggleFollow(this)">追蹤</button>
+            <span style="color:var(--text-dim)">${icon('more', 18)}</span>
+          </div>
+        </div>
+        <div class="name">${p.name}</div>
+        <div class="handle">@${p.handle}</div>
+        <div class="bio">${esc(p.bio)}</div>
+        <div class="joined">${icon('calendar', 15)} ${esc(p.joined)}</div>
+        <div class="stats"><span><b>${p.following}</b> 追蹤中</span><span><b>${p.followers}</b> 位粉絲</span></div>
+      </div>
+      <div class="x-trends-card">
+        <div class="x-trends-head"><span>為你推薦的熱門話題</span>${icon('more', 18)}</div>
+        ${DATA.trends.map((t, i) => `
+          <div class="x-trend-item">
+            <div><div class="meta">${i + 1} · 熱門話題</div><div class="tag">${esc(t.tag)}</div><div class="count">${esc(t.count)} 則貼文</div></div>
+            <span style="color:var(--text-dim)">${icon('more', 16)}</span>
+          </div>`).join('')}
+        <div class="x-trends-more">顯示更多</div>
+      </div>
+      <div class="x-footer-links">
+        <span>服務條款</span><span>隱私權</span><span>Cookie</span><span>關於</span><span>說明</span>
+        <span>狀態</span><span>資源</span><span>職缺</span><span>廣告資訊</span><span>更多⋯</span>
+        <span>© 2026 ECHO, Inc.</span>
+      </div>
+    </div>`;
+  }
+
   function viewFeed() {
     return `
-    <div class="view view-narrow">
-      <div class="feed-header">
-        <div class="label">ECHO 社群</div>
-        <div class="handle" style="cursor:pointer" onclick="location.hash='#/profile/yuan'">@last_seen_0917 · YUAN</div>
+    <div class="view x-shell">
+      ${xLeftNav()}
+      <div class="x-col-center">
+        <div class="x-feed-header">
+          <div class="title">首頁</div>
+          ${icon('sparkle', 20)}
+        </div>
+        <div class="x-tabs">
+          <div class="x-tab active">為你推薦</div>
+          <div class="x-tab">追蹤中</div>
+        </div>
+        ${DATA.feed.map(xPostHtml).join('')}
       </div>
-      ${DATA.feed.map(feedPostHtml).join('')}
+      ${xRightRail()}
     </div>
     ${bottomNav()}`;
   }
@@ -735,6 +851,7 @@ const App = (() => {
 
   return {
     render, revealHidden,
+    toggleFollow, newPostToast,
     inspectAnomaly, analyzeMetadata, zoomToggle, toggleFx, resetFx,
     dragImgStart, dropOnSlot, moveImgToSlot,
     openAccessPrompt, submitAccess,

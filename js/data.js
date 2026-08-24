@@ -17,31 +17,31 @@ const DATA = {
 
   /* ---------------- @last_seen_0917 feed ---------------- */
   feed: [
-    { id: 1, time: '8/17 · 21:03', text: '今天的雨下得很奇怪。' },
-    { id: 2, time: '8/17 · 21:48', text: '今天第一次發現，\n原來便利商店關門以後，\n看起來真的很像假的。', image: 'conbini' },
-    { id: 3, time: '8/17 · 22:13', text: '對面那個人還在。' },
-    { id: 4, time: '8/17 · 22:31', text: '明天應該就不會下雨了。' },
-    { id: 5, time: '8/17 · 22:41', text: '忘記帶傘。' },
-    { id: 6, time: '8/17 · 22:52', text: '有時候覺得晚上比白天安靜很多。' },
-    { id: 7, time: '8/17 · 23:00', text: '如果你一直盯著同一個地方看，\n它也會開始看你。' },
-    { id: 8, time: '8/17 · 23:04', text: '今天沒有看到他。' },
-    { id: 9, time: '8/17 · 23:10', text: '但我知道他還在。' },
-    { id: 10, time: '8/17 · 23:17', text: '23:17' },
-    { id: 11, time: '8/17 · 23:22', text: '電梯今天又壞了。' },
-    { id: 12, time: '8/17 · 23:31', text: '明天還是會下雨嗎？' },
-    { id: 13, time: '8/17 · 23:38', text: '樓下的貓今天沒有出現。' },
-    { id: 14, time: '8/17 · 23:44', text: '手機剩 3%。' },
-    { id: 15, time: '8/17 · 23:51', text: '好像有人在敲門。' },
-    { id: 16, time: '8/17 · 23:58', text: '算了，應該是我想太多。' },
+    { id: 1, time: '8/17 · 21:03', text: '今天的雨下得很奇怪。', replies: 3, reposts: 7, likes: 24 },
+    { id: 2, time: '8/17 · 21:48', text: '今天第一次發現，\n原來便利商店關門以後，\n看起來真的很像假的。', image: 'conbini', replies: 5, reposts: 11, likes: 38 },
+    { id: 3, time: '8/17 · 22:13', text: '對面那個人還在。', replies: 2, reposts: 3, likes: 17 },
+    { id: 4, time: '8/17 · 22:31', text: '明天應該就不會下雨了。', replies: 1, reposts: 0, likes: 9 },
+    { id: 5, time: '8/17 · 22:41', text: '忘記帶傘。', replies: 1, reposts: 0, likes: 6 },
+    { id: 6, time: '8/17 · 22:52', text: '有時候覺得晚上比白天安靜很多。', replies: 2, reposts: 1, likes: 14 },
+    { id: 7, time: '8/17 · 23:00', text: '如果你一直盯著同一個地方看，\n它也會開始看你。', replies: 4, reposts: 6, likes: 29 },
+    { id: 8, time: '8/17 · 23:04', text: '今天沒有看到他。', replies: 2, reposts: 2, likes: 12 },
+    { id: 9, time: '8/17 · 23:10', text: '但我知道他還在。', replies: 3, reposts: 4, likes: 21 },
+    { id: 10, time: '8/17 · 23:17', text: '23:17', replies: 6, reposts: 9, likes: 33 },
+    { id: 11, time: '8/17 · 23:22', text: '電梯今天又壞了。', replies: 0, reposts: 0, likes: 4 },
+    { id: 12, time: '8/17 · 23:31', text: '明天還是會下雨嗎？', replies: 1, reposts: 0, likes: 5 },
+    { id: 13, time: '8/17 · 23:38', text: '樓下的貓今天沒有出現。', replies: 0, reposts: 0, likes: 3 },
+    { id: 14, time: '8/17 · 23:44', text: '手機剩 3%。', replies: 1, reposts: 0, likes: 6 },
+    { id: 15, time: '8/17 · 23:51', text: '好像有人在敲門。', replies: 5, reposts: 3, likes: 19 },
+    { id: 16, time: '8/17 · 23:58', text: '算了，應該是我想太多。', replies: 2, reposts: 1, likes: 8 },
     {
       id: 17, time: '8/18 · 00:12',
       text: '如果你看到這篇，\n代表我已經死了。',
       countdown: true,
-      likes: 143, reposts: 38, comments: 19,
+      replies: 19, reposts: 38, likes: 143,
       isLast: true
     },
-    { id: 18, time: '8/18 · 03:17', text: '不要去找我。', unlockAfter: 'timeline' },
-    { id: 19, time: '8/18 · 07:41', text: '[附件：模糊照片]', image: 'figure', unlockAfter: 'timeline' },
+    { id: 18, time: '8/18 · 03:17', text: '不要去找我。', unlockAfter: 'timeline', replies: 61, reposts: 84, likes: 312 },
+    { id: 19, time: '8/18 · 07:41', text: '[附件：模糊照片]', image: 'figure', unlockAfter: 'timeline', replies: 97, reposts: 130, likes: 488 },
   ],
 
   comments17: [
@@ -92,7 +92,17 @@ const DATA = {
     bioHoverReveal: '08/18 00:13 更新',
     posts: 17, following: 0, followers: 0,
     lastActive: '08 / 18 / 00:12',
+    joined: '2026 年 8 月加入',
   },
+
+  /* ---------------- Trending hashtags (right rail) ---------------- */
+  trends: [
+    { tag: '#突然好想你', count: '8,417' },
+    { tag: '#下雨天', count: '6,231' },
+    { tag: '#23:17', count: '5,020' },
+    { tag: '#便利商店', count: '3,114' },
+    { tag: '#你還好嗎', count: '2,998' },
+  ],
 
   mProfile: {
     handle: 'm_0917',
