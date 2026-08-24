@@ -539,7 +539,24 @@ a { color: inherit; text-decoration: none; }
   text-align: center;
   gap: 22px;
   position: relative;
+  overflow: hidden;
 }
+.entry-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.4;
+  filter: saturate(0.7);
+  z-index: 0;
+}
+.entry-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(9,10,12,0.55) 0%, var(--bg) 78%);
+}
+.entry-screen > *:not(.entry-bg) { position: relative; z-index: 1; }
 .entry-logo { font-family: var(--mono); font-size: 34px; letter-spacing: 0.3em; font-weight: 600; }
 .entry-tagline { font-family: var(--mono); font-size: 14px; color: var(--text-dim); }
 .entry-version { font-family: var(--mono); font-size: 13px; color: #3a3d43; letter-spacing: 0.1em; }

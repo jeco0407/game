@@ -19,8 +19,19 @@ const App = (() => {
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
   function nl(s) { return esc(s).replace(/\n/g, '<br>'); }
-  function img(key) {
-    return { conbini: 'assets/images/evidence-conbini.svg', figure: 'assets/images/evidence-figure.svg' }[key] || '';
+  const IMAGES = {
+    conbini: 'assets/images/evidence-conbini.jpg',
+    figure: 'assets/images/evidence-figure.jpg',
+    avatarYuan: 'assets/images/avatar-yuan.jpg',
+    avatarChen: 'assets/images/avatar-chen.jpg',
+    avatarM: 'assets/images/avatar-m.jpg',
+    bgHome: 'assets/images/bg-home.jpg',
+  };
+  function img(key) { return IMAGES[key] || ''; }
+  function avatarStyle(who) {
+    const map = { yuan: 'avatarYuan', chen: 'avatarChen', m: 'avatarM' };
+    const src = IMAGES[map[who]];
+    return src ? ` style="background-image:url('${src}');background-size:cover;background-position:center"` : '';
   }
 
   /* ---------------- icon set (feed UI) ---------------- */
@@ -98,6 +109,7 @@ const App = (() => {
   function viewEntry() {
     return `
     <div class="entry-screen view-wide">
+      <div class="entry-bg" style="background-image:url('${img('bgHome')}')"></div>
       <div class="entry-logo">ECHO</div>
       <div class="entry-tagline">${DATA.tagline}<br>${DATA.taglineZh}</div>
       <div class="entry-version">封存系統<br>${DATA.version}</div>
@@ -183,7 +195,7 @@ const App = (() => {
     return `
     <a class="x-post" href="#/post/${p.id}">
       <div class="x-post-row">
-        <div class="x-post-avatar"></div>
+        <div class="x-post-avatar"${avatarStyle('yuan')}></div>
         <div class="x-post-main">
           <div class="x-post-head">
             <div class="x-post-who"><span class="name">YUAN</span><span class="handle">@last_seen_0917</span><span class="time">· ${p.time}</span></div>
@@ -249,7 +261,7 @@ const App = (() => {
     <div class="x-col-right">
       <div class="x-profile-card">
         <div class="x-profile-card-top">
-          <div class="x-avatar-lg"></div>
+          <div class="x-avatar-lg"${avatarStyle('yuan')}></div>
           <div style="display:flex; gap:8px; align-items:center">
             <button class="x-follow-btn" onclick="App.toggleFollow(this)">追蹤</button>
             <span style="color:var(--text-dim)">${icon('more', 18)}</span>
@@ -307,7 +319,7 @@ const App = (() => {
     <div class="view view-narrow">
       ${backLink('#/feed', '動態')}
       <div class="profile-head">
-        <div class="profile-avatar"></div>
+        <div class="profile-avatar"${avatarStyle('yuan')}></div>
         <div class="post-name">${p.name}</div>
         <div class="post-handle">@${p.handle}</div>
         <div class="bio-hover profile-bio">${esc(p.bio)}<div class="reveal-tip">${esc(p.bioHoverReveal)}</div></div>
@@ -339,7 +351,7 @@ const App = (() => {
       ${backLink('#/feed', '動態')}
       <div class="post" style="border-bottom:none;padding-top:0">
         <div class="post-head">
-          <div class="avatar"></div>
+          <div class="avatar"${avatarStyle('yuan')}></div>
           <div><div class="post-name">YUAN</div><div class="post-handle">@last_seen_0917</div></div>
         </div>
         <div class="post-body">${nl(p.text)}</div>
@@ -377,7 +389,7 @@ const App = (() => {
     <div class="view view-narrow">
       ${backLink('#/post/17', '最後貼文')}
       <div class="profile-head">
-        <div class="profile-avatar"></div>
+        <div class="profile-avatar"${avatarStyle('m')}></div>
         <div class="post-name">${m.name}</div>
         <div class="post-handle">@${m.handle}</div>
         <div class="profile-status">粉絲 ${m.followers} · 追蹤中 ${m.following} · ${m.posts} 篇貼文</div>
@@ -405,7 +417,7 @@ const App = (() => {
           <div class="evidence-frame">
             <div class="evidence-img-wrap" id="ev-wrap" style="position:relative">
               <img class="evidence-img" id="ev-img" src="${img('conbini')}" alt="">
-              <div class="anomaly-tag" style="left:30%; top:44%" onclick="App.inspectAnomaly()">${anomalyLabel}</div>
+              <div class="anomaly-tag" style="left:46%; top:52%" onclick="App.inspectAnomaly()">${anomalyLabel}</div>
             </div>
             <div class="evidence-toolbar">
               <button class="tool-btn" onclick="App.zoomToggle()">[ 放大 ]</button>
@@ -414,7 +426,7 @@ const App = (() => {
               <button class="tool-btn" onclick="App.resetFx()">[ 重設 ]</button>
             </div>
           </div>
-          ${STATE.get('photoAnomaly') ? `<div class="observation-box">偵測到異常 — 玻璃反射中有一個身分不明的人。門牌上的號碼是 <b class="evidence-color">${esc(e.doorplate)}</b>。</div>` : `<div class="observation-box">你確定你已經看完這張照片了嗎？試著點擊照片中可疑的地方。</div>`}
+          ${STATE.get('photoAnomaly') ? `<div class="observation-box">偵測到異常 — 便利商店門口站著一個身分不明的人影，臉部完全隱沒在陰影裡。案件編號正好是 <b class="evidence-color">${esc(e.doorplate)}</b>。</div>` : `<div class="observation-box">你確定你已經看完這張照片了嗎？試著點擊照片中可疑的地方。</div>`}
         </div>
         <div class="photo-viewer-side">
           <div class="metadata-panel">
@@ -506,7 +518,7 @@ const App = (() => {
     <div class="view view-narrow">
       ${backLink('#/profile/m_0917', '@m_0917')}
       <div class="profile-head">
-        <div class="profile-avatar"></div>
+        <div class="profile-avatar"${avatarStyle('chen')}></div>
         <div class="post-name">${c.name}</div>
         <div class="post-handle">@${c.handle}</div>
         <div class="profile-status warn">${c.status}</div>
