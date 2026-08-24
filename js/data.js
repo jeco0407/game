@@ -87,7 +87,7 @@ const DATA = {
   /* ---------------- Profiles ---------------- */
   yuanProfile: {
     handle: 'last_seen_0917',
-    name: 'YUAN',
+    name: 'YUAN（林予安）',
     bio: '已停用。',
     bioHoverReveal: '08/18 00:13 更新',
     posts: 17, following: 0, followers: 0,
@@ -223,7 +223,7 @@ const DATA = {
     board: [
       '林予安失蹤的時間，跟帳號後續的活動，之間有沒有關聯？',
       '試著把 23:17 連到那個接管帳號的人。',
-      '正確的關係鏈是：LIN, YUAN → 23:17 → M_0917 → CHEN。',
+      '正確的關係鏈是：林予安 → 23:17 → M_0917 → 陳奕辰。',
     ],
   }
 };

@@ -198,7 +198,7 @@ const App = (() => {
         <div class="x-post-avatar"${avatarStyle('yuan')}></div>
         <div class="x-post-main">
           <div class="x-post-head">
-            <div class="x-post-who"><span class="name">YUAN</span><span class="handle">@last_seen_0917</span><span class="time">· ${p.time}</span></div>
+            <div class="x-post-who"><span class="name">YUAN（林予安）</span><span class="handle">@last_seen_0917</span><span class="time">· ${p.time}</span></div>
             <div class="x-post-more">${icon('more', 18)}</div>
           </div>
           <div class="x-post-body">${nl(p.text)}</div>
@@ -352,7 +352,7 @@ const App = (() => {
       <div class="post" style="border-bottom:none;padding-top:0">
         <div class="post-head">
           <div class="avatar"${avatarStyle('yuan')}></div>
-          <div><div class="post-name">YUAN</div><div class="post-handle">@last_seen_0917</div></div>
+          <div><div class="post-name">YUAN（林予安）</div><div class="post-handle">@last_seen_0917</div></div>
         </div>
         <div class="post-body">${nl(p.text)}</div>
         ${p.image ? `<img class="post-img" src="${img(p.image)}" alt="">` : ''}

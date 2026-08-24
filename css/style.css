@@ -171,6 +171,8 @@ a { color: inherit; text-decoration: none; }
   height: 32px;
   border-radius: 50%;
   background: #000;
+  background-repeat: no-repeat;
+  filter: brightness(1.55) contrast(1.05);
   flex-shrink: 0;
   border: 1px solid var(--border);
 }
@@ -351,7 +353,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Profile ---------- */
 .profile-head { text-align: center; padding: 24px 0; }
-.profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: #000; margin: 0 auto 12px; border: 1px solid var(--border); }
+.profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: #000; background-repeat: no-repeat; filter: brightness(1.55) contrast(1.05); margin: 0 auto 12px; border: 1px solid var(--border); }
 .profile-status { font-family: var(--mono); font-size: 14px; color: var(--text-dim); margin-top: 6px; }
 .profile-bio { font-size: 15px; color: var(--text-dim); margin-top: 8px; }
 
@@ -865,7 +867,7 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px solid var(--border);
 }
 .x-post-row { display: flex; gap: 12px; }
-.x-post-avatar { width: 40px; height: 40px; border-radius: 50%; background: #000; border: 1px solid var(--border); flex-shrink: 0; }
+.x-post-avatar { width: 40px; height: 40px; border-radius: 50%; background: #000; background-repeat: no-repeat; filter: brightness(1.55) contrast(1.05); border: 1px solid var(--border); flex-shrink: 0; }
 .x-post-main { flex: 1; min-width: 0; }
 .x-post-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .x-post-who { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; font-size: 15px; }
@@ -886,7 +888,7 @@ a { color: inherit; text-decoration: none; }
 .x-profile-card, .x-trends-card { border: 1px solid var(--border); border-radius: 16px; margin-top: 12px; overflow: hidden; }
 .x-profile-card { padding: 16px; }
 .x-profile-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
-.x-profile-card .x-avatar-lg { width: 56px; height: 56px; border-radius: 50%; background: #000; border: 1px solid var(--border); }
+.x-profile-card .x-avatar-lg { width: 56px; height: 56px; border-radius: 50%; background: #000; background-repeat: no-repeat; filter: brightness(1.55) contrast(1.05); border: 1px solid var(--border); }
 .x-follow-btn {
   background: var(--text); color: #0a0a0a; border: none; border-radius: 999px;
   padding: 8px 18px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--sans);
