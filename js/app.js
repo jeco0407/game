@@ -303,7 +303,7 @@ const App = (() => {
           <div class="x-tab active">為你推薦</div>
           <div class="x-tab">追蹤中</div>
         </div>
-        ${DATA.feed.map(xPostHtml).join('')}
+        ${DATA.feed.slice().reverse().map(xPostHtml).join('')}
       </div>
       ${xRightRail()}
     </div>
@@ -497,11 +497,11 @@ const App = (() => {
     <div class="view view-wide">
       ${backLink('#/photo/02', '證據')}
       <div class="dash-title">時間線重建</div>
-      <p class="dim" style="font-size:13px">IMG_0917 出現在 8/18 的貼文裡，但它實際上是什麼時候被建立的？把它拖到正確的那一天（或按下面的按鈕）。</p>
+      <p class="dim" style="font-size:13px">IMG_0917 出現在 8/17（週一）的貼文裡，但它實際上是什麼時候被建立的？把它拖到正確的那一天（或按下面的按鈕）。</p>
       <div class="timeline-track">
         ${track.map(day => `
           <div class="tl-day">
-            <div class="tl-day-label">${day.day}</div>
+            <div class="tl-day-label">${day.day}${day.weekday ? `<span class="dim" style="font-size:11px"> · ${esc(day.weekday)}</span>` : ''}</div>
             ${day.events.map(ev => `<div class="tl-event">${esc(ev)}</div>`).join('')}
             ${day.day === '08/19' ? `<div class="tl-slot ${solved ? '' : 'drag-over'}" id="tl-slot-0819" ondragover="event.preventDefault()" ondrop="App.dropOnSlot(event)">${solved ? '<span class="evidence-color">IMG_0917</span>' : '拖放到這裡'}</div>` : ''}
           </div>`).join('')}
@@ -511,7 +511,7 @@ const App = (() => {
           <button class="tool-btn" style="margin-top:10px" onclick="App.moveImgToSlot()">[ 移動到 08/19 → ]</button>
         </div>` : ''}
       </div>
-      ${solved ? `<div class="timeline-conflict-box">衝突<br>這張照片出現的時間，早於它被建立的時間。<br><br><b>有人動過這個封存庫。</b></div>
+      ${solved ? `<div class="timeline-conflict-box">衝突<br>這張照片出現在 8/17（週一）的貼文裡，但檔案的建立時間卻是 8/19（週三）——比它被貼出來的時間還晚了兩天。<br><br><b>有人動過這個封存庫。</b></div>
       <div class="lock-note">有人在失蹤之後，仍然可以使用她的帳號 → <span class="evidence-color" style="cursor:pointer" onclick="location.hash='#/post/17'">回到貼文</span></div>` : ''}
     </div>
     ${bottomNav('case', true)}

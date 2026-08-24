@@ -112,11 +112,15 @@ const DATA = {
     { user: 'm_0917', text: '你不應該再找了。', hidden: true, time: '08/18 · 00:19' },
   ],
 
-  /* ---------------- Evidence photo / metadata ---------------- */
+  /* ---------------- Evidence photo / metadata ----------------
+     注意：這張照片出現在 8/17（週一）的貼文裡，但檔案的建立時間卻是
+     8/19（週三）——足足晚了兩天。這個矛盾是「時間線重建」謎題的核心，
+     不是資料錯誤：代表這張照片是在她「最後一次上線」之後才被生成／
+     上傳的，屬於刻意設計的時間線衝突。 */
   evidencePhoto: {
     id: 'IMG_0917.JPG',
-    created: '08 / 19 / 2026',
-    modified: '08 / 19 / 2026',
+    created: '08 / 19 / 2026（週三）',
+    modified: '08 / 19 / 2026（週三）',
     camera: '不明',
     location: '34.XXX',
     device: '不明',
@@ -125,9 +129,9 @@ const DATA = {
 
   /* ---------------- Timeline ---------------- */
   timelineTrack: [
-    { day: '08/17', events: ['21:03', '21:48', '22:13', '23:17'] },
-    { day: '08/18', events: ['00:12', '03:17', '07:41'] },
-    { day: '08/19', events: ['IMG_0917'] },
+    { day: '08/17', weekday: '週一', events: ['21:03', '21:48', '22:13', '23:17'] },
+    { day: '08/18', weekday: '週二', events: ['00:12', '03:17', '07:41'] },
+    { day: '08/19', weekday: '週三', events: [] },
   ],
 
   /* ---------------- Profiles ---------------- */
@@ -155,7 +159,7 @@ const DATA = {
     name: 'M',
     followers: 0, following: 0, posts: 1,
     post: '他第一次發現我的時候，\n也是星期四。',
-    postDate: '08 / 20',
+    postDate: '08 / 20（週四）',
   },
 
   chenProfile: {
@@ -164,12 +168,12 @@ const DATA = {
     status: '帳號已停用',
     posts: 24,
     bio: "Don't ask me.",
-    lastPost: { text: '如果她問起來，\n就說我不知道。', time: '08 / 20 · 23:17' },
+    lastPost: { text: '如果她問起來，\n就說我不知道。', time: '08 / 20（週四）· 23:17' },
     archived: [
       { id: 1, title: '[CONTENT REMOVED]', removed: true, highlight: false },
       { id: 2, title: '[CONTENT REMOVED]', removed: true, highlight: false },
       { id: 3, title: '[CONTENT REMOVED]', removed: true, highlight: false },
-      { id: 4, title: '[CONTENT REMOVED]', removed: true, highlight: true, time: '08 / 20 · 23:17' },
+      { id: 4, title: '[CONTENT REMOVED]', removed: true, highlight: true, time: '08 / 20（週四）· 23:17' },
     ]
   },
 
