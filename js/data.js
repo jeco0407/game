@@ -198,7 +198,7 @@ const DATA = {
   mProfile: {
     handle: 'm_0917',
     name: 'M',
-    followers: 0, following: 0, posts: 1,
+    followers: '—', following: '—', posts: 1,
     post: '他第一次發現我的時候，\n也是星期四。',
     postDate: '08 / 20（週四）',
   },

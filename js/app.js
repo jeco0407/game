@@ -30,7 +30,8 @@ const App = (() => {
   function img(key) { return IMAGES[key] || ''; }
 
   function avatarStyle(who) {
-    const map = { yuan: 'avatarYuan', chen: 'avatarChen', m: 'avatarM' };
+    if (who === 'm') return '';
+    const map = { yuan: 'avatarYuan', chen: 'avatarChen' };
     const src = IMAGES[map[who]];
     return src ? ` style="background-image:url('${src}');background-size:cover;background-position:center"` : '';
   }
@@ -394,7 +395,7 @@ const App = (() => {
         <div class="post-time mono">${p.time}${p.image === 'conbini' ? ` · <span class="post-edited" onclick="App.toggleEdited()">已編輯</span>` : ''}</div>
         ${p.image === 'conbini' && window.__editedOpen ? `<div class="post-edited-detail mono dim">修改時間 ${esc(DATA.evidencePhoto.modified)}</div>` : ''}
         <div class="post-meta">
-          <span class="m-item">${icon('reply', 16)} ${p.replies || 0}</span>
+          <span class="m-item">${icon('reply', 16)} ${p.isLast ? (window.__hiddenOpen ? 19 : 18) : (p.replies || 0)}</span>
           <span class="m-item">${icon('repost', 16)} ${p.reposts || 0}</span>
           <span class="m-item">${icon('heart', 16)} ${p.likes || 0}</span>
           <span class="m-item">${icon('share', 16)}</span>
@@ -405,12 +406,12 @@ const App = (() => {
       const visible = DATA.comments17.filter(c => !c.hidden);
       body += `<div class="comments">${visible.map(commentHtml).join('')}</div>`;
 
-      body += `<div style="margin-top:14px">`;
+      body += `<div style="margin-top:2px">`;
       if (window.__hiddenOpen) {
         const hidden = DATA.comments17.find(c => c.hidden);
         body += `<div class="comment hidden"><div class="h">@<span style="cursor:pointer" onclick="location.hash='#/profile/m_0917'">${esc(hidden.user)}</span> <span class="dim">· ${esc(hidden.time)}</span></div><div>${nl(hidden.text)}</div></div>`;
       } else {
-        body += `<div class="hidden-reply-toggle" onclick="App.revealHidden()">19 則留言<br>1 則隱藏留言</div>`;
+        body += `<div class="hidden-reply-toggle" onclick="App.revealHidden()">查看更多 1 則回覆</div>`;
       }
       body += `</div>`;
     } else if (p.replies > 0) {
@@ -432,7 +433,7 @@ const App = (() => {
     <div class="view view-narrow">
       ${backLink('#/post/17', '最後貼文')}
       <div class="profile-head">
-        <div class="profile-avatar"${avatarStyle('m')}></div>
+        <div class="profile-avatar avatar-m-mark">M</div>
         <div class="post-name">${m.name}</div>
         <div class="post-handle">@${m.handle}</div>
         <div class="profile-status">粉絲 ${m.followers} · 追蹤中 ${m.following} · ${m.posts} 篇貼文</div>

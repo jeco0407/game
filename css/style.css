@@ -227,14 +227,13 @@ a { color: inherit; text-decoration: none; }
 .comment.suspicious .h { color: var(--evidence); }
 .comment.hidden .h { color: var(--warning); }
 .hidden-reply-toggle {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 14px;
   color: var(--text-dim);
   cursor: pointer;
   padding: 8px 0;
-  border-bottom: 1px dashed var(--border);
 }
-.hidden-reply-toggle:hover { color: var(--text); }
+.hidden-reply-toggle:hover { color: var(--text); text-decoration: underline; }
 
 /* ---------- Archive input ---------- */
 .archive-input-box {
@@ -369,6 +368,19 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Profile ---------- */
 .profile-head { text-align: center; padding: 24px 0; }
 .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: #000; background-repeat: no-repeat; filter: brightness(1.55) contrast(1.05); margin: 0 auto 12px; border: 1px solid var(--border); }
+.avatar-m-mark {
+  filter: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 26px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 1px;
+  padding-top: 2px;
+  padding-left: 3px;
+}
 .profile-status { font-family: var(--mono); font-size: 14px; color: var(--text-dim); margin-top: 6px; }
 .profile-bio { font-size: 15px; color: var(--text-dim); margin-top: 8px; }
 
