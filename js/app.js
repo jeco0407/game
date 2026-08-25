@@ -825,24 +825,43 @@ const App = (() => {
       const counter = document.getElementById('counter');
       if (counter) counter.textContent = '129';
       setTimeout(() => {
-        el.innerHTML = `<div class="label">調查者</div><div class="big" style="color:var(--evidence)">M-${STATE.investigatorId()}</div><div class="id-line" style="margin-top:20px">狀態</div><div class="big" style="color:var(--warning);font-size:18px">進行中</div><div class="id-line" style="margin-top:20px">調查開始於<br><span class="mono">${formatElapsed(STATE.elapsedMs())} 前</span></div>`;
-        setTimeout(showFinalMessages, 2200);
+        renderInvestigatorFinal();
+        setTimeout(showFinalMessages, 1400);
       }, 900);
     }, 1000);
   }
 
+  function renderInvestigatorFinal() {
+    const el = document.getElementById('m-sequence');
+    if (!el) return;
+    el.className = 'investigator-final';
+    el.innerHTML = `
+      <div class="investigator-panel">
+        <div class="label">調查者</div>
+        <div class="big-id evidence-color">M-${STATE.investigatorId()}</div>
+        <div class="inv-row"><span class="k">狀態</span><span class="v warn">進行中</span></div>
+        <div class="inv-row"><span class="k">調查開始於</span><span class="v mono">${formatElapsed(STATE.elapsedMs())} 前</span></div>
+      </div>
+      <div class="message-panel">
+        <div class="mp-title">新訊息 <span class="dim">· @last_seen_0917</span></div>
+        <div class="mp-body" id="mp-body"></div>
+      </div>`;
+  }
+
   function showFinalMessages() {
-    const container = document.body;
+    const box = document.getElementById('mp-body');
     const msgs = DATA.finalMessages;
     let i = 0;
     function showNext() {
-      if (i >= msgs.length) { showChapterComplete(); return; }
-      const toast = document.createElement('div');
-      toast.className = 'new-message-toast';
-      toast.innerHTML = `新訊息<br><span class="dim" style="font-size:11px">@last_seen_0917</span><br>「${esc(msgs[i])}」`;
-      container.appendChild(toast);
+      if (i >= msgs.length) { setTimeout(showChapterComplete, 1000); return; }
+      if (box) {
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+        bubble.textContent = msgs[i];
+        box.appendChild(bubble);
+      }
       i++;
-      setTimeout(() => { toast.remove(); setTimeout(showNext, 300); }, 2400);
+      setTimeout(showNext, 1700);
     }
     showNext();
   }

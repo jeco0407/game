@@ -438,6 +438,33 @@ a { color: inherit; text-decoration: none; }
 .investigator-reveal .id-line { color: var(--text-dim); font-size: 15px; }
 .m-log-line { font-family: var(--mono); font-size: 14px; color: var(--text-dim); opacity: 0; animation: reveal .5s forwards; }
 
+.investigator-final {
+  display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; justify-content: center;
+  min-height: 70vh; padding-top: 60px; font-family: var(--mono); text-align: left;
+  opacity: 0; animation: fadein .5s ease forwards;
+}
+.investigator-panel { width: 260px; flex-shrink: 0; }
+.investigator-panel .label { text-align: left; margin-bottom: 10px; }
+.big-id { font-size: 28px; letter-spacing: 0.08em; margin-bottom: 20px; }
+.inv-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dotted var(--border); font-size: 14px; }
+.inv-row .k { color: var(--text-dim); }
+.inv-row .v.warn { color: var(--warning-bright); }
+.message-panel {
+  width: 320px; border: 1px solid var(--border); background: var(--surface); padding: 18px;
+}
+.mp-title { font-size: 14px; letter-spacing: 0.08em; margin-bottom: 14px; }
+.mp-title .dim { font-weight: normal; }
+.mp-body { display: flex; flex-direction: column; gap: 10px; min-height: 40px; }
+.msg-bubble {
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px;
+  padding: 10px 12px; font-size: 14px; line-height: 1.6;
+  opacity: 0; animation: reveal .5s forwards;
+}
+@media (max-width: 640px) {
+  .investigator-final { flex-direction: column; align-items: center; padding-top: 30px; }
+  .investigator-panel, .message-panel { width: 100%; max-width: 340px; }
+}
+
 .ending-screen {
   position: fixed;
   inset: 0;
