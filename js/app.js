@@ -438,7 +438,10 @@ const App = (() => {
         <div class="profile-status">粉絲 ${m.followers} · 追蹤中 ${m.following} · ${m.posts} 篇貼文</div>
       </div>
       <div class="blank-post">${nl(m.post)}<div class="post-time mono" style="margin-top:16px">${m.postDate}</div></div>
-      ${STATE.get('timeline') ? `<button class="btn" style="margin-top:20px" onclick="location.hash='#/profile/chen_yc'">[ 封存 → ]</button>` : `<div class="lock-note">這個帳號似乎跟其他線索有關，但目前還連不起來。</div>`}
+      ${STATE.get('timeline') ? `
+      <div class="lock-note" style="color:var(--text-dim)">系統偵測到一個關聯帳號，最後互動時間與這篇貼文相近。</div>
+      <button class="btn" style="margin-top:12px" onclick="location.hash='#/profile/chen_yc'">[ 查看關聯帳號 → ]</button>`
+      : `<div class="lock-note">這個帳號似乎跟其他線索有關，但目前還連不起來。</div>`}
     </div>
     ${bottomNav()}`;
   }
