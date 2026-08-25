@@ -144,6 +144,7 @@ const App = (() => {
           ${nav.map(n => `<div class="dash-nav-item ${n.key === 'cases' ? 'active' : ''}" ${n.key === 'cases' ? "onclick=\"location.hash='#/archive'\"" : (n.key === 'people' ? "onclick=\"location.hash='#/profile/yuan'\"" : '')}>${n.label}</div>`).join('')}
           ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='#/m-database'">M 資料庫</div>` : ''}
           <div class="dash-sys">系統<br><span class="v">上線中</span></div>
+          <div class="dash-nav-item" style="margin-top:24px;color:var(--text-dim);font-size:12px" onclick="App.resetProgress()">重置進度</div>
         </div>
         <div class="dash-main">
           <div class="dash-title">封存庫 / 最近案件</div>
@@ -221,6 +222,13 @@ const App = (() => {
         </div>
       </div>
     </a>`;
+  }
+
+  function resetProgress() {
+    if (!confirm('確定要重置所有進度嗎？這會清空目前解開的謎題與案件紀錄，無法復原。')) return;
+    STATE.reset();
+    location.hash = '#/';
+    location.reload();
   }
 
   function toggleFollow(el) {
@@ -876,7 +884,7 @@ const App = (() => {
 
   return {
     render, revealHidden,
-    toggleFollow, newPostToast,
+    toggleFollow, newPostToast, resetProgress,
     inspectAnomaly, analyzeMetadata, zoomToggle, toggleFx, resetFx,
     dragImgStart, dropOnSlot, moveImgToSlot,
     openAccessPrompt, submitAccess,
