@@ -392,7 +392,7 @@ const App = (() => {
           : (p.image ? `<img class="post-img" src="${img(p.image)}" alt="">` : '')}
         ${p.isLast ? `<div class="post-countdown mono">23:17:42</div>` : ''}
         <div class="post-time mono">${p.time}${p.image === 'conbini' ? ` · <span class="post-edited" onclick="App.toggleEdited()">已編輯</span>` : ''}</div>
-        ${p.image === 'conbini' && window.__editedOpen ? `<div class="post-edited-detail mono dim">建立時間 ${esc(DATA.evidencePhoto.created)}　修改時間 ${esc(DATA.evidencePhoto.modified)}</div>` : ''}
+        ${p.image === 'conbini' && window.__editedOpen ? `<div class="post-edited-detail mono dim">修改時間 ${esc(DATA.evidencePhoto.modified)}</div>` : ''}
         <div class="post-meta">
           <span class="m-item">${icon('reply', 16)} ${p.replies || 0}</span>
           <span class="m-item">${icon('repost', 16)} ${p.reposts || 0}</span>
