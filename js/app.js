@@ -374,10 +374,12 @@ const App = (() => {
           <div><div class="post-name">YUAN（林予安）</div><div class="post-handle">@last_seen_0917</div></div>
         </div>
         <div class="post-body">${nl(p.text)}</div>
-        ${p.image ? `<img class="post-img" src="${img(p.image)}" alt="">` : ''}
-        ${p.image === 'conbini' ? `<button class="btn" style="margin-top:14px" onclick="location.hash='#/photo/02'">[ 檢視照片 → ]</button>` : ''}
+        ${p.image === 'conbini'
+          ? `<img class="post-img" style="cursor:pointer" src="${img(p.image)}" alt="" onclick="location.hash='#/photo/02'">`
+          : (p.image ? `<img class="post-img" src="${img(p.image)}" alt="">` : '')}
         ${p.isLast ? `<div class="post-countdown mono">23:17:42</div>` : ''}
-        <div class="post-time mono">${p.time}</div>
+        <div class="post-time mono">${p.time}${p.image === 'conbini' ? ` · <span class="post-edited" onclick="App.toggleEdited()">已編輯</span>` : ''}</div>
+        ${p.image === 'conbini' && window.__editedOpen ? `<div class="post-edited-detail mono dim">建立時間 ${esc(DATA.evidencePhoto.created)}　修改時間 ${esc(DATA.evidencePhoto.modified)}</div>` : ''}
       </div>`;
 
     if (p.isLast) {
@@ -400,6 +402,7 @@ const App = (() => {
     return body;
   }
   function revealHidden() { window.__hiddenOpen = true; render(); }
+  function toggleEdited() { window.__editedOpen = !window.__editedOpen; render(); }
 
   /* ================================================================
      SCREEN 09 — M_0917 profile
@@ -883,7 +886,7 @@ const App = (() => {
   window.addEventListener('hashchange', render);
 
   return {
-    render, revealHidden,
+    render, revealHidden, toggleEdited,
     toggleFollow, newPostToast, resetProgress,
     inspectAnomaly, analyzeMetadata, zoomToggle, toggleFx, resetFx,
     dragImgStart, dropOnSlot, moveImgToSlot,

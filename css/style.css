@@ -209,6 +209,9 @@ a { color: inherit; text-decoration: none; }
 }
 
 .post-time { font-family: var(--mono); font-size: 14px; color: var(--text-dim); margin-top: 6px; }
+.post-edited { cursor: pointer; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; }
+.post-edited:hover { color: var(--text); }
+.post-edited-detail { font-size: 13px; margin-top: 6px; }
 
 /* ---------- Post Detail ---------- */
 .comments { margin-top: 20px; display: flex; flex-direction: column; gap: 14px; }
