@@ -55,6 +55,10 @@ const App = (() => {
     lock: '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/>',
     alert: '<path d="M12 3 2 20h20L12 3Z"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/>',
     check: '<path d="M20 6 9 17l-5-5"/>',
+    zoomIn: '<circle cx="10" cy="10" r="7"/><line x1="10" y1="7" x2="10" y2="13"/><line x1="7" y1="10" x2="13" y2="10"/><line x1="21" y1="21" x2="15" y2="15"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+    refresh: '<path d="M3 12a9 9 0 0 1 15.4-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.4 6.4L3 16"/><path d="M3 21v-5h5"/>',
+    contrast: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor" stroke="none"/>',
   };
   function icon(name, size) {
     size = size || 20;
@@ -389,6 +393,12 @@ const App = (() => {
         ${p.isLast ? `<div class="post-countdown mono">23:17:42</div>` : ''}
         <div class="post-time mono">${p.time}${p.image === 'conbini' ? ` · <span class="post-edited" onclick="App.toggleEdited()">已編輯</span>` : ''}</div>
         ${p.image === 'conbini' && window.__editedOpen ? `<div class="post-edited-detail mono dim">建立時間 ${esc(DATA.evidencePhoto.created)}　修改時間 ${esc(DATA.evidencePhoto.modified)}</div>` : ''}
+        <div class="post-meta">
+          <span class="m-item">${icon('reply', 16)} ${p.replies || 0}</span>
+          <span class="m-item">${icon('repost', 16)} ${p.reposts || 0}</span>
+          <span class="m-item">${icon('heart', 16)} ${p.likes || 0}</span>
+          <span class="m-item">${icon('share', 16)}</span>
+        </div>
       </div>`;
 
     if (p.isLast) {
@@ -451,12 +461,12 @@ const App = (() => {
             <div class="evidence-img-wrap" id="ev-wrap" style="position:relative">
               <img class="evidence-img" id="ev-img" src="${img('conbini')}" alt="">
               <div class="anomaly-tag" style="left:46%; top:52%" onclick="App.inspectAnomaly()">${anomalyLabel}</div>
-            </div>
-            <div class="evidence-toolbar">
-              <button class="tool-btn" onclick="App.zoomToggle()">[ 放大 ]</button>
-              <button class="tool-btn" onclick="App.toggleFx('bright')">[ 亮度 ]</button>
-              <button class="tool-btn" onclick="App.toggleFx('contrast')">[ 對比 ]</button>
-              <button class="tool-btn" onclick="App.resetFx()">[ 重設 ]</button>
+              <div class="evidence-toolbar">
+                <button class="tool-icon-btn" onclick="App.zoomToggle()" title="放大">${icon('zoomIn', 16)}</button>
+                <button class="tool-icon-btn" onclick="App.toggleFx('bright')" title="亮度">${icon('sun', 16)}</button>
+                <button class="tool-icon-btn" onclick="App.toggleFx('contrast')" title="對比">${icon('contrast', 16)}</button>
+                <button class="tool-icon-btn" onclick="App.resetFx()" title="重設">${icon('refresh', 16)}</button>
+              </div>
             </div>
           </div>
           ${STATE.get('photoAnomaly') ? `<div class="observation-box">偵測到異常 — 便利商店門口站著一個身分不明的人影，臉部完全隱沒在陰影裡。案件編號正好是 <b class="evidence-color">${esc(e.doorplate)}</b>。</div>` : `<div class="observation-box">你確定你已經看完這張照片了嗎？試著點擊照片中可疑的地方。</div>`}
