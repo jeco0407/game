@@ -44,51 +44,92 @@ const DATA = {
     { id: 19, time: '8/18 · 07:41', text: '[附件：模糊照片]', image: 'figure', unlockAfter: 'timeline', replies: 97, reposts: 130, likes: 488 },
   ],
 
-  /* 一般貼文（失蹤前）留言池 — 依貼文 id 決定性抽取，維持每篇貼文的留言穩定 */
-  genericComments: [
-    { user: 'mia', text: '今天也有好好吃飯嗎', time: '3h' },
-    { user: 'ken', text: '哈哈這個我懂', time: '3h' },
-    { user: 'nn_room', text: '晚安〜', time: '2h' },
-    { user: 'quietsea', text: '妳最近好像很少發文', time: '2h' },
-    { user: 'z_9', text: '同感', time: '2h' },
-    { user: 'anon_42', text: '這張拍得不錯欸', time: '1h' },
-    { user: 'reader_88', text: '早點睡啦', time: '1h' },
-    { user: 'k.eve', text: '哈哈哈哈笑死', time: '1h' },
-    { user: 'ghostwr1ter', text: '我也是這樣想', time: '55m' },
-    { user: 'moon_9', text: '好有共鳴喔', time: '48m' },
-    { user: 'nn_room', text: '雨真的下很大', time: '40m' },
-    { user: 'yc_fan', text: '妳今天有出門嗎', time: '35m' },
-    { user: 'quietsea', text: '收到，晚安', time: '30m' },
-    { user: 'echo_lurker', text: '這篇怎麼有點感傷', time: '24m' },
-    { user: 'mia', text: '要記得吃藥喔', time: '20m' },
-    { user: 'z_9', text: '妳真的很會拍照', time: '15m' },
-    { user: 'anon_42', text: '在等妳分享後續', time: '11m' },
-    { user: 'k.eve', text: '路上小心', time: '8m' },
-    { user: 'reader_88', text: '這是哪裡拍的', time: '5m' },
-    { user: 'ghostwr1ter', text: '好想知道妳在想什麼', time: '2m' },
-  ],
-
-  /* 貼文事後（失蹤後）留言池 — 用於解鎖後的兩篇貼文，語氣偏震驚／揣測 */
-  lateComments: [
-    { user: 'anon_42', text: '這篇是什麼時候發的？？', time: '6h' },
-    { user: 'ghostwr1ter', text: '帳號真的被別人用了吧', time: '6h' },
-    { user: 'k.eve', text: '報警了嗎有人知道嗎', time: '5h' },
-    { user: 'quietsea', text: '我截圖了，這太詭異了', time: '5h' },
-    { user: 'reader_88', text: '拜託不要再更新這種東西了', time: '4h' },
-    { user: 'nn_room', text: '誰是 M……', time: '4h' },
-    { user: 'z_9', text: '這不是她本人在發吧', time: '3h' },
-    { user: 'mia', text: '真的好可怕，希望她沒事', time: '3h' },
-    { user: 'moon_9', text: '有沒有人聯絡上她家人', time: '2h' },
-    { user: 'echo_lurker', text: '這帳號感覺越來越不對勁', time: '2h' },
-    { user: 'yc_fan', text: 'chen_yc 那邊也怪怪的', time: '1h' },
-    { user: 'ken', text: '我朋友說附近有人看到類似的人', time: '1h' },
-    { user: 'anon_42', text: '拜託是惡作劇就好', time: '50m' },
-    { user: 'k.eve', text: '這張照片背景是不是那間便利商店', time: '38m' },
-    { user: 'ghostwr1ter', text: '感覺有人在操控這個帳號', time: '25m' },
-    { user: 'quietsea', text: '希望警方有在追蹤這個案子', time: '17m' },
-    { user: 'reader_88', text: '越看越毛', time: '9m' },
-    { user: 'nn_room', text: '大家小心，別亂猜', time: '3m' },
-  ],
+  /* 每篇貼文專屬的留言 — 內容對應該篇貼文文字，避免留言跟貼文文不對題，
+     也避免不同貼文之間出現一模一樣的留言。key 是 feed 裡的貼文 id。 */
+  postComments: {
+    1: [ // 今天的雨下得很奇怪。
+      { user: 'mia', text: '真的欸，今天雨滴看起來特別大顆', time: '3h' },
+      { user: 'ken', text: '妳是不是又在陽台發呆了', time: '2h' },
+      { user: 'quietsea', text: '早點回家喔，路滑', time: '1h' },
+    ],
+    2: [ // 便利商店關門以後看起來很像假的（+超商照片）
+      { user: 'z_9', text: '這張真的有種說不出的違和感', time: '4h' },
+      { user: 'anon_42', text: '妳是自己一個人去的嗎', time: '3h' },
+      { user: 'reader_88', text: '那間我知道，晚上真的很安靜', time: '3h' },
+      { user: 'k.eve', text: '拍得很有氛圍欸', time: '2h' },
+      { user: 'nn_room', text: '後面站著的那個人是誰啊', time: '1h' },
+    ],
+    3: [ // 對面那個人還在。
+      { user: 'ghostwr1ter', text: '什麼人？在等妳嗎', time: '2h' },
+      { user: 'moon_9', text: '妳確定不用報警之類的嗎', time: '1h' },
+    ],
+    4: [ // 明天應該就不會下雨了。
+      { user: 'yc_fan', text: '希望啦，好想出門', time: '50m' },
+    ],
+    5: [ // 忘記帶傘。
+      { user: 'quietsea', text: '妳每次都忘記，記得買一把放包包', time: '40m' },
+    ],
+    6: [ // 有時候覺得晚上比白天安靜很多。
+      { user: 'echo_lurker', text: '深夜真的容易亂想東西', time: '38m' },
+      { user: 'z_9', text: '早點睡啦，別想太多', time: '30m' },
+    ],
+    7: [ // 如果你一直盯著同一個地方看，它也會開始看你。
+      { user: 'ken', text: '這句話講得有點毛欸', time: '55m' },
+      { user: 'anon_42', text: '妳最近是不是熬夜了', time: '40m' },
+      { user: 'k.eve', text: '怎麼突然這麼有哲理', time: '25m' },
+      { user: 'nn_room', text: '妳還好嗎，感覺怪怪的', time: '10m' },
+    ],
+    8: [ // 今天沒有看到他。
+      { user: 'reader_88', text: '他是誰啊？', time: '50m' },
+      { user: 'mia', text: '妳說的是樓下那個人嗎', time: '20m' },
+    ],
+    9: [ // 但我知道他還在。
+      { user: 'ghostwr1ter', text: '這聽起來有點嚇人耶', time: '40m' },
+      { user: 'quietsea', text: '要不要跟家人說一下比較好', time: '25m' },
+      { user: 'moon_9', text: '妳是不是被跟蹤了', time: '9m' },
+    ],
+    10: [ // 23:17
+      { user: 'k.eve', text: '這什麼意思？', time: '30m' },
+      { user: 'z_9', text: '只打時間有點嚇到我', time: '25m' },
+      { user: 'anon_42', text: '妳還好嗎？？', time: '20m' },
+      { user: 'nn_room', text: '怎麼了嗎，發生什麼事了', time: '14m' },
+      { user: 'reader_88', text: '拜託回一下，在線上嗎', time: '8m' },
+      { user: 'mia', text: '在等妳說明……', time: '3m' },
+    ],
+    12: [ // 明天還是會下雨嗎？
+      { user: 'yc_fan', text: '看預報好像還是會喔', time: '20m' },
+    ],
+    14: [ // 手機剩 3%。
+      { user: 'echo_lurker', text: '快去充電啦', time: '12m' },
+    ],
+    15: [ // 好像有人在敲門。
+      { user: 'ken', text: '妳有去看是誰嗎', time: '35m' },
+      { user: 'ghostwr1ter', text: '這個時間有點可怕欸', time: '28m' },
+      { user: 'k.eve', text: '要不要打給我', time: '20m' },
+      { user: 'quietsea', text: '門鎖好了嗎', time: '12m' },
+      { user: 'anon_42', text: '拜託不要自己開門', time: '5m' },
+    ],
+    16: [ // 算了，應該是我想太多。
+      { user: 'moon_9', text: '有時候真的會這樣想太多', time: '15m' },
+      { user: 'nn_room', text: '早點休息吧', time: '6m' },
+    ],
+    18: [ // 不要去找我。（解鎖後）
+      { user: 'anon_42', text: '不要去找我是什麼意思？？', time: '6h' },
+      { user: 'k.eve', text: '這真的是她本人打的嗎', time: '5h' },
+      { user: 'ghostwr1ter', text: '這語氣跟平常完全不一樣', time: '3h' },
+      { user: 'quietsea', text: '已經報警了，拜託聯絡我們', time: '2h' },
+      { user: 'z_9', text: '帳號到底是誰在用', time: '50m' },
+      { user: 'reader_88', text: '拜託不要嚇我們', time: '10m' },
+    ],
+    19: [ // [附件：模糊照片]（解鎖後）
+      { user: 'nn_room', text: '這張照片是在哪裡拍的', time: '5h' },
+      { user: 'mia', text: '背景那個人是誰', time: '4h' },
+      { user: 'ghostwr1ter', text: '感覺不是她自己拍的', time: '2h' },
+      { user: 'moon_9', text: '這是要我們找這個地方嗎', time: '1h' },
+      { user: 'anon_42', text: '越來越不對勁了', time: '30m' },
+      { user: 'k.eve', text: '有人認出這條巷子嗎', time: '8m' },
+    ],
+  },
 
   comments17: [
     { user: 'mia', text: '你還好嗎？', time: '2h' },
