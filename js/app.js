@@ -52,6 +52,9 @@ const App = (() => {
     heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
     share: '<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M16 6l-4-4-4 4"/><line x1="12" y1="2" x2="12" y2="15"/>',
     calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+    lock: '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/>',
+    alert: '<path d="M12 3 2 20h20L12 3Z"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
   };
   function icon(name, size) {
     size = size || 20;
@@ -148,17 +151,18 @@ const App = (() => {
           <div class="dash-nav-item" style="margin-top:24px;color:var(--text-dim);font-size:12px" onclick="App.resetProgress()">重置進度</div>
         </div>
         <div class="dash-main">
-          <div class="dash-title">封存庫 / 最近案件</div>
+          <div class="dash-title">近期案件</div>
           <div class="case-grid">
-            <div class="case-card" onclick="location.hash='#/case-overview'">
+            <div class="case-card featured" onclick="location.hash='#/case-overview'">
+              <div class="cc-thumb" style="background-image:url('${img('conbini')}')"></div>
               <div class="cc-id">案件 #0917</div>
               <div class="cc-name">林予安</div>
-              <div>最後出現<br>2026 / 08 / 17 · 23:17</div>
-              <div class="cc-status">狀態：進行中</div>
+              <div class="cc-meta">最後出現<br>2026 / 08 / 17 · 23:17</div>
+              <div class="cc-status">狀態：<span class="warn">進行中</span></div>
             </div>
-            <div class="case-card restricted"><div class="cc-id">案件 #0642</div><div class="cc-name">存取受限</div></div>
-            <div class="case-card restricted"><div class="cc-id">案件 #1188</div><div class="cc-name">存取受限</div></div>
-            <div class="case-card restricted"><div class="cc-id">案件 #0033</div><div class="cc-name">存取受限</div></div>
+            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #0642</div><div class="cc-name">存取受限</div></div>
+            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #1188</div><div class="cc-name">存取受限</div></div>
+            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #0033</div><div class="cc-name">存取受限</div></div>
           </div>
         </div>
       </div>
@@ -174,25 +178,29 @@ const App = (() => {
     const relatedLinked = STATE.get('timeline');
     return `
     <div class="view view-wide">
-      ${backLink('#/archive', '封存庫')}
-      <div class="dash-title">案件 ${c.id} / 失蹤人口</div>
+      <div class="overview-header">
+        ${backLink('#/archive', '封存庫')}
+        <button class="overview-pill" onclick="location.hash='#/feed'">查看社群媒體 <span class="arrow">→</span></button>
+      </div>
+      <div class="dash-title" style="margin-top:6px">案件 ${c.id} · 失蹤人口</div>
       <div class="overview-grid">
         <div>
           <div class="overview-field"><div class="k">關係人</div><div class="v">${c.subject}</div></div>
           <div class="overview-field"><div class="k">年齡</div><div class="v">${c.age}</div></div>
-          <div class="overview-field"><div class="k">最後出現</div><div class="v">${c.lastSeenDate}<br>${c.lastSeenTime}</div></div>
           <div class="overview-field"><div class="k">狀態</div><div class="v warn">${c.status}</div></div>
         </div>
         <div>
+          <div class="overview-field"><div class="k">最後出現</div><div class="v">${c.lastSeenDate}<br>${c.lastSeenTime}</div></div>
+          <div class="overview-field"><div class="k">地點</div><div class="v" style="color:var(--text-dim)">${c.location}</div></div>
           <div class="overview-field"><div class="k">相關人物</div></div>
           ${c.related.map(r => `
             <div class="related-item ${relatedLinked ? 'linked' : ''}" ${relatedLinked ? `onclick="location.hash='${r.name === '陳奕辰' ? '#/profile/chen_yc' : '#/profile/m_0917'}'"` : ''}>
               <span class="name">${esc(r.name)}</span><span class="status">${relatedLinked ? '→' : r.status}</span>
             </div>`).join('')}
-          <div class="overview-field" style="margin-top:20px"><div class="k">最後數位活動</div><div class="v">${c.lastActivity.date}<br>${c.lastActivity.time}</div></div>
         </div>
       </div>
-      <div class="overview-cta" onclick="location.hash='#/feed'">查看社群媒體 →</div>
+      <div class="overview-field" style="margin-top:8px"><div class="k">最後數位活動</div></div>
+      <div class="digital-activity-row">${c.digitalActivity.map(t => `<div class="da-chip mono">${esc(t)}</div>`).join('')}</div>
     </div>
     ${bottomNav('case', true)}`;
   }
@@ -463,7 +471,7 @@ const App = (() => {
             <div class="row"><span class="k">裝置</span><span class="v" style="color:var(--text-dim)">${e.device}</span></div>
           </div>
           ${!STATE.get('metadata') ? `<button class="btn" style="margin-top:14px" onclick="App.analyzeMetadata()">[ 分析 ]</button>` : `
-          <div class="conflict-banner">時間線衝突<br>有些地方兜不起來。</div>
+          <div class="conflict-banner">${icon('alert', 18)}<div><b>時間線衝突</b><br>有些地方兜不起來。</div></div>
           <button class="btn" style="margin-top:14px" onclick="location.hash='#/timeline'">[ 重建時間線 → ]</button>`}
         </div>
       </div>
@@ -510,7 +518,7 @@ const App = (() => {
         ${track.map(day => `
           <div class="tl-day">
             <div class="tl-day-label">${day.day}${day.weekday ? `<span class="dim" style="font-size:11px"> · ${esc(day.weekday)}</span>` : ''}</div>
-            ${day.events.map(ev => `<div class="tl-event">${esc(ev)}</div>`).join('')}
+            ${day.events.map(ev => `<div class="tl-event">${esc(ev)}${ev === '23:17' ? `<span class="tl-event-warn">${icon('alert', 14)}</span>` : ''}</div>`).join('')}
             ${day.day === '08/19' ? `<div class="tl-slot ${solved ? '' : 'drag-over'}" id="tl-slot-0819" ondragover="event.preventDefault()" ondrop="App.dropOnSlot(event)">${solved ? '<span class="evidence-color">IMG_0917</span>' : '拖放到這裡'}</div>` : ''}
           </div>`).join('')}
         ${!solved ? `<div class="tl-day">
@@ -519,7 +527,7 @@ const App = (() => {
           <button class="tool-btn" style="margin-top:10px" onclick="App.moveImgToSlot()">[ 移動到 08/19 → ]</button>
         </div>` : ''}
       </div>
-      ${solved ? `<div class="timeline-conflict-box">衝突<br>這張照片出現在 8/17（週一）的貼文裡，但檔案的建立時間卻是 8/19（週三）——比它被貼出來的時間還晚了兩天。<br><br><b>有人動過這個封存庫。</b></div>
+      ${solved ? `<div class="timeline-conflict-box">${icon('alert', 20)}<div><b>時間線衝突</b><br>這張照片出現在 8/17（週一）的貼文裡，但檔案的建立時間卻是 8/19（週三）——比它被貼出來的時間還晚了兩天。<br><br><b>有人動過這個封存庫。</b></div></div>
       <div class="lock-note">有人在失蹤之後，仍然可以使用她的帳號 → <span class="evidence-color" style="cursor:pointer" onclick="location.hash='#/post/17'">回到貼文</span></div>` : ''}
     </div>
     ${bottomNav('case', true)}
@@ -555,7 +563,7 @@ const App = (() => {
       <div class="deleted-list">
         ${c.archived.map(a => {
           if (a.highlight && !STATE.get('access')) {
-            return `<div class="deleted-item highlight" onclick="App.openAccessPrompt()"><span>${a.title}</span><span>${esc(a.time)}</span></div>`;
+            return `<div class="deleted-item highlight" onclick="App.openAccessPrompt()"><span>${a.title}</span><span style="display:flex;align-items:center;gap:8px">${esc(a.time)} ${icon('lock', 14)}</span></div>`;
           }
           if (a.highlight && STATE.get('access')) {
             return `<div class="deleted-item"><span>案件檔案 #0917</span><span class="evidence-color" style="cursor:pointer" onclick="location.hash='#/case/0917'">已解鎖 →</span></div>`;
@@ -575,8 +583,10 @@ const App = (() => {
     const ap = DATA.accessPrompt;
     slot.innerHTML = `
     <div class="access-prompt-box">
+      <div class="ap-lock-icon">${icon('lock', 28)}</div>
       <div class="ap-title">封存權限受限</div>
       <div class="ap-id">內容編號 · ${esc(ap.contentId)}</div>
+      <div class="ap-required">需要驗證存取權限</div>
       <div class="ap-question">${nl(ap.question)}</div>
       <div class="archive-input-row">
         <input class="archive-input mono" id="ans-access" placeholder="……" autocomplete="off">
@@ -591,8 +601,8 @@ const App = (() => {
     if (checkIn(DATA.accessPrompt.answers, el.value)) {
       STATE.set('access', true);
       msg.className = 'access-msg granted';
-      msg.textContent = '存取權限已授予。';
-      setTimeout(render, 500);
+      msg.innerHTML = '存取權限已授予。<br><span style="font-size:12px">案件檔案 #0917 已解鎖</span>';
+      setTimeout(render, 900);
     } else {
       msg.className = 'access-msg denied';
       msg.textContent = '存取遭拒。封存系統無法辨識這個答案，再試一次。';
@@ -607,29 +617,41 @@ const App = (() => {
       return `<div class="view view-wide">${backLink('#/case-overview','案件概覽')}<p class="dim mono">案件檔案已鎖定。</p></div>${bottomNav('case', true)}`;
     }
     const cf = DATA.caseFile;
+    const cfNav = [
+      { label: '總覽', active: true },
+      { label: '證據板', count: 1, hash: '#/evidence-board' },
+      { label: '時間線', hash: STATE.get('metadata') ? '#/timeline' : null },
+      { label: '相關人物', count: cf.related.length },
+    ];
     return `
     <div class="view view-wide">
       ${backLink('#/case-overview', '案件概覽')}
-      <div class="dash-title">案件檔案 ${cf.id}</div>
-      <div class="overview-grid">
-        <div>
-          <div class="overview-field"><div class="k">關係人</div><div class="v">${cf.subject}</div></div>
-          <div class="overview-field"><div class="k">年齡</div><div class="v">${cf.age}</div></div>
-          <div class="overview-field"><div class="k">狀態</div><div class="v warn">${cf.status}</div></div>
-          <div class="overview-field"><div class="k">最後出現</div><div class="v">${cf.lastSeenDate}<br>${cf.lastSeenTime}</div></div>
-          <div class="overview-field"><div class="k">地點</div><div class="v">${cf.location}</div></div>
-          ${STATE.get('audio') ? `<div class="overview-field"><div class="k">調查者</div><div class="v evidence-color" style="cursor:pointer" onclick="location.hash='#/investigator'">M →</div></div>`
-            : `<div class="overview-field"><div class="k">調查者</div><div class="v" style="color:var(--text-dim)">身分不明</div></div>`}
+      <div class="case-file-layout">
+        <div class="board-sidebar">
+          ${cfNav.map(n => `<div class="board-cat-item ${n.active ? 'active' : ''} ${n.hash ? '' : 'inert'}" ${n.hash ? `onclick="location.hash='${n.hash}'"` : ''}><span>${n.label}</span>${n.count !== undefined ? `<span class="count">${n.count}</span>` : ''}</div>`).join('')}
         </div>
-        <div>
-          <div class="overview-field"><div class="k">相關人物</div></div>
-          ${cf.related.map(r => `<div class="related-item"><span class="name">${esc(r.name)}</span><span class="status">${r.status}</span></div>`).join('')}
-          <div class="overview-field" style="margin-top:20px"><div class="k">數位活動</div>
-            <div class="v" style="font-size:13px;line-height:2">${cf.digitalActivity.map(esc).join('<br>')}</div>
+        <div class="board-main">
+          <div class="dash-title">案件檔案 ${cf.id}</div>
+          <div class="overview-grid">
+            <div>
+              <div class="overview-field"><div class="k">關係人</div><div class="v">${cf.subject}</div></div>
+              <div class="overview-field"><div class="k">年齡</div><div class="v">${cf.age}</div></div>
+              <div class="overview-field"><div class="k">狀態</div><div class="v warn">${cf.status}</div></div>
+              <div class="overview-field"><div class="k">最後出現</div><div class="v">${cf.lastSeenDate}<br>${cf.lastSeenTime}</div></div>
+              <div class="overview-field"><div class="k">地點</div><div class="v">${cf.location}</div></div>
+              ${STATE.get('audio') ? `<div class="overview-field"><div class="k">調查者</div><div class="v evidence-color" style="cursor:pointer" onclick="location.hash='#/investigator'">M →</div></div>`
+                : `<div class="overview-field"><div class="k">調查者</div><div class="v" style="color:var(--text-dim)">身分不明</div></div>`}
+            </div>
+            <div>
+              <div class="overview-field"><div class="k">相關人物</div></div>
+              ${cf.related.map(r => `<div class="related-item"><span class="name">${esc(r.name)}</span><span class="status">${r.status}</span></div>`).join('')}
+              <div class="overview-field" style="margin-top:20px"><div class="k">數位活動</div></div>
+              <div class="digital-activity-row">${cf.digitalActivity.map(t => `<div class="da-chip mono">${esc(t)}</div>`).join('')}</div>
+            </div>
           </div>
+          <button class="overview-pill" style="margin-top:24px" onclick="location.hash='#/evidence-board'">證據板 <span class="arrow">→</span></button>
         </div>
       </div>
-      <div class="overview-cta" onclick="location.hash='#/evidence-board'">證據板 →</div>
     </div>
     ${bottomNav('case', true)}`;
   }
@@ -649,28 +671,44 @@ const App = (() => {
     }
     const solved = STATE.get('board');
     const nodes = DATA.evidenceBoardNodes;
+    const timeCount = DATA.timelineTrack.reduce((n, d) => n + d.events.length, 0);
+    const categories = [
+      { label: '照片', count: 1, hash: '#/photo/02' },
+      { label: '貼文', count: DATA.feed.length, hash: '#/feed' },
+      { label: '錄音', count: 1, hash: solved ? '#/evidence/audio' : null },
+      { label: '人物', count: 3, hash: null },
+      { label: '時間點', count: timeCount, hash: null },
+    ];
     return `
     <div class="view view-wide">
       ${backLink('#/case/0917', '案件檔案')}
-      <div class="dash-title">證據板</div>
-      <p class="dim" style="font-size:13px">依序點選兩張卡片，把它們連在一起。試著找出正確的關係鏈。</p>
-      <div class="board-toolbar">
-        <button class="tool-btn" onclick="App.resetBoard()">[ 重設連線 ]</button>
+      <div class="board-layout">
+        <div class="board-sidebar">
+          <div class="dash-nav-title">證據分類</div>
+          ${categories.map(c => `<div class="board-cat-item ${c.hash ? '' : 'inert'}" ${c.hash ? `onclick="location.hash='${c.hash}'"` : ''}><span>${c.label}</span><span class="count">${c.count}</span></div>`).join('')}
+        </div>
+        <div class="board-main">
+          <div class="dash-title">證據板</div>
+          <p class="dim" style="font-size:13px">依序點選兩張卡片，把它們連在一起。試著找出正確的關係鏈。</p>
+          <div class="board-toolbar">
+            <button class="tool-btn" onclick="App.resetBoard()">[ 重設連線 ]</button>
+          </div>
+          <div class="board-canvas" id="board-canvas">
+            <svg class="board-svg">${boardLinks.map(l => {
+              const a = nodes.find(n => n.id === l[0]), b = nodes.find(n => n.id === l[1]);
+              if (!a || !b) return '';
+              const correct = isCorrectLink(l[0], l[1]);
+              return `<line x1="${a.x}%" y1="${a.y + 3}%" x2="${b.x}%" y2="${b.y + 3}%" class="${correct ? 'correct' : ''}"/>`;
+            }).join('')}</svg>
+            ${nodes.map(n => `
+              <div class="board-node ${boardSelected === n.id ? 'selected' : ''}" style="left:${n.x}%; top:${n.y}%" onclick="App.selectBoardNode('${n.id}')">${esc(n.label)}</div>`).join('')}
+          </div>
+          <div class="board-status ${solved ? 'detected' : ''}" id="board-status">
+            ${solved ? `${icon('check', 16)}<div>偵測到關聯模式<br>錄音證據已解鎖</div>` : ''}
+          </div>
+          ${solved ? `<button class="btn" style="margin-top:14px;max-width:280px" onclick="location.hash='#/evidence/audio'">[ 查看錄音證據 ]</button>` : ''}
+        </div>
       </div>
-      <div class="board-canvas" id="board-canvas">
-        <svg class="board-svg">${boardLinks.map(l => {
-          const a = nodes.find(n => n.id === l[0]), b = nodes.find(n => n.id === l[1]);
-          if (!a || !b) return '';
-          const correct = isCorrectLink(l[0], l[1]);
-          return `<line x1="${a.x}%" y1="${a.y + 3}%" x2="${b.x}%" y2="${b.y + 3}%" class="${correct ? 'correct' : ''}"/>`;
-        }).join('')}</svg>
-        ${nodes.map(n => `
-          <div class="board-node ${boardSelected === n.id ? 'selected' : ''}" style="left:${n.x}%; top:${n.y}%" onclick="App.selectBoardNode('${n.id}')">${esc(n.label)}</div>`).join('')}
-      </div>
-      <div class="board-status ${solved ? 'detected' : ''}" id="board-status">
-        ${solved ? '偵測到關聯模式<br>錄音證據已解鎖 →' : ''}
-      </div>
-      ${solved ? `<button class="btn" style="margin-top:14px;max-width:280px" onclick="location.hash='#/evidence/audio'">[ 查看錄音證據 ]</button>` : ''}
     </div>
     ${bottomNav('board', true)}
     ${hintBar(!solved ? 'board' : null)}`;
@@ -708,15 +746,18 @@ const App = (() => {
       ${backLink('#/evidence-board', '證據板')}
       <div class="audio-evidence-box">
         <div class="audio-evidence-id">${a.id} · 錄音</div>
-        <div class="audio-evidence-dur">${a.duration}</div>
         <div class="waveform" id="waveform">${bars.map(h => `<div class="bar" style="height:${h}px"></div>`).join('')}</div>
-        ${!STATE.get('audio') ? `<button class="btn" style="max-width:260px;margin:0 auto" onclick="App.playAudio()">[ ▶ 播放錄音 ]</button>` : ''}
-        <div class="audio-transcript" id="audio-transcript" style="margin-top:20px;text-align:left;max-width:400px;margin-left:auto;margin-right:auto"></div>
+        <div class="audio-time-row mono"><span>00:00</span><span>${a.duration}</span></div>
+        ${!STATE.get('audio') ? `<button class="audio-play-btn" onclick="App.playAudio()">▶</button>` : ''}
+        <div class="audio-transcript" id="audio-transcript">${STATE.get('audio') ? a.transcript.map(transcriptLineHtml).join('') : ''}</div>
         ${STATE.get('audio') ? `<div class="lock-note">錄音已轉成逐字稿<br>偵測到 1 個身分不明的關係人。</div>
         <button class="btn" style="max-width:260px;margin:16px auto 0" onclick="location.hash='#/case/0917'">[ 回到案件檔案 ]</button>` : ''}
       </div>
     </div>
     ${bottomNav('board', true)}`;
+  }
+  function transcriptLineHtml(l) {
+    return `<div class="line${l.warn ? ' warn-line' : ''}"><span>${esc(l.line)}</span><span class="t mono">${esc(l.t)}</span></div>`;
   }
   function playAudio() {
     const wf = document.getElementById('waveform');
@@ -727,10 +768,7 @@ const App = (() => {
     transcript.forEach((l, i) => {
       setTimeout(() => {
         if (!box) return;
-        const div = document.createElement('div');
-        div.className = 'line' + (l.warn ? ' warn-line' : '');
-        div.textContent = `${l.t} — ${l.line}`;
-        box.appendChild(div);
+        box.insertAdjacentHTML('beforeend', transcriptLineHtml(l));
       }, i * 1400);
     });
     setTimeout(() => {

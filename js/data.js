@@ -232,7 +232,9 @@ const DATA = {
     lastSeenDate: '2026 / 08 / 17',
     lastSeenTime: '23:17',
     status: '失蹤',
+    location: '不明',
     lastActivity: { date: '2026 / 08 / 18', time: '00:12' },
+    digitalActivity: ['08/18 · 00:12', '08/18 · 03:17', '08/18 · 07:41'],
     related: [
       { name: '陳奕辰', status: '身分不明' },
       { name: 'M', status: '身分不明' },
