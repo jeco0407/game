@@ -28,6 +28,31 @@ const App = (() => {
     bgHome: 'assets/images/bg-home.jpg',
   };
   function img(key) { return IMAGES[key] || ''; }
+
+  /* The last real post's clock never stopped — it keeps climbing past
+     23:17:42 for as long as the case stays open, instead of freezing. */
+  const COUNTDOWN_BASE_SEC = 23 * 3600 + 17 * 60 + 42;
+  function countdownText() {
+    const totalSec = COUNTDOWN_BASE_SEC + Math.floor(STATE.elapsedMs() / 1000);
+    const h = String(Math.floor(totalSec / 3600)).padStart(2, '0');
+    const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
+    const s = String(totalSec % 60).padStart(2, '0');
+    return `${h}:${m}:${s}`;
+  }
+  let countdownInterval = null;
+  function syncCountdownInterval() {
+    const nodes = document.querySelectorAll('.live-countdown');
+    if (!nodes.length) {
+      if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+      return;
+    }
+    nodes.forEach(n => { n.textContent = countdownText(); });
+    if (!countdownInterval) {
+      countdownInterval = setInterval(() => {
+        document.querySelectorAll('.live-countdown').forEach(n => { n.textContent = countdownText(); });
+      }, 1000);
+    }
+  }
   function avatarStyle(who) {
     const map = { yuan: 'avatarYuan', chen: 'avatarChen', m: 'avatarM' };
     const src = IMAGES[map[who]];
@@ -212,7 +237,7 @@ const App = (() => {
           </div>
           <div class="x-post-body">${nl(p.text)}</div>
           ${p.image ? `<img class="x-post-img" src="${img(p.image)}" alt="">` : ''}
-          ${p.isLast ? `<div class="x-post-countdown mono">23:17:42</div>` : ''}
+          ${p.isLast ? `<div class="x-post-countdown mono live-countdown">${countdownText()}</div>` : ''}
           <div class="x-post-actions">
             <span class="x-post-action">${icon('reply', 18)} ${p.replies || 0}</span>
             <span class="x-post-action">${icon('repost', 18)} ${p.reposts || 0}</span>
@@ -377,7 +402,7 @@ const App = (() => {
         ${p.image === 'conbini'
           ? `<img class="post-img" style="cursor:pointer" src="${img(p.image)}" alt="" onclick="location.hash='#/photo/02'">`
           : (p.image ? `<img class="post-img" src="${img(p.image)}" alt="">` : '')}
-        ${p.isLast ? `<div class="post-countdown mono">23:17:42</div>` : ''}
+        ${p.isLast ? `<div class="post-countdown mono live-countdown">${countdownText()}</div>` : ''}
         <div class="post-time mono">${p.time}${p.image === 'conbini' ? ` · <span class="post-edited" onclick="App.toggleEdited()">已編輯</span>` : ''}</div>
         ${p.image === 'conbini' && window.__editedOpen ? `<div class="post-edited-detail mono dim">建立時間 ${esc(DATA.evidencePhoto.created)}　修改時間 ${esc(DATA.evidencePhoto.modified)}</div>` : ''}
       </div>`;
@@ -881,6 +906,7 @@ const App = (() => {
     }
     root.innerHTML = html;
     window.scrollTo(0, 0);
+    syncCountdownInterval();
   }
 
   window.addEventListener('hashchange', render);
