@@ -72,7 +72,7 @@ const App = (() => {
       { key: 'archive', label: '封存庫', hash: '#/archive', locked: false },
       { key: 'case', label: '案件', hash: STATE.get('access') ? '#/case/0917' : '#/case-overview', locked: false },
       { key: 'board', label: '證據板', hash: '#/evidence-board', locked: !STATE.get('access') },
-      { key: 'm', label: STATE.get('final') ? '灰資料庫' : '灰', hash: STATE.get('final') ? '#/m-database' : '#/investigator', locked: !STATE.get('audio') },
+      { key: 'm', label: STATE.get('final') ? '灰資料庫' : '灰', hash: STATE.get('final') ? '#/grey-database' : '#/investigator', locked: !STATE.get('audio') },
     ];
     return `<nav class="bottom-nav ${wide ? 'wide' : ''}">${items.map(it => {
       const cls = ['nav-item'];
@@ -162,7 +162,7 @@ const App = (() => {
           <div class="dash-logo">ECHO</div>
           <div class="dash-nav-title">封存庫</div>
           ${nav.map(n => `<div class="dash-nav-item ${n.key === 'cases' ? 'active' : ''}" ${n.key === 'cases' ? "onclick=\"location.hash='#/archive'\"" : (n.key === 'people' ? "onclick=\"location.hash='#/profile/yuan'\"" : '')}>${n.label}</div>`).join('')}
-          ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='#/m-database'">灰資料庫</div>` : ''}
+          ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='#/grey-database'">灰資料庫</div>` : ''}
           <div class="dash-sys">系統<br><span class="v">上線中</span></div>
           <div class="dash-nav-item" style="margin-top:24px;color:var(--text-dim);font-size:12px" onclick="App.resetProgress()">重置進度</div>
         </div>
@@ -911,32 +911,129 @@ const App = (() => {
   }
 
   /* ================================================================
-     SCREEN 24 — M Database
+     CHAPTER 02 — SCREEN 02 — Grey Database（Puzzle 01）
      ================================================================ */
-  function viewMDatabase() {
-    if (!STATE.get('final')) {
-      return `<div class="view view-wide">${backLink('#/archive','封存庫')}<p class="dim mono">存取遭拒。</p></div>${bottomNav('archive', true)}`;
-    }
-    const id = STATE.investigatorId();
-    let rows = '';
-    for (let i = 1; i <= 6; i++) rows += `<div class="cf-row"><span class="k">灰-${String(i).padStart(3,'0')}</span><span class="v dim">存取遭拒</span></div>`;
-    rows += `<div class="cf-row"><span class="k">...</span><span class="v dim">...</span></div>`;
-    rows += `<div class="cf-row"><span class="k">灰-128</span><span class="v dim">存取遭拒</span></div>`;
-    rows += `<div class="cf-row"><span class="k">灰-${id}</span><span class="v evidence-color">你</span></div>`;
+  function ch2Locked() {
+    return `<div class="view view-wide">${backLink('#/archive','封存庫')}<p class="dim mono">存取遭拒。</p></div>${bottomNav('archive', true)}`;
+  }
+  function greyCreatedRank(id) { return (id * 53 + 17) % 130; }
+  function greyCreatedDate(id) {
+    const base = new Date(2024, 0, 1).getTime();
+    const d = new Date(base + greyCreatedRank(id) * 3 * 86400000);
+    return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`;
+  }
+  let greySortMode = 'id';
+  function viewGreyDatabase() {
+    if (!STATE.get('final')) return ch2Locked();
+    const you = parseInt(STATE.investigatorId(), 10);
+    let ids = Array.from({ length: DATA.ch2.greyTotal }, (_, i) => i);
+    if (greySortMode === 'created') ids = ids.slice().sort((a, b) => greyCreatedRank(a) - greyCreatedRank(b));
+    const rows = ids.map(id => {
+      const label = `灰-${String(id).padStart(3, '0')}`;
+      const isYou = id === you;
+      const clickable = id === 128 || id === 0;
+      const cls = ['cf-row']; if (clickable) cls.push('clickable');
+      const onclick = id === 128 ? `onclick="location.hash='#/grey/128'"` : id === 0 ? `onclick="location.hash='#/grey/000'"` : '';
+      const dateTag = greySortMode === 'created' ? `<span class="dim mono" style="font-size:12px;margin-right:10px">${greyCreatedDate(id)}</span>` : '';
+      return `<div class="${cls.join(' ')}" ${onclick}><span class="k">${label}</span><span>${dateTag}<span class="v ${isYou ? 'evidence-color' : ''}">${isYou ? '你' : '存取遭拒'}</span></span></div>`;
+    }).join('');
     return `
     <div class="view view-wide">
       ${backLink('#/archive', '封存庫')}
       <div class="dash-title">灰資料庫</div>
-      <div class="case-file" style="margin-top:10px;max-width:480px">${rows}
-        <div class="cf-row clickable" onclick="App.openM000()"><span class="k">灰-000</span><span class="v missing">已刪除</span></div>
+      <div class="board-toolbar">
+        <button class="tool-btn ${greySortMode === 'id' ? 'active' : ''}" onclick="App.setGreySort('id')">[ ID SORT ]</button>
+        <button class="tool-btn ${greySortMode === 'created' ? 'active' : ''}" onclick="App.setGreySort('created')">[ ARCHIVE CREATED ]</button>
       </div>
-      <div id="m000-slot" style="margin-top:14px"></div>
+      <div class="case-file" style="margin-top:10px;max-width:520px;max-height:520px;overflow-y:auto">${rows}</div>
     </div>
     ${bottomNav('m', true)}`;
   }
-  function openM000() {
-    const slot = document.getElementById('m000-slot');
-    if (slot) slot.innerHTML = `<div class="observation-box warn">存取遭拒<br>你還沒準備好。</div>`;
+  function setGreySort(mode) {
+    greySortMode = mode;
+    if (mode === 'created') STATE.set('ch2Puzzle01Solved', true);
+    render();
+  }
+
+  /* ================================================================
+     CHAPTER 02 — SCREEN 04/05/06 — Grey-128（Puzzle 02）
+     ================================================================ */
+  function viewGrey128Overview() {
+    if (!STATE.get('final')) return ch2Locked();
+    const g = DATA.ch2.grey128;
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey-database', '灰資料庫')}
+      <div class="dash-title">灰-128</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        <div class="cf-row"><span class="k">狀態</span><span class="v">INACTIVE</span></div>
+        <div class="cf-row"><span class="k">最後活動</span><span class="v">${esc(g.lastActivity)}</span></div>
+      </div>
+      <button class="btn" style="margin-top:20px;max-width:220px" onclick="location.hash='#/grey/128/archive'">[ 進入 ARCHIVE ]</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  let checksumOpen = false;
+  function viewGrey128Archive() {
+    if (!STATE.get('final')) return ch2Locked();
+    const g = DATA.ch2.grey128;
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/128', '灰-128')}
+      <div class="dash-title">灰-128 · ARCHIVE</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        ${g.indexEntries.map(e => `<div class="cf-row"><span class="k">${e.id} ${esc(e.label)}</span><span class="v missing">DELETED</span></div>`).join('')}
+        <div class="cf-row"><span class="k">FILE SIZE</span><span class="v">12.4 MB</span></div>
+      </div>
+      ${!checksumOpen
+        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.toggleChecksum()">[ 查看 CHECKSUM ]</button>`
+        : `<div class="metadata-panel" style="margin-top:14px;max-width:420px">
+             <div class="row"><span class="k">EXPECTED HASH</span><span class="v">${g.checksumExpected}</span></div>
+             <div class="row"><span class="k">ARCHIVE HASH</span><span class="v">${g.checksumArchive}</span></div>
+             <div class="row"><span class="k">RESULT</span><span class="v" style="color:var(--success)">MATCH</span></div>
+           </div>`}
+      <button class="btn" style="margin-top:20px;max-width:220px" onclick="location.hash='#/grey/128/integrity'">[ 查看 INDEX → ]</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  function toggleChecksum() { checksumOpen = !checksumOpen; render(); }
+
+  let openedIndexEntries = {};
+  function viewFileIntegrity() {
+    if (!STATE.get('final')) return ch2Locked();
+    const g = DATA.ch2.grey128;
+    const rows = g.indexEntries.map(e => {
+      const opened = !!openedIndexEntries[e.id];
+      return `<div class="cf-row clickable" onclick="App.openIndexEntry('${e.id}')"><span class="k">${e.id} ${esc(e.label)}</span><span class="v ${opened && e.body === 'MISSING' ? 'missing' : ''}">${opened ? `BODY: ${e.body}` : 'HEADER: PRESENT · INDEX: PRESENT'}</span></div>`;
+    }).join('');
+    const solved = STATE.get('ch2Puzzle02Solved');
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/128/archive', '灰-128 ARCHIVE')}
+      <div class="dash-title">FILE INTEGRITY</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
+      ${solved ? `<div class="observation-box" style="margin-top:14px">Header 完整、Index 還在，但 02、03 的 Body 都消失了——有人只清掉了內容，卻沒有清掉索引。</div>` : ''}
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  function openIndexEntry(id) {
+    openedIndexEntries[id] = true;
+    if (openedIndexEntries['02'] && openedIndexEntries['03']) STATE.set('ch2Puzzle02Solved', true);
+    render();
+  }
+
+  /* ================================================================
+     CHAPTER 02 — Grey-000（locked until later puzzles are built）
+     ================================================================ */
+  function viewGrey000() {
+    if (!STATE.get('final')) return ch2Locked();
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey-database', '灰資料庫')}
+      <div class="dash-title">灰-000</div>
+      <div class="observation-box warn">存取遭拒<br>你還沒準備好。</div>
+    </div>
+    ${bottomNav('m', true)}`;
   }
 
   /* ---------------- Router ---------------- */
@@ -955,7 +1052,11 @@ const App = (() => {
     '#/evidence-board': viewBoard,
     '#/evidence/audio': viewAudio,
     '#/investigator': viewInvestigator,
-    '#/m-database': viewMDatabase,
+    '#/grey-database': viewGreyDatabase,
+    '#/grey/128': viewGrey128Overview,
+    '#/grey/128/archive': viewGrey128Archive,
+    '#/grey/128/integrity': viewFileIntegrity,
+    '#/grey/000': viewGrey000,
   };
 
   function render() {
@@ -964,7 +1065,7 @@ const App = (() => {
     // Once the chapter is complete, the investigator reveal has already
     // played — forward straight to the M database instead of re-running it.
     if (hash === '#/investigator' && STATE.get('final')) {
-      location.hash = '#/m-database';
+      location.hash = '#/grey-database';
       return;
     }
 
@@ -996,7 +1097,7 @@ const App = (() => {
     openAccessPrompt, submitAccess,
     selectBoardNode, resetBoard, toggleBoardHelp,
     playAudio, finalReveal, runMSequence,
-    openM000,
+    setGreySort, toggleChecksum, openIndexEntry,
     toggleHint, deeperHint,
   };
 })();

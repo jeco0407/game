@@ -15,6 +15,10 @@ const STATE = (() => {
       board: false,        // Evidence Board 三條正確連線 → 解鎖 Audio
       audio: false,        // 播放過錄音 → Case File 的 INVESTIGATOR 欄位從 UNKNOWN 變成 M
       final: false,        // 完成 M-129 最終揭露
+
+      // ---- Chapter 02 ----
+      ch2Puzzle01Solved: false,  // 灰資料庫依建立時間排序過，看過灰-000不是最早
+      ch2Puzzle02Solved: false,  // File Integrity：看過灰-128 的 Index Entries 缺 Body
     };
   }
 

@@ -287,6 +287,22 @@ const DATA = {
   /* ---------------- M Database ---------------- */
   mCount: 128,
 
+  /* ---------------- Chapter 02 ---------------- */
+  ch2: {
+    greyTotal: 130, // 灰-000 ~ 灰-129
+    grey128: {
+      lastActivity: '08/26/2026 · 16:00',
+      checksumExpected: 'A93F-71C2-88DE',
+      checksumArchive: 'A93F-71C2-88DE',
+      indexEntries: [
+        { id: '01', label: 'PROFILE', body: 'PRESENT' },
+        { id: '02', label: 'CASE #0917', body: 'MISSING' },
+        { id: '03', label: 'CASE #000', body: 'MISSING' },
+        { id: '04', label: 'MESSAGE', body: 'PRESENT' },
+      ],
+    },
+  },
+
   finalMessages: [
     '你終於來了。',
     '我一直在等你。',
