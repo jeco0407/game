@@ -687,7 +687,8 @@ const App = (() => {
             <div class="row"><span class="k">FIRST LINKED</span><span class="v">${esc(rv.firstLinked)}</span></div>
             <div class="row"><span class="k">LAST MODIFIED</span><span class="v">${esc(rv.lastModified)}</span></div>
           </div>
-          <div class="observation-box warn" style="margin-top:14px;max-width:420px">ARCHIVE NOTE · 1 change detected<br>「${esc(rv.note)}」</div>` : ''}
+          <div class="observation-box warn" style="margin-top:14px;max-width:420px">ARCHIVE NOTE · 1 change detected<br>「${esc(rv.note)}」</div>
+          <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/128/versions'">[ 查看 Archive 版本 → ]</button>` : ''}
           <button class="overview-pill" style="margin-top:24px" onclick="location.hash='#/evidence-board'">證據板 <span class="arrow">→</span></button>
         </div>
       </div>
@@ -1116,15 +1117,123 @@ const App = (() => {
   }
 
   /* ================================================================
+     CHAPTER 02 — SCREEN 10/11 — Archive Version Compare / Edit History（Puzzle 04）
+     ================================================================ */
+  let versionFound = {};
+  function viewArchiveVersionCompare() {
+    if (!STATE.get('case0917Level2Unlocked')) return ch2Locked();
+    const versions = DATA.ch2.archiveVersions;
+    const found = versions.every(v => v.diffIndex === undefined || versionFound[v.version]);
+    const rows = versions.map(v => {
+      const chars = v.text.split('').map((ch, i) => {
+        if (v.diffIndex === i) {
+          const isFound = versionFound[v.version];
+          return `<span class="clickable" style="cursor:pointer;${isFound ? 'color:var(--success)' : 'color:var(--warning-bright)'}" onclick="App.selectDiffChar('${v.version}')">${esc(ch)}</span>`;
+        }
+        return esc(ch);
+      }).join('');
+      return `<div class="cf-row"><span class="k">${v.version.toUpperCase()}</span><span class="v">${chars}</span></div>`;
+    }).join('');
+    return `
+    <div class="view view-wide">
+      ${backLink('#/case/0917', '案件檔案')}
+      <div class="dash-title">ARCHIVE VERSION COMPARE</div>
+      <p class="dim" style="font-size:13px">找出每一版跟前一版不一樣的字。</p>
+      <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
+      ${found ? `<button class="btn" style="margin-top:20px;max-width:260px" onclick="location.hash='#/grey/128/edit-history'">[ 查看修改紀錄 → ]</button>` : ''}
+    </div>
+    ${bottomNav('case', true)}`;
+  }
+  function selectDiffChar(version) {
+    versionFound[version] = true;
+    const versions = DATA.ch2.archiveVersions;
+    if (versions.every(v => v.diffIndex === undefined || versionFound[v.version])) {
+      STATE.set('ch2VersionDiffFound', true);
+    }
+    render();
+  }
+  function viewEditHistory() {
+    if (!STATE.get('ch2VersionDiffFound')) return ch2Locked();
+    STATE.set('ch2Puzzle04Solved', true);
+    const versions = DATA.ch2.archiveVersions;
+    const author = DATA.ch2.editHistoryAuthor;
+    return `
+    <div class="view view-wide">
+      ${backLink('#/case/0917', '案件檔案')}
+      <div class="dash-title">EDIT HISTORY</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        ${versions.map(v => `<div class="cf-row"><span class="k">${v.version.toUpperCase()} AUTHOR</span><span class="v evidence-color">${esc(author)}</span></div>`).join('')}
+      </div>
+      <div class="observation-box" style="margin-top:14px">這三版都不是陳奕辰留下的——是灰-127。不同代灰之間，似乎會互相留言。</div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/chain'">[ 繼續調查 → ]</button>
+    </div>
+    ${bottomNav('case', true)}`;
+  }
+
+  /* ================================================================
+     CHAPTER 02 — SCREEN 12 — Grey Chain
+     ================================================================ */
+  let chainSelected = [];
+  let chainWrong = false;
+  function viewGreyChain() {
+    if (!STATE.get('ch2Puzzle04Solved')) return ch2Locked();
+    const ids = DATA.ch2.greyChainIds;
+    const solved = STATE.get('ch2GreyChainBuilt');
+    const nodes = ids.map(id => {
+      const picked = chainSelected.includes(id);
+      const order = chainSelected.indexOf(id);
+      return `<div class="cf-row clickable ${picked ? 'active' : ''}" onclick="App.selectChainNode(${id})">
+        <span class="k">灰-${String(id).padStart(3, '0')}</span>
+        <span class="v mono">${greyCreatedDate(id)}${picked ? ` · #${order + 1}` : ''}</span>
+      </div>`;
+    }).join('');
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/128/edit-history', 'EDIT HISTORY')}
+      <div class="dash-title">GREY CHAIN</div>
+      <p class="dim" style="font-size:13px">依 ARCHIVE CREATED 時間，由舊到新依序點選。</p>
+      <div class="case-file" style="margin-top:10px;max-width:420px">${nodes}</div>
+      <div class="board-toolbar" style="margin-top:14px">
+        <button class="tool-btn" onclick="App.resetChain()">[ 重設 ]</button>
+      </div>
+      ${chainWrong ? `<div class="observation-box warn" style="max-width:420px">順序不對，再試一次。</div>` : ''}
+      ${solved ? `<div class="observation-box" style="max-width:420px">灰-001 → 灰-027 → 灰-063 → 灰-091 → 灰-128——一條跨越多年的鏈。</div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/000'">[ 前往灰-000 → ]</button>` : ''}
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  function selectChainNode(id) {
+    if (STATE.get('ch2GreyChainBuilt')) return;
+    chainWrong = false;
+    if (chainSelected.includes(id)) { chainSelected = chainSelected.filter(x => x !== id); render(); return; }
+    chainSelected.push(id);
+    if (chainSelected.length === DATA.ch2.greyChainIds.length) {
+      const correct = DATA.ch2.greyChainIds.slice().sort((a, b) => greyCreatedRank(a) - greyCreatedRank(b));
+      if (chainSelected.every((id2, i) => id2 === correct[i])) {
+        STATE.set('ch2GreyChainBuilt', true);
+      } else {
+        chainWrong = true;
+        chainSelected = [];
+      }
+    }
+    render();
+  }
+  function resetChain() { chainSelected = []; chainWrong = false; render(); }
+
+  /* ================================================================
      CHAPTER 02 — Grey-000（locked until later puzzles are built）
      ================================================================ */
   function viewGrey000() {
-    if (!STATE.get('final')) return ch2Locked();
+    if (!STATE.get('ch2GreyChainBuilt')) return ch2Locked();
     return `
     <div class="view view-wide">
       ${backLink('#/grey-database', '灰資料庫')}
       <div class="dash-title">灰-000</div>
-      <div class="observation-box warn">存取遭拒<br>你還沒準備好。</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        <div class="cf-row"><span class="k">狀態</span><span class="v missing">DELETED</span></div>
+        <div class="cf-row"><span class="k">LAST MODIFIED</span><span class="v">UNKNOWN</span></div>
+      </div>
+      <div class="observation-box warn" style="margin-top:14px">你還沒準備好。（後續劇情開發中）</div>
     </div>
     ${bottomNav('m', true)}`;
   }
@@ -1151,6 +1260,9 @@ const App = (() => {
     '#/grey/128/integrity': viewFileIntegrity,
     '#/grey/128/chen': viewChenArchive,
     '#/grey/128/fragments': viewFragmentReconstruction,
+    '#/grey/128/versions': viewArchiveVersionCompare,
+    '#/grey/128/edit-history': viewEditHistory,
+    '#/grey/chain': viewGreyChain,
     '#/grey/000': viewGrey000,
   };
 
@@ -1193,6 +1305,7 @@ const App = (() => {
     selectBoardNode, resetBoard, toggleBoardHelp,
     playAudio, finalReveal, runMSequence,
     setGreySort, toggleChecksum, openIndexEntry, selectFragmentChip,
+    selectDiffChar, selectChainNode, resetChain,
     toggleHint, deeperHint,
   };
 })();

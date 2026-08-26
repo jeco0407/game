@@ -322,6 +322,13 @@ const DATA = {
       lastModified: '08/26/2026 16:03',
       note: '不要讓下一個人從這裡開始。',
     },
+    archiveVersions: [
+      { version: 'v1', text: '不要再找了。' },
+      { version: 'v2', text: '不要再等了。', diffIndex: 3 },
+      { version: 'v3', text: '不要再等他。', diffIndex: 4 },
+    ],
+    editHistoryAuthor: 'GREY-127',
+    greyChainIds: [1, 27, 63, 91, 128],
   },
 
   finalMessages: [
