@@ -295,25 +295,25 @@ const DATA = {
       checksumArchive: 'A93F-71C2-88DE',
       accountHash: 'A91F',
       indexEntries: [
-        { id: '01', label: 'PROFILE', body: 'PRESENT' },
+        { id: '01', label: '個人檔案 PROFILE', body: 'PRESENT' },
         { id: '02', label: 'CASE #0917', body: 'MISSING' },
         { id: '03', label: 'CASE #000', body: 'MISSING' },
-        { id: '04', label: 'MESSAGE', body: 'PRESENT' },
+        { id: '04', label: '訊息 MESSAGE', body: 'PRESENT' },
       ],
     },
     fragments: {
-      a: { title: 'FRAGMENT A', rows: [
-        { field: 'NAME', value: 'CHEN YI-CHEN', type: 'name' },
-        { field: 'DEVICE HASH', value: '7F21-██', type: 'device' },
+      a: { title: '殘片 FRAGMENT A', rows: [
+        { field: '姓名 NAME', value: 'CHEN YI-CHEN', type: 'name' },
+        { field: '裝置雜湊 DEVICE HASH', value: '7F21-██', type: 'device' },
       ] },
-      b: { title: 'FRAGMENT B', rows: [
-        { field: 'ACCOUNT HASH', value: 'A91F', type: 'account' },
-        { field: 'AGE', value: '24', type: 'age' },
-        { field: 'DEVICE HASH', value: '██-7F21', type: 'device' },
+      b: { title: '殘片 FRAGMENT B', rows: [
+        { field: '帳號雜湊 ACCOUNT HASH', value: 'A91F', type: 'account' },
+        { field: '年齡 AGE', value: '24', type: 'age' },
+        { field: '裝置雜湊 DEVICE HASH', value: '██-7F21', type: 'device' },
       ] },
-      c: { title: 'FRAGMENT C', rows: [
-        { field: 'GREY ID', value: '128', type: 'greyid' },
-        { field: 'DEVICE HASH', value: '7F21-████', type: 'device' },
+      c: { title: '殘片 FRAGMENT C', rows: [
+        { field: '灰編號 GREY ID', value: '128', type: 'greyid' },
+        { field: '裝置雜湊 DEVICE HASH', value: '7F21-████', type: 'device' },
       ] },
     },
     case0917Revisit: {
@@ -329,12 +329,12 @@ const DATA = {
     editHistoryAuthor: 'GREY-127',
     greyChainIds: [1, 27, 63, 91, 128],
     evidence: [
-      { key: 'photo', label: 'PHOTO', result: 'match' },
-      { key: 'device', label: 'DEVICE', result: 'match' },
-      { key: 'location', label: 'LOCATION', result: 'match' },
-      { key: 'archivePattern', label: 'ARCHIVE PATTERN', result: 'partial' },
-      { key: 'date', label: 'DATE', result: 'unresolved' },
-      { key: 'name', label: 'NAME', result: 'unresolved' },
+      { key: 'photo', label: '照片 PHOTO', result: 'match' },
+      { key: 'device', label: '裝置 DEVICE', result: 'match' },
+      { key: 'location', label: '地點 LOCATION', result: 'match' },
+      { key: 'archivePattern', label: '封存模式 ARCHIVE PATTERN', result: 'partial' },
+      { key: 'date', label: '日期 DATE', result: 'unresolved' },
+      { key: 'name', label: '姓名 NAME', result: 'unresolved' },
     ],
   },
 

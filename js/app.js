@@ -662,7 +662,7 @@ const App = (() => {
           ${cfNav.map(n => `<div class="board-cat-item ${n.active ? 'active' : ''} ${n.hash ? '' : 'inert'}" ${n.hash ? `onclick="location.hash='${n.hash}'"` : ''}><span>${n.label}</span>${n.count !== undefined ? `<span class="count">${n.count}</span>` : ''}</div>`).join('')}
         </div>
         <div class="board-main">
-          <div class="dash-title">案件檔案 ${cf.id}${level2 ? ` <span class="dim mono" style="font-size:11px">· ARCHIVE ACCESS · LEVEL 02</span>` : ''}</div>
+          <div class="dash-title">案件檔案 ${cf.id}${level2 ? ` <span class="dim mono" style="font-size:11px">· 存取層級 ARCHIVE ACCESS · LEVEL 02</span>` : ''}</div>
           <div class="overview-grid">
             <div>
               <div class="overview-field"><div class="k">關係人</div><div class="v">${cf.subject}</div></div>
@@ -672,8 +672,8 @@ const App = (() => {
               <div class="overview-field"><div class="k">地點</div><div class="v">${cf.location}</div></div>
               ${STATE.get('audio') ? `<div class="overview-field"><div class="k">調查者</div><div class="v evidence-color" style="cursor:pointer" onclick="location.hash='#/investigator'">灰 →</div></div>`
                 : `<div class="overview-field"><div class="k">調查者</div><div class="v" style="color:var(--text-dim)">身分不明</div></div>`}
-              ${level2 && caseRevisitOpen ? `<div class="dim mono" style="font-size:11px;margin-top:-8px">PREVIOUS VALUE 身分不明<br>MODIFIED BY GREY-128</div>` : ''}
-              ${level2 ? `<div class="overview-field clickable" style="cursor:pointer" onclick="App.toggleCaseRevisit()"><div class="k">ARCHIVE RELATION</div><div class="v evidence-color">GREY-128</div></div>` : ''}
+              ${level2 && caseRevisitOpen ? `<div class="dim mono" style="font-size:11px;margin-top:-8px">原始值 PREVIOUS VALUE：身分不明<br>修改者 MODIFIED BY：GREY-128</div>` : ''}
+              ${level2 ? `<div class="overview-field clickable" style="cursor:pointer" onclick="App.toggleCaseRevisit()"><div class="k">封存關聯 ARCHIVE RELATION</div><div class="v evidence-color">GREY-128</div></div>` : ''}
             </div>
             <div>
               <div class="overview-field"><div class="k">相關人物</div></div>
@@ -684,12 +684,12 @@ const App = (() => {
           </div>
           ${level2 && caseRevisitOpen ? `
           <div class="metadata-panel" style="margin-top:20px;max-width:420px">
-            <div class="row"><span class="k">LINKED ARCHIVE</span><span class="v">GREY-128</span></div>
-            <div class="row"><span class="k">FIRST LINKED</span><span class="v">${esc(rv.firstLinked)}</span></div>
-            <div class="row"><span class="k">LAST MODIFIED</span><span class="v">${esc(rv.lastModified)}</span></div>
+            <div class="row"><span class="k">關聯封存 LINKED ARCHIVE</span><span class="v">GREY-128</span></div>
+            <div class="row"><span class="k">首次關聯 FIRST LINKED</span><span class="v">${esc(rv.firstLinked)}</span></div>
+            <div class="row"><span class="k">最後修改 LAST MODIFIED</span><span class="v">${esc(rv.lastModified)}</span></div>
           </div>
-          <div class="observation-box warn" style="margin-top:14px;max-width:420px">ARCHIVE NOTE · 1 change detected<br>「${esc(rv.note)}」</div>
-          <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/128/versions'">[ 查看 Archive 版本 → ]</button>` : ''}
+          <div class="observation-box warn" style="margin-top:14px;max-width:420px">封存備註 ARCHIVE NOTE · 偵測到 1 次修改<br>「${esc(rv.note)}」</div>
+          <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/128/versions'">[ 查看封存版本 → ]</button>` : ''}
           <button class="overview-pill" style="margin-top:24px" onclick="location.hash='#/evidence-board'">證據板 <span class="arrow">→</span></button>
         </div>
       </div>
@@ -940,7 +940,7 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/archive', '封存庫')}
-      <div class="dash-title">CASE #0917 · INVESTIGATION CONTINUES</div>
+      <div class="dash-title">案件 #0917 調查未完 CASE #0917 · INVESTIGATION CONTINUES</div>
       <p class="dim mono" style="margin-top:10px">灰-${esc(STATE.investigatorId())}</p>
       <p class="dim" style="margin-top:16px;max-width:420px">案件並未結案。系統裡還有一長串編號，等著被打開。</p>
       <button class="btn" style="margin-top:24px;max-width:220px" onclick="location.hash='#/grey-database'">[ 進入 ]</button>
@@ -978,7 +978,7 @@ const App = (() => {
         ? `<span class="dim mono" style="font-size:12px;margin-right:10px">${isYou ? '剛剛建立' : greyCreatedDate(id)}</span>`
         : '';
       const irregularTag = (greySortMode === 'created' && id === 0)
-        ? `<span class="irregular-tag" title="ARCHIVE POSITION CHANGED">! IRREGULAR</span>`
+        ? `<span class="irregular-tag" title="封存位置已改變 ARCHIVE POSITION CHANGED">! 異常 IRREGULAR</span>`
         : '';
       return `<div class="${cls.join(' ')}" ${onclick}><span class="k">${label}</span><span>${irregularTag}${dateTag}<span class="v ${isYou ? 'evidence-color' : ''}">${isYou ? '你' : '存取遭拒'}</span></span></div>`;
     }).join('');
@@ -986,12 +986,12 @@ const App = (() => {
     <div class="view view-wide">
       ${backLink('#/archive', '封存庫')}
       <div class="dash-title">灰資料庫</div>
-      <div class="dim mono" style="font-size:12px;letter-spacing:0.04em;margin-top:8px">NOTICE<br>紀錄可能不是依照時間先後排列。</div>
+      <div class="dim mono" style="font-size:12px;letter-spacing:0.04em;margin-top:8px">注意 NOTICE<br>紀錄可能不是依照時間先後排列。</div>
       <div class="board-toolbar" style="margin-top:14px">
-        <button class="tool-btn ${greySortMode === 'id' ? 'active' : ''}" onclick="App.setGreySort('id')">[ ID SORT ]</button>
-        <button class="tool-btn ${greySortMode === 'created' ? 'active' : ''}" onclick="App.setGreySort('created')">[ ARCHIVE CREATED ]</button>
+        <button class="tool-btn ${greySortMode === 'id' ? 'active' : ''}" onclick="App.setGreySort('id')">[ 依編號 ID SORT ]</button>
+        <button class="tool-btn ${greySortMode === 'created' ? 'active' : ''}" onclick="App.setGreySort('created')">[ 依建立時間 ARCHIVE CREATED ]</button>
       </div>
-      ${greySortMode === 'created' ? `<div class="dim mono" style="font-size:12px;margin-top:10px">RECORD ORDER UPDATED<br>1 筆紀錄改變了位置。</div>` : ''}
+      ${greySortMode === 'created' ? `<div class="dim mono" style="font-size:12px;margin-top:10px">紀錄順序已更新 RECORD ORDER UPDATED<br>1 筆紀錄改變了位置。</div>` : ''}
       <div class="case-file" style="margin-top:10px;max-width:520px;max-height:520px;overflow-y:auto">${rows}</div>
     </div>
     ${bottomNav('m', true)}`;
@@ -1013,7 +1013,7 @@ const App = (() => {
       ${backLink('#/grey-database', '灰資料庫')}
       <div class="dash-title">灰-${esc(id)}</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        <div class="cf-row"><span class="k">狀態</span><span class="v">ACTIVE</span></div>
+        <div class="cf-row"><span class="k">狀態</span><span class="v">使用中 ACTIVE</span></div>
         <div class="cf-row"><span class="k">建立時間</span><span class="v">剛剛建立</span></div>
         <div class="cf-row"><span class="k">連線時長</span><span class="v">${formatElapsed(STATE.elapsedMs())}</span></div>
       </div>
@@ -1033,10 +1033,10 @@ const App = (() => {
       ${backLink('#/grey-database', '灰資料庫')}
       <div class="dash-title">灰-128</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        <div class="cf-row"><span class="k">狀態</span><span class="v">INACTIVE</span></div>
+        <div class="cf-row"><span class="k">狀態</span><span class="v">已停用 INACTIVE</span></div>
         <div class="cf-row"><span class="k">最後活動</span><span class="v">${esc(g.lastActivity)}</span></div>
       </div>
-      <button class="btn" style="margin-top:20px;max-width:220px" onclick="location.hash='#/grey/128/archive'">[ 進入 ARCHIVE ]</button>
+      <button class="btn" style="margin-top:20px;max-width:220px" onclick="location.hash='#/grey/128/archive'">[ 進入封存 ARCHIVE ]</button>
     </div>
     ${bottomNav('m', true)}`;
   }
@@ -1047,21 +1047,21 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/grey/128', '灰-128')}
-      <div class="dash-title">灰-128 · ARCHIVE</div>
+      <div class="dash-title">灰-128 · 封存 ARCHIVE</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        ${g.indexEntries.map(e => `<div class="cf-row"><span class="k">${e.id} ${esc(e.label)}</span><span class="v missing">DELETED</span></div>`).join('')}
-        <div class="cf-row"><span class="k">FILE SIZE</span><span class="v">12.4 MB</span></div>
-        <div class="cf-row"><span class="k">ACCOUNT HASH</span><span class="v mono">${esc(g.accountHash)}</span></div>
+        ${g.indexEntries.map(e => `<div class="cf-row"><span class="k">${e.id} ${esc(e.label)}</span><span class="v missing">已刪除 DELETED</span></div>`).join('')}
+        <div class="cf-row"><span class="k">檔案大小 FILE SIZE</span><span class="v">12.4 MB</span></div>
+        <div class="cf-row"><span class="k">帳號雜湊 ACCOUNT HASH</span><span class="v mono">${esc(g.accountHash)}</span></div>
       </div>
       ${!checksumOpen
-        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.toggleChecksum()">[ 查看 CHECKSUM ]</button>`
+        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.toggleChecksum()">[ 查看校驗碼 CHECKSUM ]</button>`
         : `<div class="metadata-panel" style="margin-top:14px;max-width:420px">
-             <div class="row"><span class="k">EXPECTED HASH</span><span class="v">${g.checksumExpected}</span></div>
-             <div class="row"><span class="k">ARCHIVE HASH</span><span class="v">${g.checksumArchive}</span></div>
-             <div class="row"><span class="k">RESULT</span><span class="v" style="color:var(--success)">MATCH</span></div>
+             <div class="row"><span class="k">預期雜湊 EXPECTED HASH</span><span class="v">${g.checksumExpected}</span></div>
+             <div class="row"><span class="k">封存雜湊 ARCHIVE HASH</span><span class="v">${g.checksumArchive}</span></div>
+             <div class="row"><span class="k">比對結果 RESULT</span><span class="v" style="color:var(--success)">相符 MATCH</span></div>
            </div>
-           <div class="dim mono" style="font-size:12px;margin-top:10px">STRUCTURE INTACT</div>`}
-      <button class="btn" style="margin-top:20px;max-width:220px" onclick="location.hash='#/grey/128/integrity'">[ 查看 INDEX → ]</button>
+           <div class="dim mono" style="font-size:12px;margin-top:10px">結構完整 STRUCTURE INTACT</div>`}
+      <button class="btn" style="margin-top:20px;max-width:220px" onclick="location.hash='#/grey/128/integrity'">[ 查看索引 INDEX → ]</button>
     </div>
     ${bottomNav('m', true)}`;
   }
@@ -1074,19 +1074,20 @@ const App = (() => {
     const rows = g.indexEntries.map(e => {
       const opened = !!openedIndexEntries[e.id];
       const missing = opened && e.body === 'MISSING';
+      const bodyZh = e.body === 'MISSING' ? '缺失 MISSING' : '存在 PRESENT';
       const valueText = opened
-        ? `BODY: ${e.body}${missing ? ` <span class="irregular-tag" title="CONTENT UNAVAILABLE">!</span>` : ''}`
-        : 'HEADER: PRESENT · INDEX: PRESENT';
-      const note = missing ? `<div class="dim mono" style="font-size:11px;padding:2px 16px 10px">CONTENT UNAVAILABLE · INDEX ENTRY REMAINS</div>` : '';
+        ? `內容 BODY：${bodyZh}${missing ? ` <span class="irregular-tag" title="內容無法讀取 CONTENT UNAVAILABLE">!</span>` : ''}`
+        : '標頭 HEADER：存在 · 索引 INDEX：存在';
+      const note = missing ? `<div class="dim mono" style="font-size:11px;padding:2px 16px 10px">內容無法讀取，索引仍存在 CONTENT UNAVAILABLE · INDEX ENTRY REMAINS</div>` : '';
       return `<div><div class="cf-row clickable" onclick="App.openIndexEntry('${e.id}')"><span class="k">${e.id} ${esc(e.label)}</span><span class="v ${missing ? 'missing' : ''}">${valueText}</span></div>${note}</div>`;
     }).join('');
     const solved = STATE.get('ch2Puzzle02Solved');
     return `
     <div class="view view-wide">
-      ${backLink('#/grey/128/archive', '灰-128 ARCHIVE')}
-      <div class="dash-title">FILE INTEGRITY</div>
+      ${backLink('#/grey/128/archive', '灰-128 封存')}
+      <div class="dash-title">檔案完整性 FILE INTEGRITY</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
-      ${solved ? `<div class="observation-box" style="margin-top:14px">Header 完整、Index 還在，但 02、03 的 Body 都消失了——有人只清掉了內容，卻沒有清掉索引。</div>
+      ${solved ? `<div class="observation-box" style="margin-top:14px">標頭 Header 完整、索引 Index 還在，但 02、03 的內容 Body 都消失了——有人只清掉了內容，卻沒有清掉索引。</div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/128/chen'">[ 繼續調查 → ]</button>` : ''}
     </div>
     ${bottomNav('m', true)}`;
@@ -1104,8 +1105,8 @@ const App = (() => {
     if (!STATE.get('ch2Puzzle02Solved')) return ch2Locked();
     return `
     <div class="view view-wide">
-      ${backLink('#/grey/128/archive', '灰-128 ARCHIVE')}
-      <div class="dash-title">陳奕辰 · ARCHIVE</div>
+      ${backLink('#/grey/128/archive', '灰-128 封存')}
+      <div class="dash-title">陳奕辰 · 封存 ARCHIVE</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
         <div class="cf-row"><span class="k">姓名</span><span class="v">陳奕辰</span></div>
         <div class="cf-row"><span class="k">帳號</span><span class="v">@chen_yc</span></div>
@@ -1139,14 +1140,14 @@ const App = (() => {
       </div>`;
     return `
     <div class="view view-wide">
-      ${backLink('#/grey/128/chen', '陳奕辰 ARCHIVE')}
-      <div class="dash-title">IDENTITY FRAGMENT RECONSTRUCTION</div>
-      <p class="dim" style="font-size:13px">點選任兩個「DEVICE HASH」欄位試著把它們對上。</p>
+      ${backLink('#/grey/128/chen', '陳奕辰 封存')}
+      <div class="dash-title">身分片段重建 IDENTITY FRAGMENT RECONSTRUCTION</div>
+      <p class="dim" style="font-size:13px">點選任兩個「裝置雜湊 DEVICE HASH」欄位試著把它們對上。</p>
       ${cardHtml('a')}${cardHtml('b')}${cardHtml('c')}
       ${fragMessage ? `<div class="observation-box ${fragMessageOk ? '' : 'warn'}" style="max-width:420px">${esc(fragMessage)}</div>` : ''}
       ${solved ? `
-      <div class="observation-box" style="max-width:420px;margin-top:14px">1 ARCHIVE RELATION ESTABLISHED<br><span class="dim mono" style="font-size:12px">GREY-128 → CASE #0917</span></div>
-      <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/case/0917'">[ 前往 CASE #0917 → ]</button>` : ''}
+      <div class="observation-box" style="max-width:420px;margin-top:14px">已建立 1 筆封存關聯 1 ARCHIVE RELATION ESTABLISHED<br><span class="dim mono" style="font-size:12px">GREY-128 → CASE #0917</span></div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/case/0917'">[ 前往案件 CASE #0917 → ]</button>` : ''}
     </div>
     ${bottomNav('m', true)}`;
   }
@@ -1165,10 +1166,10 @@ const App = (() => {
       const row2 = DATA.ch2.fragments[fragSelected.fragKey].rows[fragSelected.idx];
       if (row.type === 'device' && row2.type === 'device' && fragKey !== fragSelected.fragKey) {
         fragConnections.device = true;
-        fragMessage = 'COMMON DEVICE HASH · RELATION POSSIBLE';
+        fragMessage = '裝置雜湊相同 COMMON DEVICE HASH · 可能有關聯 RELATION POSSIBLE';
         fragMessageOk = true;
       } else {
-        fragMessage = 'RELATION UNSUPPORTED / NO COMMON SOURCE';
+        fragMessage = '無法建立關聯 RELATION UNSUPPORTED / 沒有共同來源 NO COMMON SOURCE';
       }
       fragSelected = null;
     }
@@ -1202,10 +1203,10 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/case/0917', '案件檔案')}
-      <div class="dash-title">ARCHIVE VERSION COMPARE</div>
+      <div class="dash-title">封存版本比對 ARCHIVE VERSION COMPARE</div>
       <p class="dim" style="font-size:13px">找出每一版跟前一版不一樣的字。</p>
       <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
-      ${foundDiffs > 0 ? `<div class="dim mono" style="font-size:12px;margin-top:12px">${foundDiffs} EDIT${foundDiffs > 1 ? 'S' : ''} DETECTED</div>` : ''}
+      ${foundDiffs > 0 ? `<div class="dim mono" style="font-size:12px;margin-top:12px">偵測到 ${foundDiffs} 處修改 ${foundDiffs} EDIT${foundDiffs > 1 ? 'S' : ''} DETECTED</div>` : ''}
       ${found ? `<button class="btn" style="margin-top:20px;max-width:260px" onclick="location.hash='#/grey/128/edit-history'">[ 查看修改紀錄 → ]</button>` : ''}
     </div>
     ${bottomNav('case', true)}`;
@@ -1226,9 +1227,9 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/case/0917', '案件檔案')}
-      <div class="dash-title">EDIT HISTORY</div>
+      <div class="dash-title">修改紀錄 EDIT HISTORY</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        ${versions.map(v => `<div class="cf-row"><span class="k">${v.version.toUpperCase()} AUTHOR</span><span class="v evidence-color">${esc(author)}</span></div>`).join('')}
+        ${versions.map(v => `<div class="cf-row"><span class="k">${v.version.toUpperCase()} 修改者 AUTHOR</span><span class="v evidence-color">${esc(author)}</span></div>`).join('')}
       </div>
       <div class="observation-box" style="margin-top:14px">這三版都不是陳奕辰留下的——是灰-127。不同代灰之間，似乎會互相留言。</div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/chain'">[ 繼續調查 → ]</button>
@@ -1255,9 +1256,9 @@ const App = (() => {
     }).join('');
     return `
     <div class="view view-wide">
-      ${backLink('#/grey/128/edit-history', 'EDIT HISTORY')}
-      <div class="dash-title">GREY CHAIN</div>
-      <p class="dim" style="font-size:13px">依 ARCHIVE CREATED 時間，由舊到新依序點選。</p>
+      ${backLink('#/grey/128/edit-history', '修改紀錄')}
+      <div class="dash-title">灰之鏈 GREY CHAIN</div>
+      <p class="dim" style="font-size:13px">依建立時間，由舊到新依序點選。</p>
       <div class="case-file" style="margin-top:10px;max-width:420px">${nodes}</div>
       <div class="board-toolbar" style="margin-top:14px">
         <button class="tool-btn" onclick="App.resetChain()">[ 重設 ]</button>
@@ -1296,10 +1297,10 @@ const App = (() => {
       ${backLink('#/grey-database', '灰資料庫')}
       <div class="dash-title">灰-000</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        <div class="cf-row"><span class="k">狀態</span><span class="v missing">DELETED</span></div>
-        <div class="cf-row"><span class="k">LAST MODIFIED</span><span class="v">UNKNOWN</span></div>
+        <div class="cf-row"><span class="k">狀態</span><span class="v missing">已刪除 DELETED</span></div>
+        <div class="cf-row"><span class="k">最後修改 LAST MODIFIED</span><span class="v">不明 UNKNOWN</span></div>
       </div>
-      <button class="btn" style="margin-top:20px;max-width:240px" onclick="App.startGreyRecovery()">[ RECOVER ARCHIVE ]</button>
+      <button class="btn" style="margin-top:20px;max-width:240px" onclick="App.startGreyRecovery()">[ 還原封存 RECOVER ARCHIVE ]</button>
     </div>
     ${bottomNav('m', true)}`;
   }
@@ -1314,7 +1315,7 @@ const App = (() => {
   function runGreyRecoverySequence() {
     const el = document.getElementById('recovery-seq');
     if (!el) return;
-    el.innerHTML = `<div class="label">RECOVERING ARCHIVE</div><div class="big" id="recovery-pct">04%</div>`;
+    el.innerHTML = `<div class="label">正在還原封存 RECOVERING ARCHIVE</div><div class="big" id="recovery-pct">04%</div>`;
     const pcts = [18, 31, 52, 71, 89, 99];
     let i = 0;
     (function step() {
@@ -1324,7 +1325,7 @@ const App = (() => {
         i++;
         setTimeout(step, 350);
       } else {
-        el.innerHTML = `<div class="label" style="color:var(--warning)">RECOVERY FAILED</div><div class="id-line" style="margin-top:20px"><span class="dim" style="cursor:pointer;text-decoration:underline" onclick="App.showRecoveredFragment()">1 fragment recovered</span></div>`;
+        el.innerHTML = `<div class="label" style="color:var(--warning)">還原失敗 RECOVERY FAILED</div><div class="id-line" style="margin-top:20px"><span class="dim" style="cursor:pointer;text-decoration:underline" onclick="App.showRecoveredFragment()">已還原 1 個片段 1 FRAGMENT RECOVERED</span></div>`;
       }
     })();
   }
@@ -1337,7 +1338,7 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/grey/000', '灰-000')}
-      <div class="dash-title">FRAGMENT_000_A</div>
+      <div class="dash-title">殘留片段 FRAGMENT_000_A</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
         ${DATA.ch2.evidence.map(e => `<div class="cf-row"><span class="k">${e.label}</span><span class="v dim">未比對</span></div>`).join('')}
       </div>
@@ -1347,7 +1348,7 @@ const App = (() => {
   }
 
   let evidenceRevealed = {};
-  const evidenceLabel = { match: 'MATCH', partial: 'PARTIAL', unresolved: 'UNRESOLVED' };
+  const evidenceLabel = { match: '相符 MATCH', partial: '部分相符 PARTIAL', unresolved: '無法判定 UNRESOLVED' };
   const evidenceColor = { match: 'var(--success)', partial: 'var(--evidence)', unresolved: 'var(--text-dim)' };
   function viewIdentityEvidenceMatching() {
     if (!STATE.get('ch2RecoveryPlayed')) return ch2Locked();
@@ -1361,12 +1362,12 @@ const App = (() => {
     }).join('');
     return `
     <div class="view view-wide">
-      ${backLink('#/grey/000/fragment', 'FRAGMENT_000_A')}
-      <div class="dash-title">IDENTITY EVIDENCE MATCHING</div>
+      ${backLink('#/grey/000/fragment', '殘留片段')}
+      <div class="dash-title">身分證據比對 IDENTITY EVIDENCE MATCHING</div>
       <p class="dim" style="font-size:13px">逐項比對灰-000 的殘留資料跟林予安的既有資料。</p>
       <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
       ${allRevealed ? `
-      <div class="observation-box" style="margin-top:14px;max-width:420px">${counts.match} MATCH / ${counts.partial} PARTIAL / ${counts.unresolved} UNRESOLVED</div>
+      <div class="observation-box" style="margin-top:14px;max-width:420px">相符 ${counts.match} MATCH / 部分相符 ${counts.partial} PARTIAL / 無法判定 ${counts.unresolved} UNRESOLVED</div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="App.goToArchiveConflict()">[ 繼續 → ]</button>` : ''}
     </div>
     ${bottomNav('m', true)}`;
@@ -1387,26 +1388,26 @@ const App = (() => {
     const counts = { match: 0, partial: 0, unresolved: 0 };
     Object.values(ev).forEach(r => counts[r]++);
     const options = [
-      { key: 'A', text: 'GREY-000 IS LIN, YU-AN' },
-      { key: 'B', text: 'LIN, YU-AN IS CONNECTED TO GREY-000' },
-      { key: 'C', text: 'INSUFFICIENT EVIDENCE' },
+      { key: 'A', text: '灰-000 就是林予安 GREY-000 IS LIN, YU-AN' },
+      { key: 'B', text: '林予安與灰-000 有關聯 LIN, YU-AN IS CONNECTED TO GREY-000' },
+      { key: 'C', text: '證據不足 INSUFFICIENT EVIDENCE' },
     ];
     return `
     <div class="view view-wide">
-      ${backLink('#/grey/000/evidence', 'EVIDENCE MATCHING')}
-      <div class="dash-title">ARCHIVE CONFLICT</div>
+      ${backLink('#/grey/000/evidence', '證據比對')}
+      <div class="dash-title">封存衝突 ARCHIVE CONFLICT</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        <div class="cf-row"><span class="k">MATCH</span><span class="v" style="color:var(--success)">${counts.match}</span></div>
-        <div class="cf-row"><span class="k">PARTIAL</span><span class="v" style="color:var(--evidence)">${counts.partial}</span></div>
-        <div class="cf-row"><span class="k">UNRESOLVED</span><span class="v dim">${counts.unresolved}</span></div>
-        <div class="cf-row"><span class="k">IDENTITY CONFIDENCE</span><span class="v evidence-color">${conf}%</span></div>
+        <div class="cf-row"><span class="k">相符 MATCH</span><span class="v" style="color:var(--success)">${counts.match}</span></div>
+        <div class="cf-row"><span class="k">部分相符 PARTIAL</span><span class="v" style="color:var(--evidence)">${counts.partial}</span></div>
+        <div class="cf-row"><span class="k">無法判定 UNRESOLVED</span><span class="v dim">${counts.unresolved}</span></div>
+        <div class="cf-row"><span class="k">身分信心值 IDENTITY CONFIDENCE</span><span class="v evidence-color">${conf}%</span></div>
       </div>
       <div class="dash-nav-title" style="margin-top:20px">調查判斷</div>
       <div class="case-file" style="margin-top:8px;max-width:420px">
         ${options.map(o => `<div class="cf-row clickable ${judgement === o.key ? 'active' : ''}" onclick="App.submitJudgement('${o.key}')"><span class="k">${o.key}</span><span class="v">${o.text}</span></div>`).join('')}
       </div>
-      ${judgement && judgement !== 'C' ? `<div class="observation-box warn" style="margin-top:14px;max-width:420px">CONCLUSION UNSUPPORTED<br>IDENTITY MATCH ≠ IDENTITY CONFIRMED</div>` : ''}
-      ${judgement === 'C' ? `<div class="observation-box" style="margin-top:14px;max-width:420px">INVESTIGATION STATUS: PROVISIONAL</div>
+      ${judgement && judgement !== 'C' ? `<div class="observation-box warn" style="margin-top:14px;max-width:420px">結論證據不足 CONCLUSION UNSUPPORTED<br>身分相符 ≠ 身分確認 IDENTITY MATCH ≠ IDENTITY CONFIRMED</div>` : ''}
+      ${judgement === 'C' ? `<div class="observation-box" style="margin-top:14px;max-width:420px">調查狀態：暫定 INVESTIGATION STATUS: PROVISIONAL</div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="App.ch2FinalReveal()">[ 繼續 → ]</button>` : ''}
     </div>
     ${bottomNav('m', true)}`;
@@ -1427,12 +1428,12 @@ const App = (() => {
   function runGrey130Sequence() {
     const el = document.getElementById('ch2-seq');
     if (!el) return;
-    el.innerHTML = `<div class="label">GREY-130</div><div class="id-line" id="successor-status">SUCCESSOR<br>NOT FOUND</div>`;
+    el.innerHTML = `<div class="label">GREY-130</div><div class="id-line" id="successor-status">接班人 SUCCESSOR<br>未找到 NOT FOUND</div>`;
     setTimeout(() => {
       const s = document.getElementById('successor-status');
-      if (s) s.innerHTML = 'SUCCESSOR<br>FOUND';
+      if (s) s.innerHTML = '接班人 SUCCESSOR<br>已找到 FOUND';
       setTimeout(() => {
-        el.innerHTML = `<div class="label">GREY-130</div><div class="id-line">INVESTIGATOR<br>UNKNOWN</div><div class="big" style="font-size:18px;margin-top:24px;letter-spacing:0.02em">已經有人在找你了。</div>`;
+        el.innerHTML = `<div class="label">GREY-130</div><div class="id-line">調查者 INVESTIGATOR<br>不明 UNKNOWN</div><div class="big" style="font-size:18px;margin-top:24px;letter-spacing:0.02em">已經有人在找你了。</div>`;
         setTimeout(showCh2Complete, 2600);
       }, 1400);
     }, 1400);
