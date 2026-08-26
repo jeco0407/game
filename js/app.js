@@ -941,7 +941,7 @@ const App = (() => {
     <div class="view view-wide">
       ${backLink('#/archive', '封存庫')}
       <div class="dash-title">CASE #0917 · INVESTIGATION CONTINUES</div>
-      <p class="dim mono" style="margin-top:10px">GREY-${esc(STATE.investigatorId())}</p>
+      <p class="dim mono" style="margin-top:10px">灰-${esc(STATE.investigatorId())}</p>
       <p class="dim" style="margin-top:16px;max-width:420px">案件並未結案。系統裡還有一長串編號，等著被打開。</p>
       <button class="btn" style="margin-top:24px;max-width:220px" onclick="location.hash='#/grey-database'">[ 進入 ]</button>
     </div>
