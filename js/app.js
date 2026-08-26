@@ -977,16 +977,21 @@ const App = (() => {
       const dateTag = greySortMode === 'created'
         ? `<span class="dim mono" style="font-size:12px;margin-right:10px">${isYou ? '剛剛建立' : greyCreatedDate(id)}</span>`
         : '';
-      return `<div class="${cls.join(' ')}" ${onclick}><span class="k">${label}</span><span>${dateTag}<span class="v ${isYou ? 'evidence-color' : ''}">${isYou ? '你' : '存取遭拒'}</span></span></div>`;
+      const irregularTag = (greySortMode === 'created' && id === 0)
+        ? `<span class="irregular-tag" title="ARCHIVE POSITION CHANGED">! IRREGULAR</span>`
+        : '';
+      return `<div class="${cls.join(' ')}" ${onclick}><span class="k">${label}</span><span>${irregularTag}${dateTag}<span class="v ${isYou ? 'evidence-color' : ''}">${isYou ? '你' : '存取遭拒'}</span></span></div>`;
     }).join('');
     return `
     <div class="view view-wide">
       ${backLink('#/archive', '封存庫')}
       <div class="dash-title">灰資料庫</div>
-      <div class="board-toolbar">
+      <div class="dim mono" style="font-size:12px;letter-spacing:0.04em;margin-top:8px">NOTICE<br>Records may not follow chronological order.</div>
+      <div class="board-toolbar" style="margin-top:14px">
         <button class="tool-btn ${greySortMode === 'id' ? 'active' : ''}" onclick="App.setGreySort('id')">[ ID SORT ]</button>
         <button class="tool-btn ${greySortMode === 'created' ? 'active' : ''}" onclick="App.setGreySort('created')">[ ARCHIVE CREATED ]</button>
       </div>
+      ${greySortMode === 'created' ? `<div class="dim mono" style="font-size:12px;margin-top:10px">RECORD ORDER UPDATED<br>1 record changed position.</div>` : ''}
       <div class="case-file" style="margin-top:10px;max-width:520px;max-height:520px;overflow-y:auto">${rows}</div>
     </div>
     ${bottomNav('m', true)}`;
@@ -1054,7 +1059,8 @@ const App = (() => {
              <div class="row"><span class="k">EXPECTED HASH</span><span class="v">${g.checksumExpected}</span></div>
              <div class="row"><span class="k">ARCHIVE HASH</span><span class="v">${g.checksumArchive}</span></div>
              <div class="row"><span class="k">RESULT</span><span class="v" style="color:var(--success)">MATCH</span></div>
-           </div>`}
+           </div>
+           <div class="dim mono" style="font-size:12px;margin-top:10px">STRUCTURE INTACT</div>`}
       <button class="btn" style="margin-top:20px;max-width:220px" onclick="location.hash='#/grey/128/integrity'">[ 查看 INDEX → ]</button>
     </div>
     ${bottomNav('m', true)}`;
@@ -1067,7 +1073,12 @@ const App = (() => {
     const g = DATA.ch2.grey128;
     const rows = g.indexEntries.map(e => {
       const opened = !!openedIndexEntries[e.id];
-      return `<div class="cf-row clickable" onclick="App.openIndexEntry('${e.id}')"><span class="k">${e.id} ${esc(e.label)}</span><span class="v ${opened && e.body === 'MISSING' ? 'missing' : ''}">${opened ? `BODY: ${e.body}` : 'HEADER: PRESENT · INDEX: PRESENT'}</span></div>`;
+      const missing = opened && e.body === 'MISSING';
+      const valueText = opened
+        ? `BODY: ${e.body}${missing ? ` <span class="irregular-tag" title="CONTENT UNAVAILABLE">!</span>` : ''}`
+        : 'HEADER: PRESENT · INDEX: PRESENT';
+      const note = missing ? `<div class="dim mono" style="font-size:11px;padding:2px 16px 10px">CONTENT UNAVAILABLE · INDEX ENTRY REMAINS</div>` : '';
+      return `<div><div class="cf-row clickable" onclick="App.openIndexEntry('${e.id}')"><span class="k">${e.id} ${esc(e.label)}</span><span class="v ${missing ? 'missing' : ''}">${valueText}</span></div>${note}</div>`;
     }).join('');
     const solved = STATE.get('ch2Puzzle02Solved');
     return `
@@ -1108,6 +1119,7 @@ const App = (() => {
   let fragSelected = null;
   let fragConnections = { device: false, account: false };
   let fragMessage = '';
+  let fragMessageOk = false;
   function fragmentChipHtml(fragKey, idx) {
     const row = DATA.ch2.fragments[fragKey].rows[idx];
     const isSelected = fragSelected && fragSelected.fragKey === fragKey && fragSelected.idx === idx;
@@ -1131,9 +1143,9 @@ const App = (() => {
       <div class="dash-title">IDENTITY FRAGMENT RECONSTRUCTION</div>
       <p class="dim" style="font-size:13px">點選任兩個「DEVICE HASH」欄位試著把它們對上。</p>
       ${cardHtml('a')}${cardHtml('b')}${cardHtml('c')}
-      ${fragMessage ? `<div class="observation-box warn" style="max-width:420px">${esc(fragMessage)}</div>` : ''}
+      ${fragMessage ? `<div class="observation-box ${fragMessageOk ? '' : 'warn'}" style="max-width:420px">${esc(fragMessage)}</div>` : ''}
       ${solved ? `
-      <div class="observation-box" style="max-width:420px;margin-top:14px">ARCHIVE RELATION · 1 NEW LINK DETECTED<br><span class="dim mono" style="font-size:12px">GREY-128 → CASE #0917</span></div>
+      <div class="observation-box" style="max-width:420px;margin-top:14px">1 ARCHIVE RELATION ESTABLISHED<br><span class="dim mono" style="font-size:12px">GREY-128 → CASE #0917</span></div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/case/0917'">[ 前往 CASE #0917 → ]</button>` : ''}
     </div>
     ${bottomNav('m', true)}`;
@@ -1141,6 +1153,7 @@ const App = (() => {
   function selectFragmentChip(fragKey, idx) {
     const row = DATA.ch2.fragments[fragKey].rows[idx];
     fragMessage = '';
+    fragMessageOk = false;
     if (row.type === 'account') {
       fragConnections.account = true;
       fragSelected = null;
@@ -1152,6 +1165,8 @@ const App = (() => {
       const row2 = DATA.ch2.fragments[fragSelected.fragKey].rows[fragSelected.idx];
       if (row.type === 'device' && row2.type === 'device' && fragKey !== fragSelected.fragKey) {
         fragConnections.device = true;
+        fragMessage = 'COMMON DEVICE HASH · RELATION POSSIBLE';
+        fragMessageOk = true;
       } else {
         fragMessage = 'RELATION UNSUPPORTED / NO COMMON SOURCE';
       }
@@ -1172,6 +1187,8 @@ const App = (() => {
     if (!STATE.get('case0917Level2Unlocked')) return ch2Locked();
     const versions = DATA.ch2.archiveVersions;
     const found = versions.every(v => v.diffIndex === undefined || versionFound[v.version]);
+    const totalDiffs = versions.filter(v => v.diffIndex !== undefined).length;
+    const foundDiffs = versions.filter(v => v.diffIndex !== undefined && versionFound[v.version]).length;
     const rows = versions.map(v => {
       const chars = v.text.split('').map((ch, i) => {
         if (v.diffIndex === i) {
@@ -1188,6 +1205,7 @@ const App = (() => {
       <div class="dash-title">ARCHIVE VERSION COMPARE</div>
       <p class="dim" style="font-size:13px">找出每一版跟前一版不一樣的字。</p>
       <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
+      ${foundDiffs > 0 ? `<div class="dim mono" style="font-size:12px;margin-top:12px">${foundDiffs} EDIT${foundDiffs > 1 ? 'S' : ''} DETECTED</div>` : ''}
       ${found ? `<button class="btn" style="margin-top:20px;max-width:260px" onclick="location.hash='#/grey/128/edit-history'">[ 查看修改紀錄 → ]</button>` : ''}
     </div>
     ${bottomNav('case', true)}`;
