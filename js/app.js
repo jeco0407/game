@@ -144,6 +144,7 @@ const App = (() => {
           <span class="v">進行中</span>
         </div>
         <button class="entry-access-btn" onclick="location.hash='#/archive'">進入封存庫 <span class="arrow">→</span></button>
+        <div class="entry-howto-link" onclick="App.showIntro()">遊戲說明</div>
       </div>
       <div class="entry-corner bl">安全連線<br><span class="entry-ok">已加密</span></div>
       <div class="entry-corner br">ECHO 封存庫<br>版權所有</div>
@@ -1444,6 +1445,22 @@ const App = (() => {
 
   window.addEventListener('hashchange', render);
 
+  const INTRO_SEEN_KEY = 'echo_intro_seen';
+  function showIntro() {
+    const el = document.getElementById('intro-overlay');
+    if (el) el.classList.remove('hidden');
+  }
+  function hideIntro() {
+    const el = document.getElementById('intro-overlay');
+    if (el) el.classList.add('hidden');
+    try { localStorage.setItem(INTRO_SEEN_KEY, '1'); } catch (e) {}
+  }
+  function maybeAutoShowIntro() {
+    try {
+      if (!localStorage.getItem(INTRO_SEEN_KEY)) showIntro();
+    } catch (e) {}
+  }
+
   return {
     render, revealHidden, toggleEdited, goBack,
     toggleFollow, newPostToast, resetProgress,
@@ -1457,7 +1474,9 @@ const App = (() => {
     startGreyRecovery, showRecoveredFragment, revealEvidence, goToArchiveConflict,
     submitJudgement, ch2FinalReveal,
     toggleHint, deeperHint,
+    showIntro, hideIntro, maybeAutoShowIntro,
   };
 })();
 
 App.render();
+if (!location.hash || location.hash === '#/') App.maybeAutoShowIntro();
