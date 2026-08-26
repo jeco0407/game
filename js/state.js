@@ -19,6 +19,8 @@ const STATE = (() => {
       // ---- Chapter 02 ----
       ch2Puzzle01Solved: false,  // 灰資料庫依建立時間排序過，看過灰-000不是最早
       ch2Puzzle02Solved: false,  // File Integrity：看過灰-128 的 Index Entries 缺 Body
+      ch2Puzzle03Solved: false,  // Fragment Reconstruction：Device Hash + Account Hash 都比對成功
+      case0917Level2Unlocked: false, // Case #0917 是否已解鎖 ARCHIVE RELATION 新欄位
     };
   }
 

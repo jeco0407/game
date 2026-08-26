@@ -638,11 +638,15 @@ const App = (() => {
   /* ================================================================
      SCREEN 16 — Case File (full)
      ================================================================ */
+  let caseRevisitOpen = false;
+  function toggleCaseRevisit() { caseRevisitOpen = !caseRevisitOpen; render(); }
   function viewCaseFile() {
     if (!STATE.get('access')) {
       return `<div class="view view-wide">${backLink('#/case-overview','案件概覽')}<p class="dim mono">案件檔案已鎖定。</p></div>${bottomNav('case', true)}`;
     }
     const cf = DATA.caseFile;
+    const level2 = STATE.get('case0917Level2Unlocked');
+    const rv = DATA.ch2.case0917Revisit;
     const cfNav = [
       { label: '總覽', active: true },
       { label: '證據板', count: 1, hash: '#/evidence-board' },
@@ -657,7 +661,7 @@ const App = (() => {
           ${cfNav.map(n => `<div class="board-cat-item ${n.active ? 'active' : ''} ${n.hash ? '' : 'inert'}" ${n.hash ? `onclick="location.hash='${n.hash}'"` : ''}><span>${n.label}</span>${n.count !== undefined ? `<span class="count">${n.count}</span>` : ''}</div>`).join('')}
         </div>
         <div class="board-main">
-          <div class="dash-title">案件檔案 ${cf.id}</div>
+          <div class="dash-title">案件檔案 ${cf.id}${level2 ? ` <span class="dim mono" style="font-size:11px">· ARCHIVE ACCESS · LEVEL 02</span>` : ''}</div>
           <div class="overview-grid">
             <div>
               <div class="overview-field"><div class="k">關係人</div><div class="v">${cf.subject}</div></div>
@@ -667,6 +671,8 @@ const App = (() => {
               <div class="overview-field"><div class="k">地點</div><div class="v">${cf.location}</div></div>
               ${STATE.get('audio') ? `<div class="overview-field"><div class="k">調查者</div><div class="v evidence-color" style="cursor:pointer" onclick="location.hash='#/investigator'">灰 →</div></div>`
                 : `<div class="overview-field"><div class="k">調查者</div><div class="v" style="color:var(--text-dim)">身分不明</div></div>`}
+              ${level2 && caseRevisitOpen ? `<div class="dim mono" style="font-size:11px;margin-top:-8px">PREVIOUS VALUE 身分不明<br>MODIFIED BY GREY-128</div>` : ''}
+              ${level2 ? `<div class="overview-field clickable" style="cursor:pointer" onclick="App.toggleCaseRevisit()"><div class="k">ARCHIVE RELATION</div><div class="v evidence-color">GREY-128</div></div>` : ''}
             </div>
             <div>
               <div class="overview-field"><div class="k">相關人物</div></div>
@@ -675,6 +681,13 @@ const App = (() => {
               <div class="digital-activity-row">${cf.digitalActivity.map(t => `<div class="da-chip mono">${esc(t)}</div>`).join('')}</div>
             </div>
           </div>
+          ${level2 && caseRevisitOpen ? `
+          <div class="metadata-panel" style="margin-top:20px;max-width:420px">
+            <div class="row"><span class="k">LINKED ARCHIVE</span><span class="v">GREY-128</span></div>
+            <div class="row"><span class="k">FIRST LINKED</span><span class="v">${esc(rv.firstLinked)}</span></div>
+            <div class="row"><span class="k">LAST MODIFIED</span><span class="v">${esc(rv.lastModified)}</span></div>
+          </div>
+          <div class="observation-box warn" style="margin-top:14px;max-width:420px">ARCHIVE NOTE · 1 change detected<br>「${esc(rv.note)}」</div>` : ''}
           <button class="overview-pill" style="margin-top:24px" onclick="location.hash='#/evidence-board'">證據板 <span class="arrow">→</span></button>
         </div>
       </div>
@@ -984,6 +997,7 @@ const App = (() => {
       <div class="case-file" style="margin-top:10px;max-width:420px">
         ${g.indexEntries.map(e => `<div class="cf-row"><span class="k">${e.id} ${esc(e.label)}</span><span class="v missing">DELETED</span></div>`).join('')}
         <div class="cf-row"><span class="k">FILE SIZE</span><span class="v">12.4 MB</span></div>
+        <div class="cf-row"><span class="k">ACCOUNT HASH</span><span class="v mono">${esc(g.accountHash)}</span></div>
       </div>
       ${!checksumOpen
         ? `<button class="tool-btn" style="margin-top:14px" onclick="App.toggleChecksum()">[ 查看 CHECKSUM ]</button>`
@@ -1012,13 +1026,92 @@ const App = (() => {
       ${backLink('#/grey/128/archive', '灰-128 ARCHIVE')}
       <div class="dash-title">FILE INTEGRITY</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
-      ${solved ? `<div class="observation-box" style="margin-top:14px">Header 完整、Index 還在，但 02、03 的 Body 都消失了——有人只清掉了內容，卻沒有清掉索引。</div>` : ''}
+      ${solved ? `<div class="observation-box" style="margin-top:14px">Header 完整、Index 還在，但 02、03 的 Body 都消失了——有人只清掉了內容，卻沒有清掉索引。</div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/128/chen'">[ 繼續調查 → ]</button>` : ''}
     </div>
     ${bottomNav('m', true)}`;
   }
   function openIndexEntry(id) {
     openedIndexEntries[id] = true;
     if (openedIndexEntries['02'] && openedIndexEntries['03']) STATE.set('ch2Puzzle02Solved', true);
+    render();
+  }
+
+  /* ================================================================
+     CHAPTER 02 — SCREEN 07/08 — Chen Archive / Fragment Reconstruction（Puzzle 03）
+     ================================================================ */
+  function viewChenArchive() {
+    if (!STATE.get('ch2Puzzle02Solved')) return ch2Locked();
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/128/archive', '灰-128 ARCHIVE')}
+      <div class="dash-title">陳奕辰 · ARCHIVE</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        <div class="cf-row"><span class="k">姓名</span><span class="v">陳奕辰</span></div>
+        <div class="cf-row"><span class="k">帳號</span><span class="v">@chen_yc</span></div>
+      </div>
+      <div class="observation-box" style="margin-top:14px">系統偵測到跟這個帳號有關的資料不只一份，而且彼此不完整。</div>
+      <button class="btn" style="margin-top:20px;max-width:260px" onclick="location.hash='#/grey/128/fragments'">[ 查看殘缺資料 → ]</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+
+  let fragSelected = null;
+  let fragConnections = { device: false, account: false };
+  let fragMessage = '';
+  function fragmentChipHtml(fragKey, idx) {
+    const row = DATA.ch2.fragments[fragKey].rows[idx];
+    const isSelected = fragSelected && fragSelected.fragKey === fragKey && fragSelected.idx === idx;
+    const isConnected = (row.type === 'device' && fragConnections.device) || (row.type === 'account' && fragConnections.account);
+    const cls = ['cf-row', 'clickable'];
+    if (isSelected) cls.push('active');
+    return `<div class="${cls.join(' ')}" onclick="App.selectFragmentChip('${fragKey}',${idx})"><span class="k">${esc(row.field)}</span><span class="v ${isConnected ? '' : ''}" style="${isConnected ? 'color:var(--success)' : ''}">${esc(row.value)}</span></div>`;
+  }
+  function viewFragmentReconstruction() {
+    if (!STATE.get('ch2Puzzle02Solved')) return ch2Locked();
+    const solved = STATE.get('ch2Puzzle03Solved');
+    const frags = DATA.ch2.fragments;
+    const cardHtml = (key) => `
+      <div style="margin-bottom:16px">
+        <div class="dim mono" style="font-size:12px;margin-bottom:6px">${frags[key].title}</div>
+        <div class="case-file" style="max-width:420px">${frags[key].rows.map((_, i) => fragmentChipHtml(key, i)).join('')}</div>
+      </div>`;
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/128/chen', '陳奕辰 ARCHIVE')}
+      <div class="dash-title">IDENTITY FRAGMENT RECONSTRUCTION</div>
+      <p class="dim" style="font-size:13px">點選任兩個「DEVICE HASH」欄位試著把它們對上。</p>
+      ${cardHtml('a')}${cardHtml('b')}${cardHtml('c')}
+      ${fragMessage ? `<div class="observation-box warn" style="max-width:420px">${esc(fragMessage)}</div>` : ''}
+      ${solved ? `
+      <div class="observation-box" style="max-width:420px;margin-top:14px">ARCHIVE RELATION · 1 NEW LINK DETECTED<br><span class="dim mono" style="font-size:12px">GREY-128 → CASE #0917</span></div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/case/0917'">[ 前往 CASE #0917 → ]</button>` : ''}
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  function selectFragmentChip(fragKey, idx) {
+    const row = DATA.ch2.fragments[fragKey].rows[idx];
+    fragMessage = '';
+    if (row.type === 'account') {
+      fragConnections.account = true;
+      fragSelected = null;
+    } else if (fragSelected === null) {
+      fragSelected = { fragKey, idx };
+    } else if (fragSelected.fragKey === fragKey && fragSelected.idx === idx) {
+      fragSelected = null;
+    } else {
+      const row2 = DATA.ch2.fragments[fragSelected.fragKey].rows[fragSelected.idx];
+      if (row.type === 'device' && row2.type === 'device' && fragKey !== fragSelected.fragKey) {
+        fragConnections.device = true;
+      } else {
+        fragMessage = 'RELATION UNSUPPORTED / NO COMMON SOURCE';
+      }
+      fragSelected = null;
+    }
+    if (fragConnections.device && fragConnections.account) {
+      STATE.set('ch2Puzzle03Solved', true);
+      STATE.set('case0917Level2Unlocked', true);
+    }
     render();
   }
 
@@ -1056,6 +1149,8 @@ const App = (() => {
     '#/grey/128': viewGrey128Overview,
     '#/grey/128/archive': viewGrey128Archive,
     '#/grey/128/integrity': viewFileIntegrity,
+    '#/grey/128/chen': viewChenArchive,
+    '#/grey/128/fragments': viewFragmentReconstruction,
     '#/grey/000': viewGrey000,
   };
 
@@ -1094,10 +1189,10 @@ const App = (() => {
     toggleFollow, newPostToast, resetProgress,
     inspectAnomaly, analyzeMetadata, zoomToggle, toggleFx, resetFx,
     dragImgStart, dropOnSlot, moveImgToSlot,
-    openAccessPrompt, submitAccess,
+    openAccessPrompt, submitAccess, toggleCaseRevisit,
     selectBoardNode, resetBoard, toggleBoardHelp,
     playAudio, finalReveal, runMSequence,
-    setGreySort, toggleChecksum, openIndexEntry,
+    setGreySort, toggleChecksum, openIndexEntry, selectFragmentChip,
     toggleHint, deeperHint,
   };
 })();

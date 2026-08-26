@@ -294,12 +294,33 @@ const DATA = {
       lastActivity: '08/26/2026 · 16:00',
       checksumExpected: 'A93F-71C2-88DE',
       checksumArchive: 'A93F-71C2-88DE',
+      accountHash: 'A91F',
       indexEntries: [
         { id: '01', label: 'PROFILE', body: 'PRESENT' },
         { id: '02', label: 'CASE #0917', body: 'MISSING' },
         { id: '03', label: 'CASE #000', body: 'MISSING' },
         { id: '04', label: 'MESSAGE', body: 'PRESENT' },
       ],
+    },
+    fragments: {
+      a: { title: 'FRAGMENT A', rows: [
+        { field: 'NAME', value: 'CHEN YI-CHEN', type: 'name' },
+        { field: 'DEVICE HASH', value: '7F21-██', type: 'device' },
+      ] },
+      b: { title: 'FRAGMENT B', rows: [
+        { field: 'ACCOUNT HASH', value: 'A91F', type: 'account' },
+        { field: 'AGE', value: '24', type: 'age' },
+        { field: 'DEVICE HASH', value: '██-7F21', type: 'device' },
+      ] },
+      c: { title: 'FRAGMENT C', rows: [
+        { field: 'GREY ID', value: '128', type: 'greyid' },
+        { field: 'DEVICE HASH', value: '7F21-████', type: 'device' },
+      ] },
+    },
+    case0917Revisit: {
+      firstLinked: '08/24/2026',
+      lastModified: '08/26/2026 16:03',
+      note: '不要讓下一個人從這裡開始。',
     },
   },
 

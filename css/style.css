@@ -408,6 +408,7 @@ a { color: inherit; text-decoration: none; }
 .case-file .cf-row .v.missing { color: var(--warning); }
 .case-file .cf-row.clickable { cursor: pointer; }
 .case-file .cf-row.clickable:hover { background: var(--surface-2); }
+.case-file .cf-row.active { background: var(--surface-2); box-shadow: inset 2px 0 0 var(--evidence); }
 
 .related-tree {
   font-family: var(--mono);
