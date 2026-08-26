@@ -23,7 +23,7 @@ const App = (() => {
     conbini: 'assets/images/evidence-conbini.jpg',
     figure: 'assets/images/evidence-figure.jpg',
     avatarYuan: 'assets/images/avatar-yuan.jpg',
-    avatarChen: 'assets/images/avatar-chen.jpg',
+    avatarChen: 'assets/images/avatar-chen.png',
     avatarM: 'assets/images/avatar-m.jpg',
     bgHome: 'assets/images/bg-home.jpg',
   };
