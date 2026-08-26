@@ -329,6 +329,14 @@ const DATA = {
     ],
     editHistoryAuthor: 'GREY-127',
     greyChainIds: [1, 27, 63, 91, 128],
+    evidence: [
+      { key: 'photo', label: 'PHOTO', result: 'match' },
+      { key: 'device', label: 'DEVICE', result: 'match' },
+      { key: 'location', label: 'LOCATION', result: 'match' },
+      { key: 'archivePattern', label: 'ARCHIVE PATTERN', result: 'partial' },
+      { key: 'date', label: 'DATE', result: 'unresolved' },
+      { key: 'name', label: 'NAME', result: 'unresolved' },
+    ],
   },
 
   finalMessages: [

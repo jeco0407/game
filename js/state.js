@@ -23,6 +23,12 @@ const STATE = (() => {
       case0917Level2Unlocked: false, // Case #0917 是否已解鎖 ARCHIVE RELATION 新欄位
       ch2Puzzle04Solved: false, // Archive Version Compare + Edit History 都看過
       ch2GreyChainBuilt: false, // Grey Chain 依建立時間排出正確順序
+      ch2RecoveryPlayed: false, // 灰-000 Recovery 動畫播放過
+      ch2Evidence: null,        // { photo:'match', device:'match', ... }
+      ch2Confidence: null,      // 依 ch2Evidence 算出的信心值（87）
+      ch2Judgement: null,       // 'A' | 'B' | 'C'
+      ch2Puzzle05Solved: false, // 只有選 C 才會是 true
+      ch2Final: false,          // 完成第二章結局
     };
   }
 

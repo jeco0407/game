@@ -1233,9 +1233,154 @@ const App = (() => {
         <div class="cf-row"><span class="k">狀態</span><span class="v missing">DELETED</span></div>
         <div class="cf-row"><span class="k">LAST MODIFIED</span><span class="v">UNKNOWN</span></div>
       </div>
-      <div class="observation-box warn" style="margin-top:14px">你還沒準備好。（後續劇情開發中）</div>
+      <button class="btn" style="margin-top:20px;max-width:240px" onclick="App.startGreyRecovery()">[ RECOVER ARCHIVE ]</button>
     </div>
     ${bottomNav('m', true)}`;
+  }
+
+  /* ================================================================
+     CHAPTER 02 — SCREEN 14/15/16/17 — Recovery → Evidence → Conflict（Puzzle 05）
+     ================================================================ */
+  function startGreyRecovery() {
+    document.getElementById('app').innerHTML = `<div class="view view-wide"><div class="investigator-reveal" id="recovery-seq"></div></div>`;
+    runGreyRecoverySequence();
+  }
+  function runGreyRecoverySequence() {
+    const el = document.getElementById('recovery-seq');
+    if (!el) return;
+    el.innerHTML = `<div class="label">RECOVERING ARCHIVE</div><div class="big" id="recovery-pct">04%</div>`;
+    const pcts = [18, 31, 52, 71, 89, 99];
+    let i = 0;
+    (function step() {
+      const pctEl = document.getElementById('recovery-pct');
+      if (i < pcts.length) {
+        if (pctEl) pctEl.textContent = pcts[i] + '%';
+        i++;
+        setTimeout(step, 350);
+      } else {
+        el.innerHTML = `<div class="label" style="color:var(--warning)">RECOVERY FAILED</div><div class="id-line" style="margin-top:20px"><span class="dim" style="cursor:pointer;text-decoration:underline" onclick="App.showRecoveredFragment()">1 fragment recovered</span></div>`;
+      }
+    })();
+  }
+  function showRecoveredFragment() {
+    STATE.set('ch2RecoveryPlayed', true);
+    location.hash = '#/grey/000/fragment';
+  }
+  function viewRecoveredFragment() {
+    if (!STATE.get('ch2RecoveryPlayed')) return ch2Locked();
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/000', '灰-000')}
+      <div class="dash-title">FRAGMENT_000_A</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        ${DATA.ch2.evidence.map(e => `<div class="cf-row"><span class="k">${e.label}</span><span class="v dim">未比對</span></div>`).join('')}
+      </div>
+      <button class="btn" style="margin-top:20px;max-width:260px" onclick="location.hash='#/grey/000/evidence'">[ 開始比對 → ]</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+
+  let evidenceRevealed = {};
+  const evidenceLabel = { match: 'MATCH', partial: 'PARTIAL', unresolved: 'UNRESOLVED' };
+  const evidenceColor = { match: 'var(--success)', partial: 'var(--evidence)', unresolved: 'var(--text-dim)' };
+  function viewIdentityEvidenceMatching() {
+    if (!STATE.get('ch2RecoveryPlayed')) return ch2Locked();
+    const items = DATA.ch2.evidence;
+    const allRevealed = items.every(e => evidenceRevealed[e.key]);
+    const counts = { match: 0, partial: 0, unresolved: 0 };
+    items.forEach(e => { if (evidenceRevealed[e.key]) counts[e.result]++; });
+    const rows = items.map(e => {
+      const revealed = evidenceRevealed[e.key];
+      return `<div class="cf-row clickable" onclick="App.revealEvidence('${e.key}')"><span class="k">${e.label}</span><span class="v" style="${revealed ? `color:${evidenceColor[e.result]}` : ''}">${revealed ? evidenceLabel[e.result] : '點擊比對'}</span></div>`;
+    }).join('');
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/000/fragment', 'FRAGMENT_000_A')}
+      <div class="dash-title">IDENTITY EVIDENCE MATCHING</div>
+      <p class="dim" style="font-size:13px">逐項比對灰-000 的殘留資料跟林予安的既有資料。</p>
+      <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
+      ${allRevealed ? `
+      <div class="observation-box" style="margin-top:14px;max-width:420px">${counts.match} MATCH / ${counts.partial} PARTIAL / ${counts.unresolved} UNRESOLVED</div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="App.goToArchiveConflict()">[ 繼續 → ]</button>` : ''}
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  function revealEvidence(key) { evidenceRevealed[key] = true; render(); }
+  function goToArchiveConflict() {
+    const items = DATA.ch2.evidence;
+    STATE.set('ch2Evidence', Object.fromEntries(items.map(e => [e.key, e.result])));
+    STATE.set('ch2Confidence', 87);
+    location.hash = '#/grey/000/conflict';
+  }
+
+  function viewArchiveConflict() {
+    const ev = STATE.get('ch2Evidence');
+    if (!ev) return ch2Locked();
+    const conf = STATE.get('ch2Confidence');
+    const judgement = STATE.get('ch2Judgement');
+    const counts = { match: 0, partial: 0, unresolved: 0 };
+    Object.values(ev).forEach(r => counts[r]++);
+    const options = [
+      { key: 'A', text: 'GREY-000 IS LIN, YU-AN' },
+      { key: 'B', text: 'LIN, YU-AN IS CONNECTED TO GREY-000' },
+      { key: 'C', text: 'INSUFFICIENT EVIDENCE' },
+    ];
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/000/evidence', 'EVIDENCE MATCHING')}
+      <div class="dash-title">ARCHIVE CONFLICT</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        <div class="cf-row"><span class="k">MATCH</span><span class="v" style="color:var(--success)">${counts.match}</span></div>
+        <div class="cf-row"><span class="k">PARTIAL</span><span class="v" style="color:var(--evidence)">${counts.partial}</span></div>
+        <div class="cf-row"><span class="k">UNRESOLVED</span><span class="v dim">${counts.unresolved}</span></div>
+        <div class="cf-row"><span class="k">IDENTITY CONFIDENCE</span><span class="v evidence-color">${conf}%</span></div>
+      </div>
+      <div class="dash-nav-title" style="margin-top:20px">調查判斷</div>
+      <div class="case-file" style="margin-top:8px;max-width:420px">
+        ${options.map(o => `<div class="cf-row clickable ${judgement === o.key ? 'active' : ''}" onclick="App.submitJudgement('${o.key}')"><span class="k">${o.key}</span><span class="v">${o.text}</span></div>`).join('')}
+      </div>
+      ${judgement && judgement !== 'C' ? `<div class="observation-box warn" style="margin-top:14px;max-width:420px">CONCLUSION UNSUPPORTED<br>IDENTITY MATCH ≠ IDENTITY CONFIRMED</div>` : ''}
+      ${judgement === 'C' ? `<div class="observation-box" style="margin-top:14px;max-width:420px">INVESTIGATION STATUS: PROVISIONAL</div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="App.ch2FinalReveal()">[ 繼續 → ]</button>` : ''}
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  function submitJudgement(choice) {
+    STATE.set('ch2Judgement', choice);
+    if (choice === 'C') STATE.set('ch2Puzzle05Solved', true);
+    render();
+  }
+
+  /* ================================================================
+     CHAPTER 02 — SCREEN 18 — Grey-130（結局）
+     ================================================================ */
+  function ch2FinalReveal() {
+    document.getElementById('app').innerHTML = `<div class="view view-wide"><div class="investigator-reveal" id="ch2-seq"></div></div>`;
+    runGrey130Sequence();
+  }
+  function runGrey130Sequence() {
+    const el = document.getElementById('ch2-seq');
+    if (!el) return;
+    el.innerHTML = `<div class="label">GREY-130</div><div class="id-line" id="successor-status">SUCCESSOR<br>NOT FOUND</div>`;
+    setTimeout(() => {
+      const s = document.getElementById('successor-status');
+      if (s) s.innerHTML = 'SUCCESSOR<br>FOUND';
+      setTimeout(() => {
+        el.innerHTML = `<div class="label">GREY-130</div><div class="id-line">INVESTIGATOR<br>UNKNOWN</div><div class="big" style="font-size:18px;margin-top:24px;letter-spacing:0.02em">Someone is already looking for you.</div>`;
+        setTimeout(showCh2Complete, 2600);
+      }, 1400);
+    }, 1400);
+  }
+  function showCh2Complete() {
+    const div = document.createElement('div');
+    div.className = 'ending-screen';
+    div.innerHTML = `<div class="label">第二章</div><div style="height:6px"></div><div style="font-size:16px;color:var(--warning)">完成</div>`;
+    document.body.appendChild(div);
+    setTimeout(() => {
+      div.remove();
+      STATE.set('ch2Final', true);
+      location.hash = '#/archive';
+    }, 2400);
   }
 
   /* ---------------- Router ---------------- */
@@ -1264,6 +1409,9 @@ const App = (() => {
     '#/grey/128/edit-history': viewEditHistory,
     '#/grey/chain': viewGreyChain,
     '#/grey/000': viewGrey000,
+    '#/grey/000/fragment': viewRecoveredFragment,
+    '#/grey/000/evidence': viewIdentityEvidenceMatching,
+    '#/grey/000/conflict': viewArchiveConflict,
   };
 
   function render() {
@@ -1306,6 +1454,8 @@ const App = (() => {
     playAudio, finalReveal, runMSequence,
     setGreySort, toggleChecksum, openIndexEntry, selectFragmentChip,
     selectDiffChar, selectChainNode, resetChain,
+    startGreyRecovery, showRecoveredFragment, revealEvidence, goToArchiveConflict,
+    submitJudgement, ch2FinalReveal,
     toggleHint, deeperHint,
   };
 })();
