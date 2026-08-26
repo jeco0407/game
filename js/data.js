@@ -221,7 +221,7 @@ const DATA = {
   accessPrompt: {
     contentId: '0917-0820',
     question: '他們第一次見面的地方。',
-    answers: ['convenience store', 'convenience', '便利商店'],
+    answers: ['convenience store', 'convenience', '便利商店', '便利超商', '7-11', '7-eleven', 'seven eleven'],
   },
 
   /* ---------------- Case Overview (partial) ---------------- */
