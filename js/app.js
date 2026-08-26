@@ -84,7 +84,18 @@ const App = (() => {
   }
 
   function backLink(hash, label) {
-    return `<span class="back-link" onclick="location.hash='${hash}'">← ${label}</span>`;
+    return `<span class="back-link" onclick="App.goBack('${hash}')">← 上一頁</span>`;
+  }
+  let navStack = [];
+  let currentHash = null;
+  let navigatingBack = false;
+  function goBack(fallbackHash) {
+    if (navStack.length > 0) {
+      navigatingBack = true;
+      location.hash = navStack.pop();
+    } else {
+      location.hash = fallbackHash;
+    }
   }
 
   /* ---------------- hint system ---------------- */
@@ -216,6 +227,7 @@ const App = (() => {
   function xPostHtml(p) {
     if (p.unlockAfter && !STATE.get(p.unlockAfter)) return '';
     return `
+    ${p.unlockAfter ? `<div class="unlock-badge">${icon('lock', 13)} 解鎖隱藏貼文</div>` : ''}
     <a class="x-post" href="#/post/${p.id}">
       <div class="x-post-row">
         <div class="x-post-avatar"${avatarStyle('yuan')}></div>
@@ -708,7 +720,7 @@ const App = (() => {
             <button class="tool-btn" onclick="App.resetBoard()">[ 重設連線 ]</button>
             <button class="tool-btn" onclick="App.toggleBoardHelp()">${boardHelpOpen ? '[ 關閉說明 ]' : '[ 怎麼用？ ]'}</button>
           </div>
-          ${boardHelpOpen ? `<div class="observation-box">依序點選任兩張卡片，它們就會連在一起；再點一次同一組可以取消連線。<br>試著找出正確的因果關係鏈，不是隨便連連看——順序跟方向都有意義。</div>` : ''}
+          ${boardHelpOpen ? `<div class="observation-box">依序點選任兩張卡片，它們就會連在一起；再點一次同一組可以取消連線。<br>試著找出正確的因果關係鏈，不是隨便連連看——順序跟方向都有意義。<br>紅線代表這條連線還沒被確認正確，連對的線會變成綠色。</div>` : ''}
           <div class="board-canvas" id="board-canvas">
             <svg class="board-svg">${boardLinks.map(l => {
               const a = nodes.find(n => n.id === l[0]), b = nodes.find(n => n.id === l[1]);
@@ -956,6 +968,12 @@ const App = (() => {
       return;
     }
 
+    if (!navigatingBack && currentHash !== null && currentHash !== hash) {
+      navStack.push(currentHash);
+    }
+    navigatingBack = false;
+    currentHash = hash;
+
     let html;
     if (hash.startsWith('#/post/')) {
       html = viewPost(parseInt(hash.split('/')[2], 10));
@@ -971,7 +989,7 @@ const App = (() => {
   window.addEventListener('hashchange', render);
 
   return {
-    render, revealHidden, toggleEdited,
+    render, revealHidden, toggleEdited, goBack,
     toggleFollow, newPostToast, resetProgress,
     inspectAnomaly, analyzeMetadata, zoomToggle, toggleFx, resetFx,
     dragImgStart, dropOnSlot, moveImgToSlot,
