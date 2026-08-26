@@ -273,14 +273,14 @@ const DATA = {
   /* ---------------- Audio ---------------- */
   audioEvidence: {
     id: 'EVIDENCE_07',
-    duration: '00:27',
+    src: 'assets/audio/evidence-07.mp3',
+    duration: '00:09',
     transcript: [
-      { t: '0:00', line: '（雨聲）', dim: true },
-      { t: '0:08', line: '「如果有人找到這裡……」' },
-      { t: '0:14', line: '（停頓）', dim: true },
-      { t: '0:19', line: '「不要相信灰。」', warn: true },
-      { t: '0:23', line: '（雜訊）', dim: true },
-      { t: '0:29', line: '「他不是一個人。」', warn: true },
+      { t: '0:00', line: '（雜訊）', dim: true },
+      { t: '0:01', line: '「如果有人找到這裡……」' },
+      { t: '0:03', line: '「不要相信灰。」', warn: true },
+      { t: '0:05', line: '「不是他。」' },
+      { t: '0:06', line: '「他們不是一個人。」', warn: true },
     ],
   },
 

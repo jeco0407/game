@@ -773,22 +773,32 @@ const App = (() => {
   function transcriptLineHtml(l) {
     return `<div class="line${l.warn ? ' warn-line' : ''}"><span>${esc(l.line)}</span><span class="t mono">${esc(l.t)}</span></div>`;
   }
+  function parseTimestamp(t) {
+    const [m, s] = t.split(':').map(Number);
+    return m * 60 + s;
+  }
   function playAudio() {
     const wf = document.getElementById('waveform');
-    if (wf) wf.classList.add('playing');
     const box = document.getElementById('audio-transcript');
     const transcript = DATA.audioEvidence.transcript;
     if (box) box.innerHTML = '';
-    transcript.forEach((l, i) => {
-      setTimeout(() => {
-        if (!box) return;
-        box.insertAdjacentHTML('beforeend', transcriptLineHtml(l));
-      }, i * 1400);
+    if (wf) wf.classList.add('playing');
+    const shown = new Set();
+    const audio = new Audio(DATA.audioEvidence.src);
+    audio.addEventListener('timeupdate', () => {
+      transcript.forEach((l, i) => {
+        if (!shown.has(i) && audio.currentTime >= parseTimestamp(l.t)) {
+          shown.add(i);
+          if (box) box.insertAdjacentHTML('beforeend', transcriptLineHtml(l));
+        }
+      });
     });
-    setTimeout(() => {
+    audio.addEventListener('ended', () => {
+      if (wf) wf.classList.remove('playing');
       STATE.set('audio', true);
       render();
-    }, transcript.length * 1400 + 800);
+    });
+    audio.play();
   }
 
   /* ================================================================
