@@ -672,8 +672,8 @@ const App = (() => {
               <div class="overview-field"><div class="k">地點</div><div class="v">${cf.location}</div></div>
               ${STATE.get('audio') ? `<div class="overview-field"><div class="k">調查者</div><div class="v evidence-color" style="cursor:pointer" onclick="location.hash='#/investigator'">灰 →</div></div>`
                 : `<div class="overview-field"><div class="k">調查者</div><div class="v" style="color:var(--text-dim)">身分不明</div></div>`}
-              ${level2 && caseRevisitOpen ? `<div class="dim mono" style="font-size:11px;margin-top:-8px">原始值 PREVIOUS VALUE：身分不明<br>修改者 MODIFIED BY：GREY-128</div>` : ''}
-              ${level2 ? `<div class="overview-field clickable" style="cursor:pointer" onclick="App.toggleCaseRevisit()"><div class="k">封存關聯 ARCHIVE RELATION</div><div class="v evidence-color">GREY-128</div></div>` : ''}
+              ${level2 && caseRevisitOpen ? `<div class="dim mono" style="font-size:11px;margin-top:-8px">原始值 PREVIOUS VALUE：身分不明<br>修改者 MODIFIED BY：灰-128</div>` : ''}
+              ${level2 ? `<div class="overview-field clickable" style="cursor:pointer" onclick="App.toggleCaseRevisit()"><div class="k">封存關聯 ARCHIVE RELATION</div><div class="v evidence-color">灰-128</div></div>` : ''}
             </div>
             <div>
               <div class="overview-field"><div class="k">相關人物</div></div>
@@ -684,7 +684,7 @@ const App = (() => {
           </div>
           ${level2 && caseRevisitOpen ? `
           <div class="metadata-panel" style="margin-top:20px;max-width:420px">
-            <div class="row"><span class="k">關聯封存 LINKED ARCHIVE</span><span class="v">GREY-128</span></div>
+            <div class="row"><span class="k">關聯封存 LINKED ARCHIVE</span><span class="v">灰-128</span></div>
             <div class="row"><span class="k">首次關聯 FIRST LINKED</span><span class="v">${esc(rv.firstLinked)}</span></div>
             <div class="row"><span class="k">最後修改 LAST MODIFIED</span><span class="v">${esc(rv.lastModified)}</span></div>
           </div>
@@ -1146,7 +1146,7 @@ const App = (() => {
       ${cardHtml('a')}${cardHtml('b')}${cardHtml('c')}
       ${fragMessage ? `<div class="observation-box ${fragMessageOk ? '' : 'warn'}" style="max-width:420px">${esc(fragMessage)}</div>` : ''}
       ${solved ? `
-      <div class="observation-box" style="max-width:420px;margin-top:14px">已建立 1 筆封存關聯 1 ARCHIVE RELATION ESTABLISHED<br><span class="dim mono" style="font-size:12px">GREY-128 → CASE #0917</span></div>
+      <div class="observation-box" style="max-width:420px;margin-top:14px">已建立 1 筆封存關聯 1 ARCHIVE RELATION ESTABLISHED<br><span class="dim mono" style="font-size:12px">灰-128 → CASE #0917</span></div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/case/0917'">[ 前往案件 CASE #0917 → ]</button>` : ''}
     </div>
     ${bottomNav('m', true)}`;
@@ -1388,8 +1388,8 @@ const App = (() => {
     const counts = { match: 0, partial: 0, unresolved: 0 };
     Object.values(ev).forEach(r => counts[r]++);
     const options = [
-      { key: 'A', text: '灰-000 就是林予安 GREY-000 IS LIN, YU-AN' },
-      { key: 'B', text: '林予安與灰-000 有關聯 LIN, YU-AN IS CONNECTED TO GREY-000' },
+      { key: 'A', text: '灰-000 就是林予安' },
+      { key: 'B', text: '林予安與灰-000 有關聯' },
       { key: 'C', text: '證據不足 INSUFFICIENT EVIDENCE' },
     ];
     return `
@@ -1428,12 +1428,12 @@ const App = (() => {
   function runGrey130Sequence() {
     const el = document.getElementById('ch2-seq');
     if (!el) return;
-    el.innerHTML = `<div class="label">GREY-130</div><div class="id-line" id="successor-status">接班人 SUCCESSOR<br>未找到 NOT FOUND</div>`;
+    el.innerHTML = `<div class="label">灰-130</div><div class="id-line" id="successor-status">接班人 SUCCESSOR<br>未找到 NOT FOUND</div>`;
     setTimeout(() => {
       const s = document.getElementById('successor-status');
       if (s) s.innerHTML = '接班人 SUCCESSOR<br>已找到 FOUND';
       setTimeout(() => {
-        el.innerHTML = `<div class="label">GREY-130</div><div class="id-line">調查者 INVESTIGATOR<br>不明 UNKNOWN</div><div class="big" style="font-size:18px;margin-top:24px;letter-spacing:0.02em">已經有人在找你了。</div>`;
+        el.innerHTML = `<div class="label">灰-130</div><div class="id-line">調查者 INVESTIGATOR<br>不明 UNKNOWN</div><div class="big" style="font-size:18px;margin-top:24px;letter-spacing:0.02em">已經有人在找你了。</div>`;
         setTimeout(showCh2Complete, 2600);
       }, 1400);
     }, 1400);

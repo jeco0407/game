@@ -326,7 +326,7 @@ const DATA = {
       { version: 'v2', text: '不要再等了。', diffIndex: 3 },
       { version: 'v3', text: '不要再等他。', diffIndex: 4 },
     ],
-    editHistoryAuthor: 'GREY-127',
+    editHistoryAuthor: '灰-127',
     greyChainIds: [1, 27, 63, 91, 128],
     evidence: [
       { key: 'photo', label: '照片 PHOTO', result: 'match' },
