@@ -675,6 +675,7 @@ const App = (() => {
      ================================================================ */
   let boardLinks = []; // array of [id,id]
   let boardSelected = null;
+  let boardHelpOpen = false;
   function linkKey(a, b) { return [a, b].sort().join('|'); }
   function hasLink(a, b) { return boardLinks.some(l => linkKey(l[0], l[1]) === linkKey(a, b)); }
   function isCorrectLink(a, b) { return DATA.evidenceBoardCorrectLinks.some(l => linkKey(l[0], l[1]) === linkKey(a, b)); }
@@ -703,10 +704,11 @@ const App = (() => {
         </div>
         <div class="board-main">
           <div class="dash-title">證據板</div>
-          <p class="dim" style="font-size:13px">依序點選兩張卡片，把它們連在一起。試著找出正確的關係鏈。</p>
           <div class="board-toolbar">
             <button class="tool-btn" onclick="App.resetBoard()">[ 重設連線 ]</button>
+            <button class="tool-btn" onclick="App.toggleBoardHelp()">${boardHelpOpen ? '[ 關閉說明 ]' : '[ 怎麼用？ ]'}</button>
           </div>
+          ${boardHelpOpen ? `<div class="observation-box">依序點選任兩張卡片，它們就會連在一起；再點一次同一組可以取消連線。<br>試著找出正確的因果關係鏈，不是隨便連連看——順序跟方向都有意義。</div>` : ''}
           <div class="board-canvas" id="board-canvas">
             <svg class="board-svg">${boardLinks.map(l => {
               const a = nodes.find(n => n.id === l[0]), b = nodes.find(n => n.id === l[1]);
@@ -745,6 +747,7 @@ const App = (() => {
     if (allCorrect) STATE.set('board', true);
   }
   function resetBoard() { boardLinks = []; boardSelected = null; render(); }
+  function toggleBoardHelp() { boardHelpOpen = !boardHelpOpen; render(); }
 
   /* ================================================================
      SCREEN 18 — Audio Evidence
@@ -973,7 +976,7 @@ const App = (() => {
     inspectAnomaly, analyzeMetadata, zoomToggle, toggleFx, resetFx,
     dragImgStart, dropOnSlot, moveImgToSlot,
     openAccessPrompt, submitAccess,
-    selectBoardNode, resetBoard,
+    selectBoardNode, resetBoard, toggleBoardHelp,
     playAudio, finalReveal, runMSequence,
     openM000,
     toggleHint, deeperHint,
