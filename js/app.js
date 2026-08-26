@@ -163,7 +163,7 @@ const App = (() => {
           <div class="dash-logo">ECHO</div>
           <div class="dash-nav-title">封存庫</div>
           ${nav.map(n => `<div class="dash-nav-item ${n.key === 'cases' ? 'active' : ''}" ${n.key === 'cases' ? "onclick=\"location.hash='#/archive'\"" : (n.key === 'people' ? "onclick=\"location.hash='#/profile/yuan'\"" : '')}>${n.label}</div>`).join('')}
-          ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='#/grey-database'">灰資料庫</div>` : ''}
+          ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='#/ch2-entry'">灰資料庫</div>` : ''}
           <div class="dash-sys">系統<br><span class="v">上線中</span></div>
           <div class="dash-nav-item" style="margin-top:24px;color:var(--text-dim);font-size:12px" onclick="App.resetProgress()">重置進度</div>
         </div>
@@ -931,6 +931,23 @@ const App = (() => {
   function ch2Locked() {
     return `<div class="view view-wide">${backLink('#/archive','封存庫')}<p class="dim mono">存取遭拒。</p></div>${bottomNav('archive', true)}`;
   }
+
+  /* ================================================================
+     CHAPTER 02 — SCREEN 01 — Chapter 02 Entry
+     ================================================================ */
+  function viewCh2Entry() {
+    if (!STATE.get('final')) return ch2Locked();
+    return `
+    <div class="view view-wide">
+      ${backLink('#/archive', '封存庫')}
+      <div class="dash-title">CASE #0917 · INVESTIGATION CONTINUES</div>
+      <p class="dim mono" style="margin-top:10px">GREY-${esc(STATE.investigatorId())}</p>
+      <p class="dim" style="margin-top:16px;max-width:420px">案件並未結案。系統裡還有一長串編號，等著被打開。</p>
+      <button class="btn" style="margin-top:24px;max-width:220px" onclick="location.hash='#/grey-database'">[ 進入 ]</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+
   function greyCreatedRank(id) { return (id * 53 + 17) % 130; }
   function greyCreatedDate(id) {
     const base = new Date(2024, 0, 1).getTime();
@@ -942,14 +959,24 @@ const App = (() => {
     if (!STATE.get('final')) return ch2Locked();
     const you = parseInt(STATE.investigatorId(), 10);
     let ids = Array.from({ length: DATA.ch2.greyTotal }, (_, i) => i);
-    if (greySortMode === 'created') ids = ids.slice().sort((a, b) => greyCreatedRank(a) - greyCreatedRank(b));
+    const youInRange = you < DATA.ch2.greyTotal;
+    if (!youInRange) ids.push(you); // 你的編號可能落在標準列表範圍之外，仍要顯示
+    if (greySortMode === 'created') {
+      ids = ids.slice().sort((a, b) => {
+        const ra = (a === you && !youInRange) ? Infinity : greyCreatedRank(a);
+        const rb = (b === you && !youInRange) ? Infinity : greyCreatedRank(b);
+        return ra - rb;
+      });
+    }
     const rows = ids.map(id => {
       const label = `灰-${String(id).padStart(3, '0')}`;
       const isYou = id === you;
-      const clickable = id === 128 || id === 0;
+      const clickable = id === 128 || id === 0 || isYou;
       const cls = ['cf-row']; if (clickable) cls.push('clickable');
-      const onclick = id === 128 ? `onclick="location.hash='#/grey/128'"` : id === 0 ? `onclick="location.hash='#/grey/000'"` : '';
-      const dateTag = greySortMode === 'created' ? `<span class="dim mono" style="font-size:12px;margin-right:10px">${greyCreatedDate(id)}</span>` : '';
+      const onclick = id === 128 ? `onclick="location.hash='#/grey/128'"` : id === 0 ? `onclick="location.hash='#/grey/000'"` : isYou ? `onclick="location.hash='#/grey/me'"` : '';
+      const dateTag = greySortMode === 'created'
+        ? `<span class="dim mono" style="font-size:12px;margin-right:10px">${isYou ? '剛剛建立' : greyCreatedDate(id)}</span>`
+        : '';
       return `<div class="${cls.join(' ')}" ${onclick}><span class="k">${label}</span><span>${dateTag}<span class="v ${isYou ? 'evidence-color' : ''}">${isYou ? '你' : '存取遭拒'}</span></span></div>`;
     }).join('');
     return `
@@ -968,6 +995,26 @@ const App = (() => {
     greySortMode = mode;
     if (mode === 'created') STATE.set('ch2Puzzle01Solved', true);
     render();
+  }
+
+  /* ================================================================
+     CHAPTER 02 — SCREEN 03 — Grey Profile（玩家自己）
+     ================================================================ */
+  function viewGreyProfileSelf() {
+    if (!STATE.get('final')) return ch2Locked();
+    const id = STATE.investigatorId();
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey-database', '灰資料庫')}
+      <div class="dash-title">灰-${esc(id)}</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        <div class="cf-row"><span class="k">狀態</span><span class="v">ACTIVE</span></div>
+        <div class="cf-row"><span class="k">建立時間</span><span class="v">剛剛建立</span></div>
+        <div class="cf-row"><span class="k">連線時長</span><span class="v">${formatElapsed(STATE.elapsedMs())}</span></div>
+      </div>
+      <p class="dim" style="margin-top:16px;max-width:420px">你也是這串編號裡的一個。</p>
+    </div>
+    ${bottomNav('m', true)}`;
   }
 
   /* ================================================================
@@ -1400,7 +1447,9 @@ const App = (() => {
     '#/evidence-board': viewBoard,
     '#/evidence/audio': viewAudio,
     '#/investigator': viewInvestigator,
+    '#/ch2-entry': viewCh2Entry,
     '#/grey-database': viewGreyDatabase,
+    '#/grey/me': viewGreyProfileSelf,
     '#/grey/128': viewGrey128Overview,
     '#/grey/128/archive': viewGrey128Archive,
     '#/grey/128/integrity': viewFileIntegrity,
