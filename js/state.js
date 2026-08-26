@@ -57,10 +57,12 @@ const STATE = (() => {
   ensureStart();
 
   function ensureId() {
+    // 玩家固定是灰-129——呼應第一章結局「調查者總數 128 → 129」的揭露，
+    // 也對上第二章灰資料庫「共 130 筆（000～129）」的設定。
     try {
       let id = localStorage.getItem(ID_KEY);
       if (!id) {
-        id = String(129 + Math.floor(Math.random() * 40));
+        id = '129';
         localStorage.setItem(ID_KEY, id);
       }
       return id;
