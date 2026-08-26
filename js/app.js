@@ -72,7 +72,7 @@ const App = (() => {
       { key: 'archive', label: '封存庫', hash: '#/archive', locked: false },
       { key: 'case', label: '案件', hash: STATE.get('access') ? '#/case/0917' : '#/case-overview', locked: false },
       { key: 'board', label: '證據板', hash: '#/evidence-board', locked: !STATE.get('access') },
-      { key: 'm', label: STATE.get('final') ? 'M 資料庫' : 'M', hash: STATE.get('final') ? '#/m-database' : '#/investigator', locked: !STATE.get('audio') },
+      { key: 'm', label: STATE.get('final') ? '灰資料庫' : '灰', hash: STATE.get('final') ? '#/m-database' : '#/investigator', locked: !STATE.get('audio') },
     ];
     return `<nav class="bottom-nav ${wide ? 'wide' : ''}">${items.map(it => {
       const cls = ['nav-item'];
@@ -151,7 +151,7 @@ const App = (() => {
           <div class="dash-logo">ECHO</div>
           <div class="dash-nav-title">封存庫</div>
           ${nav.map(n => `<div class="dash-nav-item ${n.key === 'cases' ? 'active' : ''}" ${n.key === 'cases' ? "onclick=\"location.hash='#/archive'\"" : (n.key === 'people' ? "onclick=\"location.hash='#/profile/yuan'\"" : '')}>${n.label}</div>`).join('')}
-          ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='#/m-database'">M 資料庫</div>` : ''}
+          ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='#/m-database'">灰資料庫</div>` : ''}
           <div class="dash-sys">系統<br><span class="v">上線中</span></div>
           <div class="dash-nav-item" style="margin-top:24px;color:var(--text-dim);font-size:12px" onclick="App.resetProgress()">重置進度</div>
         </div>
@@ -199,7 +199,7 @@ const App = (() => {
           <div class="overview-field"><div class="k">地點</div><div class="v" style="color:var(--text-dim)">${c.location}</div></div>
           <div class="overview-field"><div class="k">相關人物</div></div>
           ${c.related.map(r => `
-            <div class="related-item ${relatedLinked ? 'linked' : ''}" ${relatedLinked ? `onclick="location.hash='${r.name === '陳奕辰' ? '#/profile/chen_yc' : '#/profile/m_0917'}'"` : ''}>
+            <div class="related-item ${relatedLinked ? 'linked' : ''}" ${relatedLinked ? `onclick="location.hash='${r.name === '陳奕辰' ? '#/profile/chen_yc' : '#/profile/hui_0917'}'"` : ''}>
               <span class="name">${esc(r.name)}</span><span class="status">${relatedLinked ? '→' : r.status}</span>
             </div>`).join('')}
         </div>
@@ -409,7 +409,7 @@ const App = (() => {
       body += `<div style="margin-top:2px">`;
       if (window.__hiddenOpen) {
         const hidden = DATA.comments17.find(c => c.hidden);
-        body += `<div class="comment hidden"><div class="h">@<span style="cursor:pointer" onclick="location.hash='#/profile/m_0917'">${esc(hidden.user)}</span> <span class="dim">· ${esc(hidden.time)}</span></div><div>${nl(hidden.text)}</div></div>`;
+        body += `<div class="comment hidden"><div class="h">@<span style="cursor:pointer" onclick="location.hash='#/profile/hui_0917'">${esc(hidden.user)}</span> <span class="dim">· ${esc(hidden.time)}</span></div><div>${nl(hidden.text)}</div></div>`;
       } else {
         body += `<div class="hidden-reply-toggle" onclick="App.revealHidden()">查看更多 1 則回覆</div>`;
       }
@@ -425,7 +425,7 @@ const App = (() => {
   function toggleEdited() { window.__editedOpen = !window.__editedOpen; render(); }
 
   /* ================================================================
-     SCREEN 09 — M_0917 profile
+     SCREEN 09 — hui_0917（灰）profile
      ================================================================ */
   function viewMProfile() {
     const m = DATA.mProfile;
@@ -433,7 +433,7 @@ const App = (() => {
     <div class="view view-narrow">
       ${backLink('#/post/17', '最後貼文')}
       <div class="profile-head">
-        <div class="profile-avatar avatar-m-mark">M</div>
+        <div class="profile-avatar avatar-m-mark">灰</div>
         <div class="post-name">${m.name}</div>
         <div class="post-handle">@${m.handle}</div>
         <div class="profile-status">粉絲 ${m.followers} · 追蹤中 ${m.following} · ${m.posts} 篇貼文</div>
@@ -563,7 +563,7 @@ const App = (() => {
     const c = DATA.chenProfile;
     let body = `
     <div class="view view-narrow">
-      ${backLink('#/profile/m_0917', '@m_0917')}
+      ${backLink('#/profile/hui_0917', '@hui_0917')}
       <div class="profile-head">
         <div class="profile-avatar"${avatarStyle('chen')}></div>
         <div class="post-name">${c.name}</div>
@@ -653,7 +653,7 @@ const App = (() => {
               <div class="overview-field"><div class="k">狀態</div><div class="v warn">${cf.status}</div></div>
               <div class="overview-field"><div class="k">最後出現</div><div class="v">${cf.lastSeenDate}<br>${cf.lastSeenTime}</div></div>
               <div class="overview-field"><div class="k">地點</div><div class="v">${cf.location}</div></div>
-              ${STATE.get('audio') ? `<div class="overview-field"><div class="k">調查者</div><div class="v evidence-color" style="cursor:pointer" onclick="location.hash='#/investigator'">M →</div></div>`
+              ${STATE.get('audio') ? `<div class="overview-field"><div class="k">調查者</div><div class="v evidence-color" style="cursor:pointer" onclick="location.hash='#/investigator'">灰 →</div></div>`
                 : `<div class="overview-field"><div class="k">調查者</div><div class="v" style="color:var(--text-dim)">身分不明</div></div>`}
             </div>
             <div>
@@ -792,7 +792,7 @@ const App = (() => {
   }
 
   /* ================================================================
-     SCREEN 19/20/21/22/23 — Investigator → M-129 → Final message
+     SCREEN 19/20/21/22/23 — Investigator → 灰-129 → Final message
      ================================================================ */
   function viewInvestigator() {
     if (!STATE.get('audio')) {
@@ -803,7 +803,7 @@ const App = (() => {
       <div class="view view-wide">
         <div class="investigator-reveal">
           <div class="label">調查者檔案</div>
-          <div class="big">M</div>
+          <div class="big">灰</div>
           <div class="id-line" id="total-inv">調查者總數<br>128</div>
           <button class="btn" style="margin-top:30px;max-width:240px" onclick="App.finalReveal()">[ 進入 ]</button>
         </div>
@@ -821,7 +821,7 @@ const App = (() => {
   function runMSequence() {
     const el = document.getElementById('m-sequence');
     if (!el) return;
-    el.innerHTML = `<div class="label">調查者檔案</div><div class="big">M</div><div class="id-line">調查者總數</div><div class="big" id="counter">128</div>`;
+    el.innerHTML = `<div class="label">調查者檔案</div><div class="big">灰</div><div class="id-line">調查者總數</div><div class="big" id="counter">128</div>`;
     setTimeout(() => {
       const counter = document.getElementById('counter');
       if (counter) counter.textContent = '129';
@@ -839,7 +839,7 @@ const App = (() => {
     el.innerHTML = `
       <div class="investigator-panel">
         <div class="label">調查者</div>
-        <div class="big-id evidence-color">M-${STATE.investigatorId()}</div>
+        <div class="big-id evidence-color">灰-${STATE.investigatorId()}</div>
         <div class="inv-row"><span class="k">狀態</span><span class="v warn">進行中</span></div>
         <div class="inv-row"><span class="k">調查開始於</span><span class="v mono">${formatElapsed(STATE.elapsedMs())} 前</span></div>
       </div>
@@ -875,7 +875,7 @@ const App = (() => {
     setTimeout(() => {
       div.innerHTML = `<div class="big" style="font-size:22px;letter-spacing:0.14em">第一章</div><div class="big" style="font-size:26px;color:var(--evidence)">23:17</div><div class="label">完成</div>`;
       setTimeout(() => {
-        div.innerHTML = `<div class="label">下一步指示</div><div style="margin-top:14px;font-size:15px;line-height:2">不要再找林予安了。<br><b>去找 M。</b></div>`;
+        div.innerHTML = `<div class="label">下一步指示</div><div style="margin-top:14px;font-size:15px;line-height:2">不要再找林予安了。<br><b>去找灰。</b></div>`;
         setTimeout(() => {
           div.remove();
           STATE.set('final', true);
@@ -894,16 +894,16 @@ const App = (() => {
     }
     const id = STATE.investigatorId();
     let rows = '';
-    for (let i = 1; i <= 6; i++) rows += `<div class="cf-row"><span class="k">M-${String(i).padStart(3,'0')}</span><span class="v dim">存取遭拒</span></div>`;
+    for (let i = 1; i <= 6; i++) rows += `<div class="cf-row"><span class="k">灰-${String(i).padStart(3,'0')}</span><span class="v dim">存取遭拒</span></div>`;
     rows += `<div class="cf-row"><span class="k">...</span><span class="v dim">...</span></div>`;
-    rows += `<div class="cf-row"><span class="k">M-128</span><span class="v dim">存取遭拒</span></div>`;
-    rows += `<div class="cf-row"><span class="k">M-${id}</span><span class="v evidence-color">你</span></div>`;
+    rows += `<div class="cf-row"><span class="k">灰-128</span><span class="v dim">存取遭拒</span></div>`;
+    rows += `<div class="cf-row"><span class="k">灰-${id}</span><span class="v evidence-color">你</span></div>`;
     return `
     <div class="view view-wide">
       ${backLink('#/archive', '封存庫')}
-      <div class="dash-title">M 資料庫</div>
+      <div class="dash-title">灰資料庫</div>
       <div class="case-file" style="margin-top:10px;max-width:480px">${rows}
-        <div class="cf-row clickable" onclick="App.openM000()"><span class="k">M-000</span><span class="v missing">已刪除</span></div>
+        <div class="cf-row clickable" onclick="App.openM000()"><span class="k">灰-000</span><span class="v missing">已刪除</span></div>
       </div>
       <div id="m000-slot" style="margin-top:14px"></div>
     </div>
@@ -922,7 +922,7 @@ const App = (() => {
     '#/case-overview': viewCaseOverview,
     '#/feed': viewFeed,
     '#/profile/yuan': viewYuanProfile,
-    '#/profile/m_0917': viewMProfile,
+    '#/profile/hui_0917': viewMProfile,
     '#/profile/chen_yc': viewChenProfile,
     '#/photo/02': viewPhoto,
     '#/timeline': viewTimeline,

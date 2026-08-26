@@ -150,7 +150,7 @@ const DATA = {
     { user: 'k.eve', text: '拜託平安', time: '9m' },
     { user: 'nn_room', text: '這個帳號之前很正常啊', time: '5m' },
     { user: 'chen_yc', text: '別再發了。', suspicious: true, time: '3m' },
-    { user: 'm_0917', text: '你不應該再找了。', hidden: true, time: '08/18 · 00:19' },
+    { user: 'hui_0917', text: '你不應該再找了。', hidden: true, time: '08/18 · 00:19' },
   ],
 
   /* ---------------- Evidence photo / metadata ----------------
@@ -196,8 +196,8 @@ const DATA = {
   ],
 
   mProfile: {
-    handle: 'm_0917',
-    name: 'M',
+    handle: 'hui_0917',
+    name: '灰',
     followers: '—', following: '—', posts: 1,
     post: '他第一次發現我的時候，\n也是星期四。',
     postDate: '08 / 20（週四）',
@@ -237,7 +237,7 @@ const DATA = {
     digitalActivity: ['08/18 · 00:12', '08/18 · 03:17', '08/18 · 07:41'],
     related: [
       { name: '陳奕辰', status: '身分不明' },
-      { name: 'M', status: '身分不明' },
+      { name: '灰', status: '身分不明' },
     ],
   },
 
@@ -252,7 +252,7 @@ const DATA = {
     location: '不明',
     related: [
       { name: '陳奕辰', status: '身分不明' },
-      { name: 'M', status: '身分不明' },
+      { name: '灰', status: '身分不明' },
     ],
     digitalActivity: ['08/18 · 00:12', '08/18 · 03:17', '08/18 · 07:41'],
   },
@@ -261,7 +261,7 @@ const DATA = {
   evidenceBoardNodes: [
     { id: 'yuan', label: '林予安', x: 12, y: 12 },
     { id: 't2317', label: '23:17', x: 60, y: 8 },
-    { id: 'm0917', label: 'M_0917', x: 60, y: 45 },
+    { id: 'm0917', label: '灰_0917', x: 60, y: 45 },
     { id: 'chen', label: '陳奕辰', x: 12, y: 62 },
   ],
   evidenceBoardCorrectLinks: [
@@ -278,7 +278,7 @@ const DATA = {
       { t: '0:00', line: '（雨聲）', dim: true },
       { t: '0:08', line: '「如果有人找到這裡……」' },
       { t: '0:14', line: '（停頓）', dim: true },
-      { t: '0:19', line: '「不要相信 M。」', warn: true },
+      { t: '0:19', line: '「不要相信灰。」', warn: true },
       { t: '0:23', line: '（雜訊）', dim: true },
       { t: '0:29', line: '「他不是一個人。」', warn: true },
     ],
@@ -316,7 +316,7 @@ const DATA = {
     board: [
       '林予安失蹤的時間，跟帳號後續的活動，之間有沒有關聯？',
       '試著把 23:17 連到那個接管帳號的人。',
-      '正確的關係鏈是：林予安 → 23:17 → M_0917 → 陳奕辰。',
+      '正確的關係鏈是：林予安 → 23:17 → 灰_0917 → 陳奕辰。',
     ],
   }
 };
