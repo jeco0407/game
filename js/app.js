@@ -294,7 +294,7 @@ const App = (() => {
         </div>
         <button class="x-newpost-btn" onclick="App.newPostToast()">${icon('pencil', 18)} 發布貼文</button>
       </div>
-      <div class="x-left-footer">© 2026 ECHO<br>Everything leaves a trace.</div>
+      <div class="x-left-footer">© 2026 ECHO<br>${DATA.taglineZh}</div>
     </div>`;
   }
 
@@ -986,12 +986,12 @@ const App = (() => {
     <div class="view view-wide">
       ${backLink('#/archive', '封存庫')}
       <div class="dash-title">灰資料庫</div>
-      <div class="dim mono" style="font-size:12px;letter-spacing:0.04em;margin-top:8px">NOTICE<br>Records may not follow chronological order.</div>
+      <div class="dim mono" style="font-size:12px;letter-spacing:0.04em;margin-top:8px">NOTICE<br>紀錄可能不是依照時間先後排列。</div>
       <div class="board-toolbar" style="margin-top:14px">
         <button class="tool-btn ${greySortMode === 'id' ? 'active' : ''}" onclick="App.setGreySort('id')">[ ID SORT ]</button>
         <button class="tool-btn ${greySortMode === 'created' ? 'active' : ''}" onclick="App.setGreySort('created')">[ ARCHIVE CREATED ]</button>
       </div>
-      ${greySortMode === 'created' ? `<div class="dim mono" style="font-size:12px;margin-top:10px">RECORD ORDER UPDATED<br>1 record changed position.</div>` : ''}
+      ${greySortMode === 'created' ? `<div class="dim mono" style="font-size:12px;margin-top:10px">RECORD ORDER UPDATED<br>1 筆紀錄改變了位置。</div>` : ''}
       <div class="case-file" style="margin-top:10px;max-width:520px;max-height:520px;overflow-y:auto">${rows}</div>
     </div>
     ${bottomNav('m', true)}`;
@@ -1432,7 +1432,7 @@ const App = (() => {
       const s = document.getElementById('successor-status');
       if (s) s.innerHTML = 'SUCCESSOR<br>FOUND';
       setTimeout(() => {
-        el.innerHTML = `<div class="label">GREY-130</div><div class="id-line">INVESTIGATOR<br>UNKNOWN</div><div class="big" style="font-size:18px;margin-top:24px;letter-spacing:0.02em">Someone is already looking for you.</div>`;
+        el.innerHTML = `<div class="label">GREY-130</div><div class="id-line">INVESTIGATOR<br>UNKNOWN</div><div class="big" style="font-size:18px;margin-top:24px;letter-spacing:0.02em">已經有人在找你了。</div>`;
         setTimeout(showCh2Complete, 2600);
       }, 1400);
     }, 1400);

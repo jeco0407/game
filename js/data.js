@@ -3,7 +3,6 @@
 const DATA = {
 
   siteName: 'ECHO',
-  tagline: 'Everything leaves a trace.',
   taglineZh: '所有事情，都會留下痕跡。',
   version: 'v.2.4.17',
 
@@ -208,7 +207,7 @@ const DATA = {
     name: '陳奕辰',
     status: '帳號已停用',
     posts: 24,
-    bio: "Don't ask me.",
+    bio: '別問我。',
     lastPost: { text: '如果她問起來，\n就說我不知道。', time: '08 / 20（週四）· 23:17' },
     archived: [
       { id: 1, title: '[CONTENT REMOVED]', removed: true, highlight: false },
@@ -347,12 +346,12 @@ const DATA = {
   hints: {
     hiddenReply: [
       '這則貼文寫著 19 則留言，但畫面上數得到的，好像不到 19 則。',
-      '往留言最下面找找看，有沒有寫著「1 hidden reply」。',
+      '往留言最下面找找看，有沒有寫著「查看更多 1 則回覆」。',
       '點開它。',
     ],
     photo: [
       '這張照片乍看很普通，但便利商店已經打烊了。',
-      '玻璃會反射對街的東西。試著用 INSPECT 放大玻璃的部分。',
+      '玻璃會反射對街的東西。試著把玻璃的部分放大看看。',
       '玻璃門旁邊，還有一個小小的門牌號碼，也值得看清楚。',
     ],
     timeline: [
