@@ -994,6 +994,7 @@ const App = (() => {
       ${greySortMode === 'created' ? `<div class="dim mono" style="font-size:12px;margin-top:10px">紀錄順序已更新 RECORD ORDER UPDATED<br>1 筆紀錄改變了位置。</div>` : ''}
       <div class="case-file" style="margin-top:10px;max-width:520px;max-height:520px;overflow-y:auto">${rows}</div>
     </div>
+    ${hintBar(!STATE.get('ch2Puzzle01Solved') ? 'ch2Puzzle01' : null)}
     ${bottomNav('m', true)}`;
   }
   function setGreySort(mode) {
@@ -1090,6 +1091,7 @@ const App = (() => {
       ${solved ? `<div class="observation-box" style="margin-top:14px">標頭 Header 完整、索引 Index 還在，但 02、03 的內容 Body 都消失了——有人只清掉了內容，卻沒有清掉索引。</div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/128/chen'">[ 繼續調查 → ]</button>` : ''}
     </div>
+    ${hintBar(!solved ? 'ch2Puzzle02' : null)}
     ${bottomNav('m', true)}`;
   }
   function openIndexEntry(id) {
@@ -1149,6 +1151,7 @@ const App = (() => {
       <div class="observation-box" style="max-width:420px;margin-top:14px">已建立 1 筆封存關聯 1 ARCHIVE RELATION ESTABLISHED<br><span class="dim mono" style="font-size:12px">灰-128 → CASE #0917</span></div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/case/0917'">[ 前往案件 CASE #0917 → ]</button>` : ''}
     </div>
+    ${hintBar(!solved ? 'ch2Puzzle03' : null)}
     ${bottomNav('m', true)}`;
   }
   function selectFragmentChip(fragKey, idx) {
@@ -1209,6 +1212,7 @@ const App = (() => {
       ${foundDiffs > 0 ? `<div class="dim mono" style="font-size:12px;margin-top:12px">偵測到 ${foundDiffs} 處修改 ${foundDiffs} EDIT${foundDiffs > 1 ? 'S' : ''} DETECTED</div>` : ''}
       ${found ? `<button class="btn" style="margin-top:20px;max-width:260px" onclick="location.hash='#/grey/128/edit-history'">[ 查看修改紀錄 → ]</button>` : ''}
     </div>
+    ${hintBar(!found ? 'ch2Puzzle04' : null)}
     ${bottomNav('case', true)}`;
   }
   function selectDiffChar(version) {
@@ -1267,6 +1271,7 @@ const App = (() => {
       ${solved ? `<div class="observation-box" style="max-width:420px">灰-001 → 灰-027 → 灰-063 → 灰-091 → 灰-128——一條跨越多年的鏈。</div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/000'">[ 前往灰-000 → ]</button>` : ''}
     </div>
+    ${hintBar(!solved ? 'ch2GreyChain' : null)}
     ${bottomNav('m', true)}`;
   }
   function selectChainNode(id) {
@@ -1370,6 +1375,7 @@ const App = (() => {
       <div class="observation-box" style="margin-top:14px;max-width:420px">相符 ${counts.match} MATCH / 部分相符 ${counts.partial} PARTIAL / 無法判定 ${counts.unresolved} UNRESOLVED</div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="App.goToArchiveConflict()">[ 繼續 → ]</button>` : ''}
     </div>
+    ${hintBar(!allRevealed ? 'ch2Evidence' : null)}
     ${bottomNav('m', true)}`;
   }
   function revealEvidence(key) { evidenceRevealed[key] = true; render(); }
@@ -1410,6 +1416,7 @@ const App = (() => {
       ${judgement === 'C' ? `<div class="observation-box" style="margin-top:14px;max-width:420px">調查狀態：暫定 INVESTIGATION STATUS: PROVISIONAL</div>
       <button class="btn" style="margin-top:14px;max-width:260px" onclick="App.ch2FinalReveal()">[ 繼續 → ]</button>` : ''}
     </div>
+    ${hintBar(judgement !== 'C' ? 'ch2Conflict' : null)}
     ${bottomNav('m', true)}`;
   }
   function submitJudgement(choice) {
