@@ -44,6 +44,9 @@ const STATE = (() => {
       // ---- Post-game archive anomaly ----
       archiveAnomalySeen: false,      // 破關後是否已觸發過封存庫「自己更新了一次」的彩蛋
       archiveAnomalyIndexedAt: null,  // 觸發當下的時間戳，之後永久顯示在 #0642 卡片上
+
+      // ---- Case #0642 · Archive Fragment 01（番外） ----
+      ch0642Fragment01Solved: false, // 找出建立時間早於對話開始的那則訊息
     };
   }
 

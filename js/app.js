@@ -255,8 +255,73 @@ const App = (() => {
         <div class="row"><span class="k">案件狀態</span><span class="v">已封存</span></div>
         <div class="row"><span class="k">最後索引</span><span class="v">${esc(indexedAt)}</span></div>
         <div class="row"><span class="k">索引者</span><span class="v">不明</span></div>
+        ${STATE.get('ch0642Fragment01Solved') ? `<div class="row"><span class="k">封存片段</span><span class="v">01 · 已讀取</span></div>` : ''}
       </div>
-      <button class="btn" style="margin-top:20px;max-width:340px" onclick="location.hash='#/archive'">[ 返回封存庫 ]</button>
+      <button class="btn" style="margin-top:20px;max-width:340px" onclick="location.hash='#/case/0642/fragment'">[ 查看封存片段 → ]</button>
+      <button class="btn" style="margin-top:10px;max-width:340px" onclick="location.hash='#/archive'">[ 返回封存庫 ]</button>
+    </div>
+    ${bottomNav('archive', true)}`;
+  }
+
+  function viewCase0642Fragment() {
+    const indexedAt = STATE.get('archiveAnomalyIndexedAt');
+    if (!indexedAt) return `<div class="view view-wide">${backLink('#/archive', '封存庫')}<p class="dim mono">已鎖定。</p></div>${bottomNav('archive', true)}`;
+    const intro = DATA.case0642.intro;
+    return `
+    <div class="view view-wide">
+      ${backLink('#/case/0642', '案件 #0642')}
+      <div class="dash-title">封存片段 01</div>
+      <div style="max-width:420px;font-size:14px;line-height:1.9;color:var(--text);margin-top:14px">${intro.map(esc).join('<br><br>')}</div>
+      <button class="btn" style="margin-top:20px;max-width:340px" onclick="location.hash='#/case/0642/messages'">[ 查看訊息紀錄 → ]</button>
+    </div>
+    ${bottomNav('archive', true)}`;
+  }
+
+  let ch0642Revealed = {};
+  let ch0642Wrong = false;
+  function viewCase0642Messages() {
+    const indexedAt = STATE.get('archiveAnomalyIndexedAt');
+    if (!indexedAt) return `<div class="view view-wide">${backLink('#/archive', '封存庫')}<p class="dim mono">已鎖定。</p></div>${bottomNav('archive', true)}`;
+    const msgs = DATA.case0642.messages;
+    const rows = msgs.map(m => {
+      const revealed = !!ch0642Revealed[m.id];
+      return `
+      <div class="cf-row clickable" onclick="App.revealCh0642Message(${m.id})"><span class="k">${m.sentTime}</span><span class="v">${esc(m.text)}</span></div>
+      ${revealed ? `<div class="dim mono" style="font-size:11px;padding:2px 16px 8px">建立時間：${esc(m.createdTime)}${revealed ? ` <span class="dim" style="cursor:pointer;text-decoration:underline" onclick="App.selectCh0642Anomaly(${m.id})">標記為異常</span>` : ''}</div>` : ''}`;
+    }).join('');
+    return `
+    <div class="view view-wide">
+      ${backLink('#/case/0642/fragment', '封存片段 01')}
+      <div class="dash-title">訊息紀錄</div>
+      <p class="dim" style="font-size:13px">點擊每一則訊息，比對它的建立時間。找出建立時間跟顯示順序不合理的那一則，點擊「標記為異常」。</p>
+      <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
+      ${ch0642Wrong ? `<div class="observation-box warn" style="max-width:420px;margin-top:14px">這則沒有異常，再檢查一次。</div>` : ''}
+    </div>
+    ${hintBar('case0642')}
+    ${bottomNav('archive', true)}`;
+  }
+  function revealCh0642Message(id) { ch0642Revealed[id] = true; ch0642Wrong = false; render(); }
+  function selectCh0642Anomaly(id) {
+    if (id === DATA.case0642.anomalyId) {
+      playSolveSfx();
+      STATE.set('ch0642Fragment01Solved', true);
+      location.hash = '#/case/0642/result';
+    } else {
+      ch0642Wrong = true;
+      render();
+    }
+  }
+  function viewCase0642Result() {
+    if (!STATE.get('ch0642Fragment01Solved')) return `<div class="view view-wide">${backLink('#/case/0642/messages', '訊息紀錄')}<p class="dim mono">尚未找到異常。</p></div>${bottomNav('archive', true)}`;
+    const r = DATA.case0642.result;
+    return `
+    <div class="view view-wide">
+      <div class="dash-title">${esc(r.title)}</div>
+      <div class="case-file" style="margin-top:14px;max-width:420px">
+        ${r.lines.map(l => `<div class="cf-row"><span class="v">${esc(l)}</span></div>`).join('')}
+      </div>
+      <p class="dim" style="font-size:13px;margin-top:20px;max-width:420px">${esc(r.closing)}</p>
+      <button class="btn" style="margin-top:14px;max-width:340px" onclick="location.hash='#/archive'">[ 返回封存庫 ]</button>
     </div>
     ${bottomNav('archive', true)}`;
   }
@@ -1687,7 +1752,7 @@ const App = (() => {
     const nextHash = key === 'A' ? '#/ch3/message-b' : '#/ch3/message-timeline';
     const nextLabel = key === 'A' ? '[ 查看下一份片段 → ]' : '[ 排列這兩份訊息 → ]';
     const backHash = key === 'A' ? '#/grey/000/revisit' : '#/ch3/message-a';
-    const backLabel = key === 'A' ? '灰-000' : '訊息片段';
+    const backLabel = key === 'A' ? '灰-000' : '訊息片段 A';
     return `
     <div class="view view-wide">
       ${backLink(backHash, backLabel)}
@@ -1983,6 +2048,9 @@ const App = (() => {
     '#/': viewEntry,
     '#/archive': viewDashboard,
     '#/case/0642': viewCase0642,
+    '#/case/0642/fragment': viewCase0642Fragment,
+    '#/case/0642/messages': viewCase0642Messages,
+    '#/case/0642/result': viewCase0642Result,
     '#/case-overview': viewCaseOverview,
     '#/feed': viewFeed,
     '#/profile/yuan': viewYuanProfile,
@@ -2094,6 +2162,7 @@ const App = (() => {
     revealCh3Evidence, submitCh3Judgement,
     ch3FinalReveal, ch3ReturnToCase,
     shareResult, replayGame, exitEndingToArchive, finishRecap3,
+    revealCh0642Message, selectCh0642Anomaly,
   };
 })();
 
