@@ -151,6 +151,7 @@ const App = (() => {
      ================================================================ */
   function viewDashboard() {
     const nav = DATA.archiveNav;
+    const indexedAt = STATE.get('archiveAnomalyIndexedAt');
     return `
     <div class="view view-wide">
       <div class="dashboard">
@@ -176,16 +177,52 @@ const App = (() => {
               <div class="cc-name">林予安</div>
               <div class="cc-meta">最後出現<br>2026 / 08 / 17 · 23:17</div>
               ${STATE.get('ch3Final')
-                ? `<div class="cc-status">狀態：<span class="closed">已結案 CLOSED</span></div>
+                ? `<div class="cc-status">狀態：<span class="closed">已結案 CLOSED</span></div>
                    <div class="cc-archive-tag">03 CHAPTERS COMPLETE</div>`
                 : `<div class="cc-status">狀態：<span class="warn">進行中</span></div>`}
             </div>
-            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #0642</div><div class="cc-name">存取受限</div><div class="cc-archive-tag">僅供封存 ARCHIVE ONLY</div></div>
-            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #1188</div><div class="cc-name">存取受限</div><div class="cc-archive-tag">僅供封存 ARCHIVE ONLY</div></div>
-            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #0033</div><div class="cc-name">存取受限</div><div class="cc-archive-tag">僅供封存 ARCHIVE ONLY</div></div>
+            <div class="case-card restricted${indexedAt ? ' clickable' : ''}"${indexedAt ? ` onclick="location.hash='#/case/0642'"` : ''}>${icon('lock', 18)}<div class="cc-id">案件 #0642</div><div class="cc-name">存取受限</div><div class="cc-archive-tag">僅供封存 ARCHIVE ONLY</div>${indexedAt ? `<div class="cc-archive-tag">最後索引 LAST INDEXED<br>${esc(indexedAt)}</div>` : ''}</div>
+            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #1188</div><div class="cc-name">存取受限</div><div class="cc-archive-tag">僅供封存 ARCHIVE ONLY</div></div>
+            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #0033</div><div class="cc-name">存取受限</div><div class="cc-archive-tag">僅供封存 ARCHIVE ONLY</div></div>
           </div>
         </div>
       </div>
+    </div>
+    ${bottomNav('archive', true)}`;
+  }
+
+  function formatIndexedTimestamp() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())} · ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function maybeTriggerArchiveAnomaly() {
+    if (!STATE.get('ch3Final') || STATE.get('archiveAnomalySeen')) return;
+    STATE.set('archiveAnomalySeen', true);
+    shareToast('SYNCING...');
+    setTimeout(() => {
+      shareToast('ARCHIVE UPDATED');
+      STATE.set('archiveAnomalyIndexedAt', formatIndexedTimestamp());
+      render();
+    }, 1600);
+  }
+
+  function viewCase0642() {
+    const indexedAt = STATE.get('archiveAnomalyIndexedAt');
+    if (!indexedAt) {
+      return `<div class="view view-wide">${backLink('#/archive', '封存庫')}<p class="dim mono">已鎖定。</p></div>${bottomNav('archive', true)}`;
+    }
+    return `
+    <div class="view view-wide">
+      ${backLink('#/archive', '封存庫')}
+      <div class="dash-title">案件 #0642<span class="dim mono" style="font-size:11px"> · ACCESS RESTRICTED</span></div>
+      <div class="metadata-panel" style="margin-top:16px;max-width:420px">
+        <div class="row"><span class="k">案件狀態 CASE STATUS</span><span class="v">已封存 ARCHIVED</span></div>
+        <div class="row"><span class="k">最後索引 LAST INDEXED</span><span class="v">${esc(indexedAt)}</span></div>
+        <div class="row"><span class="k">索引者 INDEX OWNER</span><span class="v">不明 UNKNOWN</span></div>
+      </div>
+      <button class="btn" style="margin-top:20px;max-width:340px" onclick="location.hash='#/archive'">[ 返回封存庫 RETURN TO ARCHIVE ]</button>
     </div>
     ${bottomNav('archive', true)}`;
   }
@@ -797,7 +834,7 @@ const App = (() => {
         <div class="waveform" id="waveform">${bars.map(h => `<div class="bar" style="height:${h}px"></div>`).join('')}</div>
         <div class="audio-time-row mono"><span>00:00</span><span>${a.duration}</span></div>
         ${!STATE.get('audio') ? `<button class="audio-play-btn" onclick="App.playAudio()">▶</button>
-        <div class="tool-btn" style="margin:10px auto 0;width:fit-content" onclick="App.toggleAudioMute()">${audioMuted ? '[ 取消靜音 UNMUTE ]' : '[ 靜音 MUTE ]'}</div>` : ''}
+        <div class="tool-btn" style="margin:10px auto 0;width:fit-content" onclick="App.toggleAudioMute()">${audioMuted ? '[ 取消靜音 UNMUTE ]' : '[ 靜音 MUTE ]'}</div>` : ''}
         <div class="audio-transcript" id="audio-transcript">${STATE.get('audio') ? a.transcript.map(transcriptLineHtml).join('') : ''}</div>
         ${STATE.get('audio') ? `<div class="lock-note">錄音已轉成逐字稿<br>偵測到 1 個身分不明的關係人。</div>
         <button class="btn" style="max-width:360px;margin:16px auto 0" onclick="location.hash='#/case/0917'">[ 回到案件檔案 ]</button>` : ''}
@@ -1919,6 +1956,7 @@ const App = (() => {
     '': viewEntry,
     '#/': viewEntry,
     '#/archive': viewDashboard,
+    '#/case/0642': viewCase0642,
     '#/case-overview': viewCaseOverview,
     '#/feed': viewFeed,
     '#/profile/yuan': viewYuanProfile,
@@ -1989,6 +2027,7 @@ const App = (() => {
     }
     root.innerHTML = html;
     window.scrollTo(0, 0);
+    if (hash === '#/archive') maybeTriggerArchiveAnomaly();
   }
 
   window.addEventListener('hashchange', render);

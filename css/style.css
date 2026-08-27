@@ -816,6 +816,9 @@ html { scrollbar-color: var(--border) var(--surface); scrollbar-width: thin; }
 .case-card.restricted { opacity: 0.45; cursor: not-allowed; color: var(--text-dim); }
 .case-card.restricted:hover { border-color: var(--border); }
 .case-card.restricted .icon { margin-bottom: 8px; }
+.case-card.restricted.clickable { opacity: 0.7; cursor: pointer; }
+.case-card.restricted.clickable:hover { border-color: var(--evidence); }
+.case-card.restricted.clickable .cc-archive-tag:last-child { color: var(--evidence); margin-top: 10px; }
 
 /* ==================================================================
    SCREEN 03 — Case Overview

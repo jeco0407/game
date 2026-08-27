@@ -40,6 +40,10 @@ const STATE = (() => {
       ch3Judgement: null,       // 'A' | 'B' | 'C'
       ch3Puzzle05Solved: false, // 只有選 C 才會是 true
       ch3Final: false,          // 完成第三章結局
+
+      // ---- Post-game archive anomaly ----
+      archiveAnomalySeen: false,      // 破關後是否已觸發過封存庫「自己更新了一次」的彩蛋
+      archiveAnomalyIndexedAt: null,  // 觸發當下的時間戳，之後永久顯示在 #0642 卡片上
     };
   }
 
