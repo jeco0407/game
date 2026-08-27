@@ -118,6 +118,40 @@ const App = (() => {
   function toggleHint() { hintOpen = !hintOpen; render(); }
   function deeperHint(key) { hintLevels[key] = (hintLevels[key] || 0) + 1; hintOpen = true; render(); }
 
+  /* ---------------- sound effects ---------------- */
+  const sfxCache = {};
+  function playSfx(name, volume) {
+    try {
+      let base = sfxCache[name];
+      if (!base) { base = new Audio(`assets/audio/sfx-${name}.wav`); sfxCache[name] = base; }
+      const inst = base.cloneNode(true);
+      inst.volume = volume !== undefined ? volume : 0.5;
+      inst.play().catch(() => {});
+    } catch (e) {}
+  }
+  function playSolveSfx() { playSfx('solve', 0.45); }
+  function typeMessages(box, msgs, onAllDone) {
+    let i = 0;
+    (function showNext() {
+      if (i >= msgs.length) { onAllDone(); return; }
+      const bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      if (box) box.appendChild(bubble);
+      const text = msgs[i];
+      let c = 0;
+      const iv = setInterval(() => {
+        c++;
+        if (bubble) bubble.textContent = text.slice(0, c);
+        playSfx('type', 0.22);
+        if (c >= text.length) {
+          clearInterval(iv);
+          i++;
+          setTimeout(showNext, 900);
+        }
+      }, 45);
+    })();
+  }
+
   /* ================================================================
      SCREEN 01 — Entry
      ================================================================ */
@@ -546,8 +580,8 @@ const App = (() => {
     ${bottomNav('case', true)}
     ${hintBar(!STATE.get('photoAnomaly') ? 'photo' : null)}`;
   }
-  function inspectAnomaly() { STATE.set('photoAnomaly', true); render(); }
-  function analyzeMetadata() { STATE.set('metadata', true); render(); }
+  function inspectAnomaly() { STATE.set('photoAnomaly', true); playSolveSfx(); render(); }
+  function analyzeMetadata() { STATE.set('metadata', true); playSolveSfx(); render(); }
   function zoomToggle() {
     zoomed = !zoomed;
     const im = document.getElementById('ev-img');
@@ -603,7 +637,7 @@ const App = (() => {
   function dragImgStart(ev) { ev.dataTransfer.setData('text/plain', 'img0917'); }
   function dropOnSlot(ev) { ev.preventDefault(); solveTimeline(); }
   function moveImgToSlot() { solveTimeline(); }
-  function solveTimeline() { STATE.set('timeline', true); render(); }
+  function solveTimeline() { if (!STATE.get('timeline')) playSolveSfx(); STATE.set('timeline', true); render(); }
 
   /* ================================================================
      SCREEN 13/14/15 — Chen profile / Deleted Archive / Access Prompt
@@ -667,6 +701,7 @@ const App = (() => {
     const msg = document.getElementById('msg-access');
     if (checkIn(DATA.accessPrompt.answers, el.value)) {
       STATE.set('access', true);
+      playSolveSfx();
       msg.className = 'access-msg granted';
       msg.innerHTML = '存取權限已授予。<br><span style="font-size:12px">案件檔案 #0917 已解鎖</span>';
       setTimeout(render, 900);
@@ -811,7 +846,10 @@ const App = (() => {
   }
   function checkBoardSolved() {
     const allCorrect = DATA.evidenceBoardCorrectLinks.every(l => hasLink(l[0], l[1]));
-    if (allCorrect) STATE.set('board', true);
+    if (allCorrect) {
+      if (!STATE.get('board')) playSolveSfx();
+      STATE.set('board', true);
+    }
   }
   function resetBoard() { boardLinks = []; boardSelected = null; render(); }
   function toggleBoardHelp() { boardHelpOpen = !boardHelpOpen; render(); }
@@ -935,20 +973,7 @@ const App = (() => {
 
   function showFinalMessages() {
     const box = document.getElementById('mp-body');
-    const msgs = DATA.finalMessages;
-    let i = 0;
-    function showNext() {
-      if (i >= msgs.length) { setTimeout(showChapterComplete, 1000); return; }
-      if (box) {
-        const bubble = document.createElement('div');
-        bubble.className = 'msg-bubble';
-        bubble.textContent = msgs[i];
-        box.appendChild(bubble);
-      }
-      i++;
-      setTimeout(showNext, 1700);
-    }
-    showNext();
+    typeMessages(box, DATA.finalMessages, () => setTimeout(showChapterComplete, 1000));
   }
 
   function showChapterComplete() {
@@ -1047,7 +1072,10 @@ const App = (() => {
   }
   function setGreySort(mode) {
     greySortMode = mode;
-    if (mode === 'created') STATE.set('ch2Puzzle01Solved', true);
+    if (mode === 'created') {
+      if (!STATE.get('ch2Puzzle01Solved')) playSolveSfx();
+      STATE.set('ch2Puzzle01Solved', true);
+    }
     render();
   }
 
@@ -1144,7 +1172,10 @@ const App = (() => {
   }
   function openIndexEntry(id) {
     openedIndexEntries[id] = true;
-    if (openedIndexEntries['02'] && openedIndexEntries['03']) STATE.set('ch2Puzzle02Solved', true);
+    if (openedIndexEntries['02'] && openedIndexEntries['03']) {
+      if (!STATE.get('ch2Puzzle02Solved')) playSolveSfx();
+      STATE.set('ch2Puzzle02Solved', true);
+    }
     render();
   }
 
@@ -1225,6 +1256,7 @@ const App = (() => {
       fragSelected = null;
     }
     if (fragConnections.device && fragConnections.account) {
+      if (!STATE.get('ch2Puzzle03Solved')) playSolveSfx();
       STATE.set('ch2Puzzle03Solved', true);
       STATE.set('case0917Level2Unlocked', true);
     }
@@ -1267,12 +1299,14 @@ const App = (() => {
     versionFound[version] = true;
     const versions = DATA.ch2.archiveVersions;
     if (versions.every(v => v.diffIndex === undefined || versionFound[v.version])) {
+      if (!STATE.get('ch2VersionDiffFound')) playSolveSfx();
       STATE.set('ch2VersionDiffFound', true);
     }
     render();
   }
   function viewEditHistory() {
     if (!STATE.get('ch2VersionDiffFound')) return ch2Locked();
+    if (!STATE.get('ch2Puzzle04Solved')) playSolveSfx();
     STATE.set('ch2Puzzle04Solved', true);
     const versions = DATA.ch2.archiveVersions;
     const author = DATA.ch2.editHistoryAuthor;
@@ -1330,6 +1364,7 @@ const App = (() => {
     if (chainSelected.length === DATA.ch2.greyChainIds.length) {
       const correct = DATA.ch2.greyChainIds.slice().sort((a, b) => greyCreatedRank(a) - greyCreatedRank(b));
       if (chainSelected.every((id2, i) => id2 === correct[i])) {
+        playSolveSfx();
         STATE.set('ch2GreyChainBuilt', true);
       } else {
         chainWrong = true;
@@ -1469,7 +1504,7 @@ const App = (() => {
   }
   function submitJudgement(choice) {
     STATE.set('ch2Judgement', choice);
-    if (choice === 'C') STATE.set('ch2Puzzle05Solved', true);
+    if (choice === 'C') { playSolveSfx(); STATE.set('ch2Puzzle05Solved', true); }
     render();
   }
 
@@ -1545,7 +1580,7 @@ const App = (() => {
     ${hintBar(!solved ? 'ch3Puzzle01' : null)}
     ${bottomNav('m', true)}`;
   }
-  function compareGrey130Time() { STATE.set('ch3Puzzle01Solved', true); render(); }
+  function compareGrey130Time() { if (!STATE.get('ch3Puzzle01Solved')) playSolveSfx(); STATE.set('ch3Puzzle01Solved', true); render(); }
 
   /* ================================================================
      CHAPTER 03 — SCREEN 04/05 — Observer Log（Puzzle 02）
@@ -1572,6 +1607,7 @@ const App = (() => {
   }
   function expandObserverLog() {
     observerLogExpanded = true;
+    if (!STATE.get('ch3Puzzle02Solved')) playSolveSfx();
     STATE.set('ch3Puzzle02Solved', true);
     render();
   }
@@ -1700,6 +1736,7 @@ const App = (() => {
     if (msgOrderSelected.length === DATA.ch3.yuanMessages.length) {
       const correct = DATA.ch3.yuanMessages.slice().sort((a, b) => a.sortRank - b.sortRank).map(m => m.key);
       if (msgOrderSelected.every((k, i) => k === correct[i])) {
+        playSolveSfx();
         STATE.set('ch3Puzzle03Solved', true);
       } else {
         msgOrderWrong = true;
@@ -1751,6 +1788,7 @@ const App = (() => {
     if (ch3ChainSelected.length === DATA.ch3.chainAppendIds.length) {
       const correct = DATA.ch3.chainAppendIds;
       if (ch3ChainSelected.every((id2, i) => id2 === correct[i])) {
+        playSolveSfx();
         STATE.set('ch3ChainRebuilt', true);
       } else {
         ch3ChainWrong = true;
@@ -1809,7 +1847,7 @@ const App = (() => {
   }
   function submitCh3Judgement(choice) {
     STATE.set('ch3Judgement', choice);
-    if (choice === 'C') STATE.set('ch3Puzzle05Solved', true);
+    if (choice === 'C') { playSolveSfx(); STATE.set('ch3Puzzle05Solved', true); }
     render();
   }
 
@@ -1839,21 +1877,9 @@ const App = (() => {
     if (!el) return;
     el.innerHTML = `<div class="label">案件 CASE #0917</div><div class="id-line" style="margin-top:10px">最後查看者 LAST VIEWED BY<br>灰-131</div>`;
     setTimeout(() => {
-      const msgs = DATA.ch3.endingMessages;
       el.innerHTML = `<div class="message-panel"><div class="mp-body" id="ch3-mp-body"></div></div>`;
       const box = document.getElementById('ch3-mp-body');
-      let i = 0;
-      (function showNext() {
-        if (i >= msgs.length) { setTimeout(showCh3Complete, 1200); return; }
-        if (box) {
-          const bubble = document.createElement('div');
-          bubble.className = 'msg-bubble';
-          bubble.textContent = msgs[i];
-          box.appendChild(bubble);
-        }
-        i++;
-        setTimeout(showNext, 1700);
-      })();
+      typeMessages(box, DATA.ch3.endingMessages, () => setTimeout(showCh3Complete, 1200));
     }, 1800);
   }
   function showCh3Complete() {
