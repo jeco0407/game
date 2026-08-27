@@ -357,6 +357,14 @@ html { scrollbar-color: var(--border) var(--surface); scrollbar-width: thin; }
 }
 .observation-box.warn { border-left-color: var(--warning); color: var(--warning); font-family: var(--mono); }
 
+/* ---------- Chapter recap ---------- */
+.recap-box { max-width: 620px; margin: 0 auto; }
+.recap-box .recap-p { font-size: 16px; line-height: 1.9; color: var(--text); margin-top: 20px; }
+.recap-box .recap-closing {
+  margin-top: 28px; padding-top: 20px; border-top: 1px dotted var(--border);
+  font-family: var(--mono); font-size: 14px; letter-spacing: 0.03em; color: var(--evidence); line-height: 1.8;
+}
+
 /* ---------- Timeline puzzle ---------- */
 .timeline-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
 .timeline-item {

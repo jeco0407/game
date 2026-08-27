@@ -164,6 +164,11 @@ const App = (() => {
           <div class="dash-nav-title">封存庫</div>
           ${nav.map(n => `<div class="dash-nav-item ${n.key === 'cases' ? 'active' : ''}" ${n.key === 'cases' ? "onclick=\"location.hash='#/archive'\"" : (n.key === 'people' ? "onclick=\"location.hash='#/profile/yuan'\"" : '')}>${n.label}</div>`).join('')}
           ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='${STATE.get('ch2Final') ? '#/ch3-entry' : '#/ch2-entry'}'">灰資料庫</div>` : ''}
+          ${(STATE.get('final') || STATE.get('ch2Final') || STATE.get('ch3Final')) ? `
+          <div class="dash-nav-title" style="margin-top:20px">案件記錄</div>
+          ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='#/recap/1'">第一章回顧</div>` : ''}
+          ${STATE.get('ch2Final') ? `<div class="dash-nav-item" onclick="location.hash='#/recap/2'">第二章回顧</div>` : ''}
+          ${STATE.get('ch3Final') ? `<div class="dash-nav-item" onclick="location.hash='#/recap/3'">第三章回顧</div>` : ''}` : ''}
           <div class="dash-sys">系統<br><span class="v">上線中</span></div>
           <div class="dash-nav-item" style="margin-top:24px;color:var(--text-dim);font-size:12px" onclick="App.resetProgress()">重置進度</div>
         </div>
@@ -923,7 +928,7 @@ const App = (() => {
         setTimeout(() => {
           div.remove();
           STATE.set('final', true);
-          location.hash = '#/archive';
+          location.hash = '#/recap/1';
         }, 2600);
       }, 2400);
     }, 2200);
@@ -1461,7 +1466,7 @@ const App = (() => {
     setTimeout(() => {
       div.remove();
       STATE.set('ch2Final', true);
-      location.hash = '#/archive';
+      location.hash = '#/recap/2';
     }, 2400);
   }
 
@@ -1822,8 +1827,15 @@ const App = (() => {
     div.innerHTML = `<div class="label">灰-131</div><div style="height:6px"></div><div style="font-size:16px;color:var(--warning)">新調查已開始 NEW INVESTIGATION STARTED</div>`;
     document.body.appendChild(div);
     setTimeout(() => {
+      div.remove();
       STATE.set('ch3Final', true);
-      div.innerHTML = `
+      location.hash = '#/recap/3';
+    }, 2200);
+  }
+  function renderFinalShareScreen() {
+    const div = document.createElement('div');
+    div.className = 'ending-screen';
+    div.innerHTML = `
         <div class="label">案件結案 CASE CLOSED</div>
         <div style="height:4px"></div>
         <div style="font-size:18px;letter-spacing:0.08em">案件 CASE #0917</div>
@@ -1832,7 +1844,7 @@ const App = (() => {
         <button class="btn" style="margin-top:32px;max-width:280px" onclick="App.shareResult()">[ 分享調查結果 → ]</button>
         <button class="btn" style="margin-top:10px;max-width:280px" onclick="App.replayGame()">[ 再玩一次 ]</button>
         <div class="entry-howto-link" style="margin-top:18px" onclick="App.exitEndingToArchive()">繼續瀏覽封存庫</div>`;
-    }, 2200);
+    document.body.appendChild(div);
   }
   function shareToast(msg) {
     const toast = document.createElement('div');
@@ -1868,6 +1880,40 @@ const App = (() => {
     const div = document.querySelector('.ending-screen');
     if (div) div.remove();
     location.hash = '#/archive';
+  }
+
+  /* ================================================================
+     章節劇情摘要（結局後自動進入，封存庫側欄可重複讀取）
+     ================================================================ */
+  const RECAP_REQUIRES = { 1: 'final', 2: 'ch2Final', 3: 'ch3Final' };
+  const RECAP_NEXT = {
+    1: { hash: '#/archive', label: '[ 進入封存庫 → ]' },
+    2: { hash: '#/archive', label: '[ 進入封存庫 → ]' },
+    3: null,
+  };
+  function viewRecap(n) {
+    if (!STATE.get(RECAP_REQUIRES[n])) return ch2Locked();
+    const r = DATA.recaps[n];
+    const next = RECAP_NEXT[n];
+    return `
+    <div class="view view-wide">
+      ${backLink('#/archive', '封存庫')}
+      <div class="recap-box">
+        <div class="dash-title">${esc(r.title)}</div>
+        ${r.paragraphs.map(p => `<div class="recap-p">${nl(p)}</div>`).join('')}
+        <div class="recap-closing">${nl(r.closing)}</div>
+        ${next
+          ? `<button class="btn" style="margin-top:32px;max-width:280px" onclick="location.hash='${next.hash}'">${next.label}</button>`
+          : `<button class="btn" style="margin-top:32px;max-width:280px" onclick="App.finishRecap3()">[ 繼續 → ]</button>`}
+      </div>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  function viewRecap1() { return viewRecap(1); }
+  function viewRecap2() { return viewRecap(2); }
+  function viewRecap3() { return viewRecap(3); }
+  function finishRecap3() {
+    renderFinalShareScreen();
   }
 
   /* ---------------- Router ---------------- */
@@ -1914,6 +1960,9 @@ const App = (() => {
     '#/ch3/chain-rebuild': viewCh3ChainRebuild,
     '#/ch3/identity-evidence': viewCh3IdentityEvidence,
     '#/ch3/judgment': viewCh3Judgment,
+    '#/recap/1': viewRecap1,
+    '#/recap/2': viewRecap2,
+    '#/recap/3': viewRecap3,
   };
 
   function render() {
@@ -1981,7 +2030,7 @@ const App = (() => {
     selectCh3ChainNode, resetCh3Chain,
     revealCh3Evidence, submitCh3Judgement,
     ch3FinalReveal, ch3ReturnToCase,
-    shareResult, replayGame, exitEndingToArchive,
+    shareResult, replayGame, exitEndingToArchive, finishRecap3,
   };
 })();
 
