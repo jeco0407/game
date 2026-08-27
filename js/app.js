@@ -180,11 +180,14 @@ const App = (() => {
               <div class="cc-id">案件 #0917</div>
               <div class="cc-name">林予安</div>
               <div class="cc-meta">最後出現<br>2026 / 08 / 17 · 23:17</div>
-              <div class="cc-status">狀態：<span class="warn">進行中</span></div>
+              ${STATE.get('ch3Final')
+                ? `<div class="cc-status">狀態：<span class="closed">已結案 CLOSED</span></div>
+                   <div class="cc-archive-tag">03 CHAPTERS COMPLETE</div>`
+                : `<div class="cc-status">狀態：<span class="warn">進行中</span></div>`}
             </div>
-            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #0642</div><div class="cc-name">存取受限</div></div>
-            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #1188</div><div class="cc-name">存取受限</div></div>
-            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #0033</div><div class="cc-name">存取受限</div></div>
+            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #0642</div><div class="cc-name">存取受限</div><div class="cc-archive-tag">僅供封存 ARCHIVE ONLY</div></div>
+            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #1188</div><div class="cc-name">存取受限</div><div class="cc-archive-tag">僅供封存 ARCHIVE ONLY</div></div>
+            <div class="case-card restricted">${icon('lock', 18)}<div class="cc-id">案件 #0033</div><div class="cc-name">存取受限</div><div class="cc-archive-tag">僅供封存 ARCHIVE ONLY</div></div>
           </div>
         </div>
       </div>

@@ -811,6 +811,8 @@ html { scrollbar-color: var(--border) var(--surface); scrollbar-width: thin; }
 .case-card .cc-meta { color: var(--text-dim); font-size: 13px; }
 .case-card .cc-status { color: var(--text-dim); }
 .case-card .cc-status .warn { color: var(--warning-bright); }
+.case-card .cc-status .closed { color: var(--success); }
+.case-card .cc-archive-tag { font-size: 11px; letter-spacing: 0.04em; color: var(--text-dim); margin-top: 6px; }
 .case-card.restricted { opacity: 0.45; cursor: not-allowed; color: var(--text-dim); }
 .case-card.restricted:hover { border-color: var(--border); }
 .case-card.restricted .icon { margin-bottom: 8px; }
