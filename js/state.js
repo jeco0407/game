@@ -30,6 +30,16 @@ const STATE = (() => {
       ch2Judgement: null,       // 'A' | 'B' | 'C'
       ch2Puzzle05Solved: false, // 只有選 C 才會是 true
       ch2Final: false,          // 完成第二章結局
+
+      // ---- Chapter 03 ----
+      ch3Puzzle01Solved: false, // 灰-130 Archive：比對建立時間
+      ch3Puzzle02Solved: false, // Observer Log：展開紀錄看到 SUBJECT: 灰-129
+      ch3ChenRevisited: false,  // 看過陳奕辰 SUCCESSOR/PREDECESSOR 與雙重意圖紀錄
+      ch3Puzzle03Solved: false, // 訊息時間軸排序正確 A→B
+      ch3ChainRebuilt: false,   // 灰之鏈重建完成（接上 129、130）
+      ch3Judgement: null,       // 'A' | 'B' | 'C'
+      ch3Puzzle05Solved: false, // 只有選 C 才會是 true
+      ch3Final: false,          // 完成第三章結局
     };
   }
 

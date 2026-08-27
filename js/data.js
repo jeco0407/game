@@ -343,6 +343,48 @@ const DATA = {
     '我一直在等你。',
   ],
 
+  /* ---------------- Chapter 03 ---------------- */
+  ch3: {
+    entryTime: '08/27/2026 · 08:17',
+    grey130: {
+      status: '使用中 ACTIVE',
+      created: '08/27/2026 · 08:17',
+      investigator: '不明 UNKNOWN',
+    },
+    observerLog: [
+      { t: '08:19', action: '開啟灰資料庫 OPENED GREY DATABASE' },
+      { t: '08:24', action: '開啟灰-128 OPENED 灰-128' },
+      { t: '08:31', action: '查看檔案完整性 VIEWED FILE INTEGRITY' },
+      { t: '08:44', action: '使用提示 USED HINT' },
+      { t: '09:02', action: '開啟灰-000 OPENED 灰-000' },
+    ],
+    observerSubject: '灰-129',
+    chenRevisit: {
+      successor: '灰-130',
+      predecessor: '灰-127',
+    },
+    chenDualMessages: [
+      { key: 'stop', label: '訊息 STOP', text: '不要讓下一個人接手。' },
+      { key: 'handoff', label: '訊息 HANDOFF', text: '如果你看到這則，代表交接已經完成。' },
+    ],
+    yuanMessages: [
+      { key: 'A', label: '訊息片段 A', text: '不要相信灰。', created: '08/17/2026 · 22:50', sortRank: 1 },
+      { key: 'B', label: '訊息片段 B', text: '如果你已經看到這裡，就不要試著離開。', created: '08/17/2026 · 23:41', sortRank: 2 },
+    ],
+    chainAppendIds: [129, 130],
+    identityEvidence: [
+      { key: 'created', label: '建立時間 CREATED TIME', result: 'match' },
+      { key: 'observerLog', label: '觀察紀錄 OBSERVER LOG', result: 'match' },
+      { key: 'accessHistory', label: '存取歷史 ACCESS HISTORY', result: 'match' },
+      { key: 'subjectData', label: '灰-129 資料 SUBJECT DATA', result: 'match' },
+      { key: 'actionSequence', label: '操作序列 ACTION SEQUENCE', result: 'match' },
+    ],
+    endingMessages: [
+      '如果你正在看這個檔案，代表灰-130 已經完成了。',
+      '現在輪到你了。',
+    ],
+  },
+
   hints: {
     hiddenReply: [
       '這則貼文寫著 19 則留言，但畫面上數得到的，好像不到 19 則。',
@@ -405,6 +447,33 @@ const DATA = {
       '現在不是問「哪個看起來最像」，而是問「目前的證據能支持什麼程度的結論」。',
       '把三個選項分別當成不同程度的主張，再回頭檢查目前的相符、部分相符和無法判定。',
       '你目前可以確認兩者存在關聯，但仍沒有足夠證據證明兩者是同一個人。不要把「可能」當成「已確認」。',
+    ],
+
+    // ---- 第三章 ----
+    ch3Puzzle01: [
+      '灰-130 剛剛才出現，它跟你有什麼關係，值得想一想。',
+      '比較灰-130 的建立時間，跟你自己開始調查的時間。',
+      '兩個時間幾乎重疊——灰-130 是跟你的調查同時出現的。',
+    ],
+    ch3Puzzle02: [
+      '這份紀錄記著誰做了什麼，但看起來很眼熟。',
+      '展開日誌，找找看紀錄對象的欄位。',
+      '紀錄對象寫著灰-129——那是你自己這一路以來做過的事。',
+    ],
+    ch3Puzzle03: [
+      '同一個人，語氣卻完全不一樣，是誰先寫的？',
+      '比較兩則訊息的建立時間，不要只看語氣。',
+      'A 比 B 早——她從想逃離，變成已經接受。',
+    ],
+    ch3Chain: [
+      '鏈還沒結束，接下來輪到誰？',
+      '先接建立時間比較早的那個節點。',
+      '灰-129 先出現，灰-130 緊接在後——鏈尾變成了灰-129 → 灰-130。',
+    ],
+    ch3Judgment: [
+      '先別急著選，五項證據都指向同一件事嗎？',
+      '比對灰-130 的紀錄跟你自己的操作序列，看看重疊了多少。',
+      '灰-130 不是另一個人，也不是隨機編號——它跟你的調查行為完全同步。',
     ],
   }
 };

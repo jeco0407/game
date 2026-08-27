@@ -163,7 +163,7 @@ const App = (() => {
           <div class="dash-logo">ECHO</div>
           <div class="dash-nav-title">封存庫</div>
           ${nav.map(n => `<div class="dash-nav-item ${n.key === 'cases' ? 'active' : ''}" ${n.key === 'cases' ? "onclick=\"location.hash='#/archive'\"" : (n.key === 'people' ? "onclick=\"location.hash='#/profile/yuan'\"" : '')}>${n.label}</div>`).join('')}
-          ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='#/ch2-entry'">灰資料庫</div>` : ''}
+          ${STATE.get('final') ? `<div class="dash-nav-item" onclick="location.hash='${STATE.get('ch2Final') ? '#/ch3-entry' : '#/ch2-entry'}'">灰資料庫</div>` : ''}
           <div class="dash-sys">系統<br><span class="v">上線中</span></div>
           <div class="dash-nav-item" style="margin-top:24px;color:var(--text-dim);font-size:12px" onclick="App.resetProgress()">重置進度</div>
         </div>
@@ -961,26 +961,30 @@ const App = (() => {
     let ids = Array.from({ length: DATA.ch2.greyTotal }, (_, i) => i);
     const youInRange = you < DATA.ch2.greyTotal;
     if (!youInRange) ids.push(you); // 你的編號可能落在標準列表範圍之外，仍要顯示
+    const ch3Active = STATE.get('ch2Final');
+    if (ch3Active && !ids.includes(130)) ids.push(130);
     if (greySortMode === 'created') {
       ids = ids.slice().sort((a, b) => {
-        const ra = (a === you && !youInRange) ? Infinity : greyCreatedRank(a);
-        const rb = (b === you && !youInRange) ? Infinity : greyCreatedRank(b);
+        const ra = (a === you && !youInRange) ? Infinity : (a === 130 ? Infinity : greyCreatedRank(a));
+        const rb = (b === you && !youInRange) ? Infinity : (b === 130 ? Infinity : greyCreatedRank(b));
         return ra - rb;
       });
     }
     const rows = ids.map(id => {
       const label = `灰-${String(id).padStart(3, '0')}`;
       const isYou = id === you;
-      const clickable = id === 128 || id === 0 || isYou;
+      const isNew = id === 130;
+      const clickable = id === 128 || id === 0 || isYou || isNew;
       const cls = ['cf-row']; if (clickable) cls.push('clickable');
-      const onclick = id === 128 ? `onclick="location.hash='#/grey/128'"` : id === 0 ? `onclick="location.hash='#/grey/000'"` : isYou ? `onclick="location.hash='#/grey/me'"` : '';
+      const onclick = id === 128 ? `onclick="location.hash='#/grey/128'"` : id === 0 ? `onclick="location.hash='#/grey/000'"` : isNew ? `onclick="location.hash='#/grey/130'"` : isYou ? `onclick="location.hash='#/grey/me'"` : '';
       const dateTag = greySortMode === 'created'
-        ? `<span class="dim mono" style="font-size:12px;margin-right:10px">${isYou ? '剛剛建立' : greyCreatedDate(id)}</span>`
+        ? `<span class="dim mono" style="font-size:12px;margin-right:10px">${(isYou || isNew) ? '剛剛建立' : greyCreatedDate(id)}</span>`
         : '';
       const irregularTag = (greySortMode === 'created' && id === 0)
         ? `<span class="irregular-tag" title="封存位置已改變 ARCHIVE POSITION CHANGED">! 異常 IRREGULAR</span>`
         : '';
-      return `<div class="${cls.join(' ')}" ${onclick}><span class="k">${label}</span><span>${irregularTag}${dateTag}<span class="v ${isYou ? 'evidence-color' : ''}">${isYou ? '你' : '存取遭拒'}</span></span></div>`;
+      const newTag = isNew ? `<span class="irregular-tag" title="新建立的封存 NEWLY CREATED ARCHIVE">! 新 NEW</span>` : '';
+      return `<div class="${cls.join(' ')}" ${onclick}><span class="k">${label}</span><span>${newTag}${irregularTag}${dateTag}<span class="v ${isYou ? 'evidence-color' : ''}">${isYou ? '你' : '存取遭拒'}</span></span></div>`;
     }).join('');
     return `
     <div class="view view-wide">
@@ -1457,6 +1461,369 @@ const App = (() => {
     }, 2400);
   }
 
+  /* ================================================================
+     CHAPTER 03 — SCREEN 01 — Chapter 03 Entry
+     ================================================================ */
+  function viewCh3Entry() {
+    if (!STATE.get('ch2Final')) return ch2Locked();
+    return `
+    <div class="view view-wide">
+      ${backLink('#/archive', '封存庫')}
+      <div class="dash-title">新封存偵測 NEW ARCHIVE DETECTED · 灰-130</div>
+      <p class="dim mono" style="margin-top:10px">${esc(DATA.ch3.entryTime)}</p>
+      <p class="dim" style="margin-top:16px;max-width:420px">系統偵測到一筆新的封存紀錄，狀態：使用中 ACTIVE。</p>
+      <button class="btn" style="margin-top:24px;max-width:220px" onclick="location.hash='#/grey-database'">[ 進入 ]</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+
+  /* ================================================================
+     CHAPTER 03 — SCREEN 03 — 灰-130 Archive（Puzzle 01）
+     ================================================================ */
+  function viewGrey130Archive() {
+    if (!STATE.get('ch2Final')) return ch2Locked();
+    const g = DATA.ch3.grey130;
+    const solved = STATE.get('ch3Puzzle01Solved');
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey-database', '灰資料庫')}
+      <div class="dash-title">灰-130</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        <div class="cf-row"><span class="k">狀態</span><span class="v">${esc(g.status)}</span></div>
+        <div class="cf-row"><span class="k">建立時間</span><span class="v mono">${esc(g.created)}</span></div>
+        <div class="cf-row"><span class="k">調查者</span><span class="v dim">${esc(g.investigator)}</span></div>
+      </div>
+      ${!solved
+        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.compareGrey130Time()">[ 比對建立時間 COMPARE CREATED TIME ]</button>`
+        : `<div class="observation-box" style="margin-top:14px;max-width:420px">灰-130 建立時間 ≈ 你開始本章調查的時間<br><span class="dim mono" style="font-size:12px">時間差 TIME DELTA：幾乎重疊 NEAR-ZERO</span></div>
+        <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/130/observer-log'">[ 查看觀察紀錄 → ]</button>`}
+    </div>
+    ${hintBar(!solved ? 'ch3Puzzle01' : null)}
+    ${bottomNav('m', true)}`;
+  }
+  function compareGrey130Time() { STATE.set('ch3Puzzle01Solved', true); render(); }
+
+  /* ================================================================
+     CHAPTER 03 — SCREEN 04/05 — Observer Log（Puzzle 02）
+     ================================================================ */
+  let observerLogExpanded = false;
+  function viewObserverLog() {
+    if (!STATE.get('ch3Puzzle01Solved')) return ch2Locked();
+    const log = DATA.ch3.observerLog;
+    const solved = STATE.get('ch3Puzzle02Solved');
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/130', '灰-130')}
+      <div class="dash-title">觀察紀錄 OBSERVER LOG</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        ${log.map(l => `<div class="cf-row"><span class="k mono">${esc(l.t)}</span><span class="v">${esc(l.action)}</span></div>`).join('')}
+      </div>
+      ${!observerLogExpanded
+        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.expandObserverLog()">[ 展開紀錄對象 SUBJECT ]</button>`
+        : `<div class="observation-box" style="margin-top:14px;max-width:420px">紀錄對象 SUBJECT：${esc(DATA.ch3.observerSubject)}</div>
+        <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/130/observer-log/detail'">[ 繼續 → ]</button>`}
+    </div>
+    ${hintBar(!solved ? 'ch3Puzzle02' : null)}
+    ${bottomNav('m', true)}`;
+  }
+  function expandObserverLog() {
+    observerLogExpanded = true;
+    STATE.set('ch3Puzzle02Solved', true);
+    render();
+  }
+  function viewObserverLogDetail() {
+    if (!STATE.get('ch3Puzzle02Solved')) return ch2Locked();
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/130/observer-log', '觀察紀錄')}
+      <div class="dash-title">觀察紀錄 · 詳細</div>
+      <p class="dim" style="margin-top:12px;max-width:420px">這份紀錄裡的每一項操作，都是你在這一章做過的事。灰-130 記錄的對象，是你。</p>
+      <button class="btn" style="margin-top:20px;max-width:240px" onclick="location.hash='#/grey/128/revisit'">[ 繼續調查 → ]</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+
+  /* ================================================================
+     CHAPTER 03 — SCREEN 06/07 — 灰-128 Revisit / 陳奕辰雙重意圖
+     ================================================================ */
+  function viewGrey128Revisit() {
+    if (!STATE.get('ch3Puzzle02Solved')) return ch2Locked();
+    const r = DATA.ch3.chenRevisit;
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/130/observer-log/detail', '觀察紀錄')}
+      <div class="dash-title">灰-128 · 重新檢視</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        <div class="cf-row"><span class="k">前任 PREDECESSOR</span><span class="v evidence-color">${esc(r.predecessor)}</span></div>
+        <div class="cf-row"><span class="k">接班人 SUCCESSOR</span><span class="v evidence-color">${esc(r.successor)}</span></div>
+      </div>
+      <p class="dim" style="margin-top:16px;max-width:420px">灰不是被指定的。它是遞補的——每一個灰，都同時記著前任和接班人。</p>
+      <button class="btn" style="margin-top:20px;max-width:260px" onclick="location.hash='#/grey/128/chen-dual'">[ 查看陳奕辰留下的紀錄 → ]</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  function viewChenDualArchive() {
+    if (!STATE.get('ch3Puzzle02Solved')) return ch2Locked();
+    STATE.set('ch3ChenRevisited', true);
+    const msgs = DATA.ch3.chenDualMessages;
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/128/revisit', '灰-128')}
+      <div class="dash-title">陳奕辰 · 封存紀錄</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        ${msgs.map(m => `<div class="cf-row"><span class="k">${esc(m.label)}</span><span class="v">${esc(m.text)}</span></div>`).join('')}
+      </div>
+      <div class="observation-box" style="margin-top:14px;max-width:420px">兩則紀錄都真實存在，也互相矛盾。系統沒有標記哪一則才是「真正的」陳奕辰。</div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/grey/000/revisit'">[ 繼續調查 → ]</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+
+  /* ================================================================
+     CHAPTER 03 — SCREEN 08 — 灰-000／林予安 Archive Revisit
+     ================================================================ */
+  function viewGrey000Revisit() {
+    if (!STATE.get('ch3ChenRevisited')) return ch2Locked();
+    return `
+    <div class="view view-wide">
+      ${backLink('#/grey/128/chen-dual', '陳奕辰 封存紀錄')}
+      <div class="dash-title">灰-000 · 重新檢視</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        <div class="cf-row"><span class="k">身分比對 IDENTITY MATCH</span><span class="v evidence-color">87%</span></div>
+        <div class="cf-row"><span class="k">身分確認 IDENTITY CONFIRMED</span><span class="v" style="color:var(--success)">林予安 LIN, YU-AN</span></div>
+      </div>
+      <p class="dim" style="margin-top:16px;max-width:420px">確認的只是「林予安曾經是灰-000」——系統裡沒有任何紀錄顯示她創造了這套遞補機制。</p>
+      <button class="btn" style="margin-top:20px;max-width:260px" onclick="location.hash='#/ch3/message-a'">[ 查看她留下的訊息 → ]</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+
+  /* ================================================================
+     CHAPTER 03 — SCREEN 09/10/11 — 林予安的兩份訊息（Puzzle 03）
+     ================================================================ */
+  function viewMessageFragment(key) {
+    if (!STATE.get('ch3ChenRevisited')) return ch2Locked();
+    const m = DATA.ch3.yuanMessages.find(x => x.key === key);
+    const nextHash = key === 'A' ? '#/ch3/message-b' : '#/ch3/message-timeline';
+    const nextLabel = key === 'A' ? '[ 查看下一份片段 → ]' : '[ 排列這兩份訊息 → ]';
+    const backHash = key === 'A' ? '#/grey/000/revisit' : '#/ch3/message-a';
+    const backLabel = key === 'A' ? '灰-000' : '訊息片段 A';
+    return `
+    <div class="view view-wide">
+      ${backLink(backHash, backLabel)}
+      <div class="dash-title">${esc(m.label)}</div>
+      <div class="blank-post" style="text-align:left">${nl(m.text)}</div>
+      <button class="btn" style="margin-top:20px;max-width:260px" onclick="location.hash='${nextHash}'">${nextLabel}</button>
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  function viewMessageFragmentA() { return viewMessageFragment('A'); }
+  function viewMessageFragmentB() { return viewMessageFragment('B'); }
+
+  let msgOrderSelected = [];
+  let msgOrderWrong = false;
+  function viewMessageTimeline() {
+    if (!STATE.get('ch3ChenRevisited')) return ch2Locked();
+    const msgs = DATA.ch3.yuanMessages;
+    const solved = STATE.get('ch3Puzzle03Solved');
+    const rows = msgs.map(m => {
+      const picked = msgOrderSelected.includes(m.key);
+      const order = msgOrderSelected.indexOf(m.key);
+      return `<div class="cf-row clickable ${picked ? 'active' : ''}" onclick="App.selectMsgOrder('${m.key}')">
+        <span class="k">${esc(m.label)} <span class="dim mono" style="font-size:11px">${esc(m.created)}</span></span>
+        <span class="v">${esc(m.text)}${picked ? ` <span class="dim mono" style="font-size:11px">· #${order + 1}</span>` : ''}</span>
+      </div>`;
+    }).join('');
+    return `
+    <div class="view view-wide">
+      ${backLink('#/ch3/message-b', '訊息片段 B')}
+      <div class="dash-title">訊息時間軸 MESSAGE TIMELINE</div>
+      <p class="dim" style="font-size:13px">依建立時間，由舊到新依序點選這兩份訊息。</p>
+      <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
+      <div class="board-toolbar" style="margin-top:14px"><button class="tool-btn" onclick="App.resetMsgOrder()">[ 重設 ]</button></div>
+      ${msgOrderWrong ? `<div class="observation-box warn" style="max-width:420px">順序不對，再試一次。</div>` : ''}
+      ${solved ? `<div class="observation-box" style="max-width:420px">A → B——她的立場從「想逃離」變成「已經接受」。</div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/ch3/chain-rebuild'">[ 繼續調查 → ]</button>` : ''}
+    </div>
+    ${hintBar(!solved ? 'ch3Puzzle03' : null)}
+    ${bottomNav('m', true)}`;
+  }
+  function selectMsgOrder(key) {
+    if (STATE.get('ch3Puzzle03Solved')) return;
+    msgOrderWrong = false;
+    if (msgOrderSelected.includes(key)) { msgOrderSelected = msgOrderSelected.filter(k => k !== key); render(); return; }
+    msgOrderSelected.push(key);
+    if (msgOrderSelected.length === DATA.ch3.yuanMessages.length) {
+      const correct = DATA.ch3.yuanMessages.slice().sort((a, b) => a.sortRank - b.sortRank).map(m => m.key);
+      if (msgOrderSelected.every((k, i) => k === correct[i])) {
+        STATE.set('ch3Puzzle03Solved', true);
+      } else {
+        msgOrderWrong = true;
+        msgOrderSelected = [];
+      }
+    }
+    render();
+  }
+  function resetMsgOrder() { msgOrderSelected = []; msgOrderWrong = false; render(); }
+
+  /* ================================================================
+     CHAPTER 03 — SCREEN 12/13/14 — 灰之鏈重建（Puzzle 04）
+     ================================================================ */
+  let ch3ChainSelected = [];
+  let ch3ChainWrong = false;
+  function viewCh3ChainRebuild() {
+    if (!STATE.get('ch3Puzzle03Solved')) return ch2Locked();
+    const baseIds = DATA.ch2.greyChainIds;
+    const appendIds = DATA.ch3.chainAppendIds;
+    const solved = STATE.get('ch3ChainRebuilt');
+    const baseHtml = baseIds.map(id => `<div class="cf-row"><span class="k">灰-${String(id).padStart(3, '0')}</span><span class="v mono dim">${greyCreatedDate(id)}</span></div>`).join('');
+    const appendHtml = appendIds.map(id => {
+      const picked = ch3ChainSelected.includes(id);
+      const order = ch3ChainSelected.indexOf(id);
+      return `<div class="cf-row clickable ${picked ? 'active' : ''}" onclick="App.selectCh3ChainNode(${id})">
+        <span class="k">灰-${String(id).padStart(3, '0')}</span>
+        <span class="v mono">${picked ? `已選 #${order + 1}` : '待接上'}</span>
+      </div>`;
+    }).join('');
+    return `
+    <div class="view view-wide">
+      ${backLink('#/ch3/message-timeline', '訊息時間軸')}
+      <div class="dash-title">灰之鏈重建 GREY CHAIN RECONSTRUCTION</div>
+      <p class="dim" style="font-size:13px">已知的鏈到灰-128 為止。依建立時間，把灰-129、灰-130 接到鏈尾。</p>
+      <div class="case-file" style="margin-top:10px;max-width:420px">${baseHtml}${appendHtml}</div>
+      <div class="board-toolbar" style="margin-top:14px"><button class="tool-btn" onclick="App.resetCh3Chain()">[ 重設 ]</button></div>
+      ${ch3ChainWrong ? `<div class="observation-box warn" style="max-width:420px">順序不對，再試一次。</div>` : ''}
+      ${solved ? `<div class="observation-box" style="max-width:420px">灰-001 → 灰-027 → 灰-063 → 灰-091 → 灰-128 → 灰-129 → 灰-130<br><span class="dim mono" style="font-size:12px">前一個節點 PREVIOUS NODE：灰-129 ／ 目前觀察者 CURRENT OBSERVER：不明 UNKNOWN</span></div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/ch3/identity-evidence'">[ 繼續調查 → ]</button>` : ''}
+    </div>
+    ${hintBar(!solved ? 'ch3Chain' : null)}
+    ${bottomNav('m', true)}`;
+  }
+  function selectCh3ChainNode(id) {
+    if (STATE.get('ch3ChainRebuilt')) return;
+    ch3ChainWrong = false;
+    if (ch3ChainSelected.includes(id)) { ch3ChainSelected = ch3ChainSelected.filter(x => x !== id); render(); return; }
+    ch3ChainSelected.push(id);
+    if (ch3ChainSelected.length === DATA.ch3.chainAppendIds.length) {
+      const correct = DATA.ch3.chainAppendIds;
+      if (ch3ChainSelected.every((id2, i) => id2 === correct[i])) {
+        STATE.set('ch3ChainRebuilt', true);
+      } else {
+        ch3ChainWrong = true;
+        ch3ChainSelected = [];
+      }
+    }
+    render();
+  }
+  function resetCh3Chain() { ch3ChainSelected = []; ch3ChainWrong = false; render(); }
+
+  /* ================================================================
+     CHAPTER 03 — SCREEN 15/16 — Identity Evidence / Judgment（Puzzle 05）
+     ================================================================ */
+  let ch3EvidenceRevealed = {};
+  function viewCh3IdentityEvidence() {
+    if (!STATE.get('ch3ChainRebuilt')) return ch2Locked();
+    const items = DATA.ch3.identityEvidence;
+    const allRevealed = items.every(e => ch3EvidenceRevealed[e.key]);
+    const rows = items.map(e => {
+      const revealed = ch3EvidenceRevealed[e.key];
+      return `<div class="cf-row clickable" onclick="App.revealCh3Evidence('${e.key}')"><span class="k">${esc(e.label)}</span><span class="v" style="${revealed ? 'color:var(--success)' : ''}">${revealed ? evidenceLabel[e.result] : '點擊比對'}</span></div>`;
+    }).join('');
+    return `
+    <div class="view view-wide">
+      ${backLink('#/ch3/chain-rebuild', '灰之鏈重建')}
+      <div class="dash-title">身分證據 IDENTITY EVIDENCE</div>
+      <p class="dim" style="font-size:13px">逐項比對灰-130 的紀錄，跟你自己這一路以來的操作。</p>
+      <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
+      ${allRevealed ? `<button class="btn" style="margin-top:14px;max-width:260px" onclick="location.hash='#/ch3/judgment'">[ 做出判斷 → ]</button>` : ''}
+    </div>
+    ${bottomNav('m', true)}`;
+  }
+  function revealCh3Evidence(key) { ch3EvidenceRevealed[key] = true; render(); }
+
+  function viewCh3Judgment() {
+    if (!STATE.get('ch3ChainRebuilt')) return ch2Locked();
+    const judgement = STATE.get('ch3Judgement');
+    const options = [
+      { key: 'A', text: '灰-130 是另一名調查者' },
+      { key: 'B', text: '灰-130 是系統自動生成的編號' },
+      { key: 'C', text: '灰-130 是正在調查灰-129 的人' },
+    ];
+    return `
+    <div class="view view-wide">
+      ${backLink('#/ch3/identity-evidence', '身分證據')}
+      <div class="dash-title">灰-130 是誰？</div>
+      <div class="case-file" style="margin-top:10px;max-width:420px">
+        ${options.map(o => `<div class="cf-row clickable ${judgement === o.key ? 'active' : ''}" onclick="App.submitCh3Judgement('${o.key}')"><span class="k">${o.key}</span><span class="v">${esc(o.text)}</span></div>`).join('')}
+      </div>
+      ${judgement && judgement !== 'C' ? `<div class="observation-box warn" style="margin-top:14px;max-width:420px">結論尚未成立 CONCLUSION NOT YET SUPPORTED<br>再檢查一次五項證據之間的關係。</div>` : ''}
+      ${judgement === 'C' ? `<div class="observation-box" style="margin-top:14px;max-width:420px">結論已接受 CONCLUSION ACCEPTED<br>對象 SUBJECT：灰-130<br>關係 RELATION：觀察者 → 調查對象 OBSERVER → SUBJECT</div>
+      <button class="btn" style="margin-top:14px;max-width:260px" onclick="App.ch3FinalReveal()">[ 繼續 → ]</button>` : ''}
+    </div>
+    ${hintBar(judgement !== 'C' ? 'ch3Judgment' : null)}
+    ${bottomNav('m', true)}`;
+  }
+  function submitCh3Judgement(choice) {
+    STATE.set('ch3Judgement', choice);
+    if (choice === 'C') STATE.set('ch3Puzzle05Solved', true);
+    render();
+  }
+
+  /* ================================================================
+     CHAPTER 03 — SCREEN 17/18/19 — 最終揭露與結局序列
+     ================================================================ */
+  function ch3FinalReveal() {
+    document.getElementById('app').innerHTML = `<div class="view view-wide"><div class="investigator-reveal" id="ch3-seq"></div></div>`;
+    runCh3FinalSequence();
+  }
+  function runCh3FinalSequence() {
+    const el = document.getElementById('ch3-seq');
+    if (!el) return;
+    el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">對象 SUBJECT<br>YOU</div>`;
+    setTimeout(() => {
+      el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">調查者 INVESTIGATOR<br>灰-130</div>`;
+      setTimeout(() => {
+        el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">狀態 STATUS<br>使用中 ACTIVE</div>`;
+        setTimeout(() => {
+          el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">下一個觀察者 NEXT OBSERVER<br>不明 UNKNOWN</div><button class="btn" style="margin-top:30px;max-width:240px" onclick="App.ch3ReturnToCase()">[ 返回案件 ]</button>`;
+        }, 1600);
+      }, 1600);
+    }, 1600);
+  }
+  function ch3ReturnToCase() {
+    const el = document.getElementById('ch3-seq');
+    if (!el) return;
+    el.innerHTML = `<div class="label">案件 CASE #0917</div><div class="id-line" style="margin-top:10px">最後查看者 LAST VIEWED BY<br>灰-131</div>`;
+    setTimeout(() => {
+      const msgs = DATA.ch3.endingMessages;
+      el.innerHTML = `<div class="message-panel"><div class="mp-body" id="ch3-mp-body"></div></div>`;
+      const box = document.getElementById('ch3-mp-body');
+      let i = 0;
+      (function showNext() {
+        if (i >= msgs.length) { setTimeout(showCh3Complete, 1200); return; }
+        if (box) {
+          const bubble = document.createElement('div');
+          bubble.className = 'msg-bubble';
+          bubble.textContent = msgs[i];
+          box.appendChild(bubble);
+        }
+        i++;
+        setTimeout(showNext, 1700);
+      })();
+    }, 1800);
+  }
+  function showCh3Complete() {
+    const div = document.createElement('div');
+    div.className = 'ending-screen';
+    div.innerHTML = `<div class="label">灰-131</div><div style="height:6px"></div><div style="font-size:16px;color:var(--warning)">新調查已開始 NEW INVESTIGATION STARTED</div>`;
+    document.body.appendChild(div);
+    setTimeout(() => {
+      div.remove();
+      STATE.set('ch3Final', true);
+      location.hash = '#/archive';
+    }, 3000);
+  }
+
   /* ---------------- Router ---------------- */
   const routes = {
     '': viewEntry,
@@ -1488,6 +1855,19 @@ const App = (() => {
     '#/grey/000/fragment': viewRecoveredFragment,
     '#/grey/000/evidence': viewIdentityEvidenceMatching,
     '#/grey/000/conflict': viewArchiveConflict,
+    '#/ch3-entry': viewCh3Entry,
+    '#/grey/130': viewGrey130Archive,
+    '#/grey/130/observer-log': viewObserverLog,
+    '#/grey/130/observer-log/detail': viewObserverLogDetail,
+    '#/grey/128/revisit': viewGrey128Revisit,
+    '#/grey/128/chen-dual': viewChenDualArchive,
+    '#/grey/000/revisit': viewGrey000Revisit,
+    '#/ch3/message-a': viewMessageFragmentA,
+    '#/ch3/message-b': viewMessageFragmentB,
+    '#/ch3/message-timeline': viewMessageTimeline,
+    '#/ch3/chain-rebuild': viewCh3ChainRebuild,
+    '#/ch3/identity-evidence': viewCh3IdentityEvidence,
+    '#/ch3/judgment': viewCh3Judgment,
   };
 
   function render() {
@@ -1550,6 +1930,11 @@ const App = (() => {
     submitJudgement, ch2FinalReveal,
     toggleHint, deeperHint,
     showIntro, hideIntro, maybeAutoShowIntro,
+    compareGrey130Time, expandObserverLog,
+    selectMsgOrder, resetMsgOrder,
+    selectCh3ChainNode, resetCh3Chain,
+    revealCh3Evidence, submitCh3Judgement,
+    ch3FinalReveal, ch3ReturnToCase,
   };
 })();
 
