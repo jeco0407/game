@@ -1818,10 +1818,52 @@ const App = (() => {
     div.innerHTML = `<div class="label">灰-131</div><div style="height:6px"></div><div style="font-size:16px;color:var(--warning)">新調查已開始 NEW INVESTIGATION STARTED</div>`;
     document.body.appendChild(div);
     setTimeout(() => {
-      div.remove();
       STATE.set('ch3Final', true);
-      location.hash = '#/archive';
-    }, 3000);
+      div.innerHTML = `
+        <div class="label">案件結案 CASE CLOSED</div>
+        <div style="height:4px"></div>
+        <div style="font-size:18px;letter-spacing:0.08em">案件 CASE #0917</div>
+        <div style="max-width:400px;font-size:15px;line-height:1.9;color:var(--text);margin-top:16px">「你以為你正在調查他。<br>其實你也正在成為證據。」</div>
+        <div style="font-size:13px;letter-spacing:0.16em;color:var(--evidence);margin-top:18px">CHAPTER 01 — 03</div>
+        <button class="btn" style="margin-top:32px;max-width:280px" onclick="App.shareResult()">[ 分享調查結果 → ]</button>
+        <button class="btn" style="margin-top:10px;max-width:280px" onclick="App.replayGame()">[ 再玩一次 ]</button>
+        <div class="entry-howto-link" style="margin-top:18px" onclick="App.exitEndingToArchive()">繼續瀏覽封存庫</div>`;
+    }, 2200);
+  }
+  function shareToast(msg) {
+    const toast = document.createElement('div');
+    toast.className = 'new-message-toast';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 1800);
+  }
+  function shareResult() {
+    const shareData = {
+      title: '最後一則貼文 — ECHO CASE #0917',
+      text: '「你以為你正在調查他。其實你也正在成為證據。」',
+      url: location.origin + location.pathname,
+    };
+    if (navigator.share) {
+      navigator.share(shareData).catch(() => {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareData.url)
+        .then(() => shareToast('連結已複製'))
+        .catch(() => shareToast(shareData.url));
+    } else {
+      shareToast(shareData.url);
+    }
+  }
+  function replayGame() {
+    STATE.reset();
+    location.hash = '#/';
+    location.reload();
+  }
+  function exitEndingToArchive() {
+    const div = document.querySelector('.ending-screen');
+    if (div) div.remove();
+    location.hash = '#/archive';
   }
 
   /* ---------------- Router ---------------- */
@@ -1935,6 +1977,7 @@ const App = (() => {
     selectCh3ChainNode, resetCh3Chain,
     revealCh3Evidence, submitCh3Judgement,
     ch3FinalReveal, ch3ReturnToCase,
+    shareResult, replayGame, exitEndingToArchive,
   };
 })();
 
