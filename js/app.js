@@ -779,6 +779,7 @@ const App = (() => {
   /* ================================================================
      SCREEN 18 — Audio Evidence
      ================================================================ */
+  let audioMuted = false;
   function viewAudio() {
     if (!STATE.get('board')) {
       return `<div class="view view-wide">${backLink('#/evidence-board','證據板')}<p class="dim mono">已鎖定。</p></div>${bottomNav('board', true)}`;
@@ -792,7 +793,8 @@ const App = (() => {
         <div class="audio-evidence-id">${a.id} · 錄音</div>
         <div class="waveform" id="waveform">${bars.map(h => `<div class="bar" style="height:${h}px"></div>`).join('')}</div>
         <div class="audio-time-row mono"><span>00:00</span><span>${a.duration}</span></div>
-        ${!STATE.get('audio') ? `<button class="audio-play-btn" onclick="App.playAudio()">▶</button>` : ''}
+        ${!STATE.get('audio') ? `<button class="audio-play-btn" onclick="App.playAudio()">▶</button>
+        <div class="tool-btn" style="margin:10px auto 0;width:fit-content" onclick="App.toggleAudioMute()">${audioMuted ? '[ 取消靜音 UNMUTE ]' : '[ 靜音 MUTE ]'}</div>` : ''}
         <div class="audio-transcript" id="audio-transcript">${STATE.get('audio') ? a.transcript.map(transcriptLineHtml).join('') : ''}</div>
         ${STATE.get('audio') ? `<div class="lock-note">錄音已轉成逐字稿<br>偵測到 1 個身分不明的關係人。</div>
         <button class="btn" style="max-width:360px;margin:16px auto 0" onclick="location.hash='#/case/0917'">[ 回到案件檔案 ]</button>` : ''}
@@ -800,6 +802,7 @@ const App = (() => {
     </div>
     ${bottomNav('board', true)}`;
   }
+  function toggleAudioMute() { audioMuted = !audioMuted; render(); }
   function transcriptLineHtml(l) {
     return `<div class="line${l.warn ? ' warn-line' : ''}"><span>${esc(l.line)}</span><span class="t mono">${esc(l.t)}</span></div>`;
   }
@@ -815,6 +818,7 @@ const App = (() => {
     if (wf) wf.classList.add('playing');
     const shown = new Set();
     const audio = new Audio(DATA.audioEvidence.src);
+    audio.muted = audioMuted;
     audio.addEventListener('timeupdate', () => {
       transcript.forEach((l, i) => {
         if (!shown.has(i) && audio.currentTime >= parseTimestamp(l.t)) {
@@ -1965,7 +1969,7 @@ const App = (() => {
     dragImgStart, dropOnSlot, moveImgToSlot,
     openAccessPrompt, submitAccess, toggleCaseRevisit,
     selectBoardNode, resetBoard, toggleBoardHelp,
-    playAudio, finalReveal, runMSequence,
+    playAudio, toggleAudioMute, finalReveal, runMSequence,
     setGreySort, toggleChecksum, openIndexEntry, selectFragmentChip,
     selectDiffChar, selectChainNode, resetChain,
     startGreyRecovery, showRecoveredFragment, revealEvidence, goToArchiveConflict,
