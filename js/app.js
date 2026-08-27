@@ -102,12 +102,7 @@ const App = (() => {
   let hintOpen = false;
   let hintLevels = {};
   function hintBar(puzzleKey) {
-    if (!puzzleKey) return '';
-    return `
-    <div class="hint-bar">
-      <div class="hint-toggle" onclick="App.toggleHint()">${hintOpen ? '[ 關閉 ]' : '[ 需要提示嗎？ ]'}</div>
-    </div>
-    ${hintOpen ? renderHintPanel(puzzleKey) : ''}`;
+    return '';
   }
   function renderHintPanel(puzzleKey) {
     const levels = DATA.hints[puzzleKey] || [];
