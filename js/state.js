@@ -21,6 +21,7 @@ const STATE = (() => {
       ch2Puzzle02Solved: false,  // File Integrity：看過灰-128 的 Index Entries 缺 Body
       ch2Puzzle03Solved: false,  // Fragment Reconstruction：Device Hash + Account Hash 都比對成功
       case0917Level2Unlocked: false, // Case #0917 是否已解鎖 ARCHIVE RELATION 新欄位
+      ch2VersionDiffFound: false, // Archive Version Compare 三版差異字都找到
       ch2Puzzle04Solved: false, // Archive Version Compare + Edit History 都看過
       ch2GreyChainBuilt: false, // Grey Chain 依建立時間排出正確順序
       ch2RecoveryPlayed: false, // 灰-000 Recovery 動畫播放過
