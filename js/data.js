@@ -210,10 +210,10 @@ const DATA = {
     bio: '別問我。',
     lastPost: { text: '如果她問起來，\n就說我不知道。', time: '08 / 20（週四）· 23:17' },
     archived: [
-      { id: 1, title: '[CONTENT REMOVED]', removed: true, highlight: false },
-      { id: 2, title: '[CONTENT REMOVED]', removed: true, highlight: false },
-      { id: 3, title: '[CONTENT REMOVED]', removed: true, highlight: false },
-      { id: 4, title: '[CONTENT REMOVED]', removed: true, highlight: true, time: '08 / 20（週四）· 23:17' },
+      { id: 1, title: '[內容已移除]', removed: true, highlight: false },
+      { id: 2, title: '[內容已移除]', removed: true, highlight: false },
+      { id: 3, title: '[內容已移除]', removed: true, highlight: false },
+      { id: 4, title: '[內容已移除]', removed: true, highlight: true, time: '08 / 20（週四）· 23:17' },
     ]
   },
 
@@ -295,25 +295,25 @@ const DATA = {
       checksumArchive: 'A93F-71C2-88DE',
       accountHash: 'A91F',
       indexEntries: [
-        { id: '01', label: '個人檔案 PROFILE', body: 'PRESENT' },
-        { id: '02', label: 'CASE #0917', body: 'MISSING' },
-        { id: '03', label: 'CASE #000', body: 'MISSING' },
-        { id: '04', label: '訊息 MESSAGE', body: 'PRESENT' },
+        { id: '01', label: '個人檔案', body: 'PRESENT' },
+        { id: '02', label: '案件 #0917', body: 'MISSING' },
+        { id: '03', label: '案件 #000', body: 'MISSING' },
+        { id: '04', label: '訊息', body: 'PRESENT' },
       ],
     },
     fragments: {
-      a: { title: '殘片 FRAGMENT A', rows: [
-        { field: '姓名 NAME', value: 'CHEN YI-CHEN', type: 'name' },
-        { field: '裝置雜湊 DEVICE HASH', value: '7F21-██', type: 'device' },
+      a: { title: '殘片', rows: [
+        { field: '姓名', value: 'CHEN YI-CHEN', type: 'name' },
+        { field: '裝置雜湊', value: '7F21-██', type: 'device' },
       ] },
-      b: { title: '殘片 FRAGMENT B', rows: [
-        { field: '帳號雜湊 ACCOUNT HASH', value: 'A91F', type: 'account' },
-        { field: '年齡 AGE', value: '24', type: 'age' },
-        { field: '裝置雜湊 DEVICE HASH', value: '██-7F21', type: 'device' },
+      b: { title: '殘片', rows: [
+        { field: '帳號雜湊', value: 'A91F', type: 'account' },
+        { field: '年齡', value: '24', type: 'age' },
+        { field: '裝置雜湊', value: '██-7F21', type: 'device' },
       ] },
-      c: { title: '殘片 FRAGMENT C', rows: [
-        { field: '灰編號 GREY ID', value: '128', type: 'greyid' },
-        { field: '裝置雜湊 DEVICE HASH', value: '7F21-████', type: 'device' },
+      c: { title: '殘片', rows: [
+        { field: '灰編號', value: '128', type: 'greyid' },
+        { field: '裝置雜湊', value: '7F21-████', type: 'device' },
       ] },
     },
     case0917Revisit: {
@@ -329,12 +329,12 @@ const DATA = {
     editHistoryAuthor: '灰-127',
     greyChainIds: [1, 27, 63, 91, 128],
     evidence: [
-      { key: 'photo', label: '照片 PHOTO', result: 'match' },
-      { key: 'device', label: '裝置 DEVICE', result: 'match' },
-      { key: 'location', label: '地點 LOCATION', result: 'match' },
-      { key: 'archivePattern', label: '封存模式 ARCHIVE PATTERN', result: 'partial' },
-      { key: 'date', label: '日期 DATE', result: 'unresolved' },
-      { key: 'name', label: '姓名 NAME', result: 'unresolved' },
+      { key: 'photo', label: '照片', result: 'match' },
+      { key: 'device', label: '裝置', result: 'match' },
+      { key: 'location', label: '地點', result: 'match' },
+      { key: 'archivePattern', label: '封存模式', result: 'partial' },
+      { key: 'date', label: '日期', result: 'unresolved' },
+      { key: 'name', label: '姓名', result: 'unresolved' },
     ],
   },
 
@@ -346,7 +346,7 @@ const DATA = {
   /* ---------------- 章節劇情摘要（結局後 / 封存庫側欄可重複讀取） ---------------- */
   recaps: {
     1: {
-      title: '案件摘要 CASE SUMMARY · 第一章',
+      title: '案件摘要 · 第一章',
       paragraphs: [
         '林予安，19 歲，2026 / 08 / 17 晚間 23:17 後失蹤，之後她的帳號仍持續發文。',
         '你發現最後一張照片的建立時間，比它被貼出來的時間晚了整整兩天——代表在她失蹤之後，仍然有人能夠存取她的帳號、修改她留下的封存。',
@@ -357,18 +357,18 @@ const DATA = {
       closing: '案件並未結案。系統裡還有一長串編號，等著被打開。',
     },
     2: {
-      title: '案件摘要 CASE SUMMARY · 第二章',
+      title: '案件摘要 · 第二章',
       paragraphs: [
         '灰資料庫裡，總共有 130 筆編號，從灰-000 到灰-129——也就是你自己。你發現編號並不代表建立的先後順序：灰-000，其實不是最早建立的封存。',
         '你確認了灰-128 就是陳奕辰。他的封存裡藏著三份殘缺的身分片段，裝置雜湊把陳奕辰跟灰-128 連在了一起，卻沒有留下任何動機——他阻止了什麼，還是完成了什麼交接，系統從未給出答案。',
         '你也找到了一條橫跨多年的鏈：灰-001 → 灰-027 → 灰-063 → 灰-091 → 灰-128。每一代灰，都會把訊息留給下一代。',
-        '你還原了灰-000 被刪除的殘留片段，比對出 87% 的身分相符——指向林予安。但 87%，不是 100%。你最終判斷：證據不足，調查狀態暫定 PROVISIONAL。',
-        '結局揭露時，系統顯示：接班人 SUCCESSOR — 已找到。有人已經在找你了。',
+        '你還原了灰-000 被刪除的殘留片段，比對出 87% 的身分相符——指向林予安。但 87%，不是 100%。你最終判斷：證據不足，調查狀態暫定。',
+        '結局揭露時，系統顯示：接班人已找到。有人已經在找你了。',
       ],
       closing: '灰-130 已經建立。它是誰，你還不知道。',
     },
     3: {
-      title: '案件摘要 CASE SUMMARY · 第三章（完結）',
+      title: '案件摘要 · 第三章（完結）',
       paragraphs: [
         '隔天，系統偵測到一筆新封存：灰-130，建立時間跟你開始調查的時間幾乎重疊。你一度以為灰-130 是另一個人——直到你打開它的觀察紀錄，發現裡面記錄的，全都是你這一路做過的事。紀錄對象：灰-129。',
         '你重新檢視灰-128，第一次同時看到「前任」與「接班人」兩個欄位——灰不是被指定的，是遞補的。陳奕辰留下兩則互相矛盾的紀錄，一則像是在阻止交接，一則像是已經完成交接，兩者都真實存在。',
@@ -383,16 +383,16 @@ const DATA = {
   ch3: {
     entryTime: '08/27/2026 · 08:17',
     grey130: {
-      status: '使用中 ACTIVE',
+      status: '使用中',
       created: '08/27/2026 · 08:17',
-      investigator: '不明 UNKNOWN',
+      investigator: '不明',
     },
     observerLog: [
-      { t: '08:19', action: '開啟灰資料庫 OPENED GREY DATABASE' },
-      { t: '08:24', action: '開啟灰-128 OPENED 灰-128' },
-      { t: '08:31', action: '查看檔案完整性 VIEWED FILE INTEGRITY' },
-      { t: '08:44', action: '使用提示 USED HINT' },
-      { t: '09:02', action: '開啟灰-000 OPENED 灰-000' },
+      { t: '08:19', action: '開啟灰資料庫' },
+      { t: '08:24', action: '開啟灰-128' },
+      { t: '08:31', action: '查看檔案完整性' },
+      { t: '08:44', action: '使用提示' },
+      { t: '09:02', action: '開啟灰-000' },
     ],
     observerSubject: '灰-129',
     chenRevisit: {
@@ -400,20 +400,20 @@ const DATA = {
       predecessor: '灰-127',
     },
     chenDualMessages: [
-      { key: 'stop', label: '訊息 STOP', text: '不要讓下一個人接手。' },
-      { key: 'handoff', label: '訊息 HANDOFF', text: '如果你看到這則，代表交接已經完成。' },
+      { key: 'stop', label: '訊息', text: '不要讓下一個人接手。' },
+      { key: 'handoff', label: '訊息', text: '如果你看到這則，代表交接已經完成。' },
     ],
     yuanMessages: [
-      { key: 'A', label: '訊息片段 A', text: '不要相信灰。', created: '08/17/2026 · 22:50', sortRank: 1 },
-      { key: 'B', label: '訊息片段 B', text: '如果你已經看到這裡，就不要試著離開。', created: '08/17/2026 · 23:41', sortRank: 2 },
+      { key: 'A', label: '訊息片段', text: '不要相信灰。', created: '08/17/2026 · 22:50', sortRank: 1 },
+      { key: 'B', label: '訊息片段', text: '如果你已經看到這裡，就不要試著離開。', created: '08/17/2026 · 23:41', sortRank: 2 },
     ],
     chainAppendIds: [129, 130],
     identityEvidence: [
-      { key: 'created', label: '建立時間 CREATED TIME', result: 'match' },
-      { key: 'observerLog', label: '觀察紀錄 OBSERVER LOG', result: 'match' },
-      { key: 'accessHistory', label: '存取歷史 ACCESS HISTORY', result: 'match' },
-      { key: 'subjectData', label: '灰-129 資料 SUBJECT DATA', result: 'match' },
-      { key: 'actionSequence', label: '操作序列 ACTION SEQUENCE', result: 'match' },
+      { key: 'created', label: '建立時間', result: 'match' },
+      { key: 'observerLog', label: '觀察紀錄', result: 'match' },
+      { key: 'accessHistory', label: '存取歷史', result: 'match' },
+      { key: 'subjectData', label: '灰-129 資料', result: 'match' },
+      { key: 'actionSequence', label: '操作序列', result: 'match' },
     ],
     endingMessages: [
       '如果你正在看這個檔案，代表灰-130 已經完成了。',
@@ -434,7 +434,7 @@ const DATA = {
     ],
     timeline: [
       '案件記錄的失蹤時間，跟這張照片的建立時間，兜不起來。',
-      '試著把 IMG_0917 這個項目，拖到它實際被建立的那一天。',
+      '試著把_0917 這個項目，拖到它實際被建立的那一天。',
       '08/19 —— 那是貼文出現之後才發生的事。'
     ],
     accessPrompt: [
@@ -452,7 +452,7 @@ const DATA = {
     ch2Puzzle01: [
       '檔案的編號，真的代表它建立的先後順序嗎？',
       '試著切換排序方式，看看灰-000 的位置有沒有改變。',
-      '切換到「依建立時間 ARCHIVE CREATED」後，注意灰-000 的建立日期。它並不是最早建立的封存。',
+      '切換到「依建立時間」後，注意灰-000 的建立日期。它並不是最早建立的封存。',
     ],
     ch2Puzzle02: [
       '有些東西消失了，但不代表它留下的痕跡也消失了。',
@@ -499,7 +499,7 @@ const DATA = {
     ch3Puzzle03: [
       '同一個人，語氣卻完全不一樣，是誰先寫的？',
       '比較兩則訊息的建立時間，不要只看語氣。',
-      'A 比 B 早——她從想逃離，變成已經接受。',
+      'A 比 早——她從想逃離，變成已經接受。',
     ],
     ch3Chain: [
       '鏈還沒結束，接下來輪到誰？',
