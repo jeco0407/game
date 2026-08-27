@@ -662,7 +662,7 @@ const App = (() => {
           ${cfNav.map(n => `<div class="board-cat-item ${n.active ? 'active' : ''} ${n.hash ? '' : 'inert'}" ${n.hash ? `onclick="location.hash='${n.hash}'"` : ''}><span>${n.label}</span>${n.count !== undefined ? `<span class="count">${n.count}</span>` : ''}</div>`).join('')}
         </div>
         <div class="board-main">
-          <div class="dash-title">案件檔案 ${cf.id}${level2 ? ` <span class="dim mono" style="font-size:11px">· 存取層級 ARCHIVE ACCESS · LEVEL 02</span>` : ''}</div>
+          <div class="dash-title">案件檔案 ${cf.id}${level2 ? ` <span class="dim mono" style="font-size:11px">· 存取層級 ARCHIVE ACCESS · LEVEL 02</span>` : ''}</div>
           <div class="overview-grid">
             <div>
               <div class="overview-field"><div class="k">關係人</div><div class="v">${cf.subject}</div></div>
@@ -672,8 +672,8 @@ const App = (() => {
               <div class="overview-field"><div class="k">地點</div><div class="v">${cf.location}</div></div>
               ${STATE.get('audio') ? `<div class="overview-field"><div class="k">調查者</div><div class="v evidence-color" style="cursor:pointer" onclick="location.hash='#/investigator'">灰 →</div></div>`
                 : `<div class="overview-field"><div class="k">調查者</div><div class="v" style="color:var(--text-dim)">身分不明</div></div>`}
-              ${level2 && caseRevisitOpen ? `<div class="dim mono" style="font-size:11px;margin-top:-8px">原始值 PREVIOUS VALUE：身分不明<br>修改者 MODIFIED BY：灰-128</div>` : ''}
-              ${level2 ? `<div class="overview-field clickable" style="cursor:pointer" onclick="App.toggleCaseRevisit()"><div class="k">封存關聯 ARCHIVE RELATION</div><div class="v evidence-color">灰-128</div></div>` : ''}
+              ${level2 && caseRevisitOpen ? `<div class="dim mono" style="font-size:11px;margin-top:-8px">原始值 PREVIOUS VALUE：身分不明<br>修改者 MODIFIED BY：灰-128</div>` : ''}
+              ${level2 ? `<div class="overview-field clickable" style="cursor:pointer" onclick="App.toggleCaseRevisit()"><div class="k">封存關聯 ARCHIVE RELATION</div><div class="v evidence-color">灰-128</div></div>` : ''}
             </div>
             <div>
               <div class="overview-field"><div class="k">相關人物</div></div>
@@ -684,11 +684,11 @@ const App = (() => {
           </div>
           ${level2 && caseRevisitOpen ? `
           <div class="metadata-panel" style="margin-top:20px;max-width:420px">
-            <div class="row"><span class="k">關聯封存 LINKED ARCHIVE</span><span class="v">灰-128</span></div>
-            <div class="row"><span class="k">首次關聯 FIRST LINKED</span><span class="v">${esc(rv.firstLinked)}</span></div>
-            <div class="row"><span class="k">最後修改 LAST MODIFIED</span><span class="v">${esc(rv.lastModified)}</span></div>
+            <div class="row"><span class="k">關聯封存 LINKED ARCHIVE</span><span class="v">灰-128</span></div>
+            <div class="row"><span class="k">首次關聯 FIRST LINKED</span><span class="v">${esc(rv.firstLinked)}</span></div>
+            <div class="row"><span class="k">最後修改 LAST MODIFIED</span><span class="v">${esc(rv.lastModified)}</span></div>
           </div>
-          <div class="observation-box warn" style="margin-top:14px;max-width:420px">封存備註 ARCHIVE NOTE · 偵測到 1 次修改<br>「${esc(rv.note)}」</div>
+          <div class="observation-box warn" style="margin-top:14px;max-width:420px">封存備註 ARCHIVE NOTE · 偵測到 1 次修改<br>「${esc(rv.note)}」</div>
           <button class="btn" style="margin-top:14px;max-width:360px" onclick="location.hash='#/grey/128/versions'">[ 查看封存版本 → ]</button>` : ''}
           <button class="overview-pill" style="margin-top:24px" onclick="location.hash='#/evidence-board'">證據板 <span class="arrow">→</span></button>
         </div>
@@ -940,7 +940,7 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/archive', '封存庫')}
-      <div class="dash-title">案件 #0917 調查未完 CASE #0917 · INVESTIGATION CONTINUES</div>
+      <div class="dash-title">案件 #0917 調查未完 CASE #0917 · INVESTIGATION CONTINUES</div>
       <p class="dim mono" style="margin-top:10px">灰-${esc(STATE.investigatorId())}</p>
       <p class="dim" style="margin-top:16px;max-width:420px">案件並未結案。系統裡還有一長串編號，等著被打開。</p>
       <button class="btn" style="margin-top:24px;max-width:320px" onclick="location.hash='#/grey-database'">[ 進入 ]</button>
@@ -981,21 +981,21 @@ const App = (() => {
         ? `<span class="dim mono" style="font-size:12px;margin-right:10px">${(isYou || isNew) ? '剛剛建立' : greyCreatedDate(id)}</span>`
         : '';
       const irregularTag = (greySortMode === 'created' && id === 0)
-        ? `<span class="irregular-tag" title="封存位置已改變 ARCHIVE POSITION CHANGED">! 異常 IRREGULAR</span>`
+        ? `<span class="irregular-tag" title="封存位置已改變 ARCHIVE POSITION CHANGED">! 異常 IRREGULAR</span>`
         : '';
-      const newTag = isNew ? `<span class="irregular-tag" title="新建立的封存 NEWLY CREATED ARCHIVE">! 新 NEW</span>` : '';
+      const newTag = isNew ? `<span class="irregular-tag" title="新建立的封存 NEWLY CREATED ARCHIVE">! 新 NEW</span>` : '';
       return `<div class="${cls.join(' ')}" ${onclick}><span class="k">${label}</span><span>${newTag}${irregularTag}${dateTag}<span class="v ${isYou ? 'evidence-color' : ''}">${isYou ? '你' : '存取遭拒'}</span></span></div>`;
     }).join('');
     return `
     <div class="view view-wide">
       ${backLink('#/archive', '封存庫')}
       <div class="dash-title">灰資料庫</div>
-      <div class="dim mono" style="font-size:12px;letter-spacing:0.04em;margin-top:8px">注意 NOTICE<br>紀錄可能不是依照時間先後排列。</div>
+      <div class="dim mono" style="font-size:12px;letter-spacing:0.04em;margin-top:8px">注意 NOTICE<br>紀錄可能不是依照時間先後排列。</div>
       <div class="board-toolbar" style="margin-top:14px">
-        <button class="tool-btn ${greySortMode === 'id' ? 'active' : ''}" onclick="App.setGreySort('id')">[ 依編號 ID SORT ]</button>
-        <button class="tool-btn ${greySortMode === 'created' ? 'active' : ''}" onclick="App.setGreySort('created')">[ 依建立時間 ARCHIVE CREATED ]</button>
+        <button class="tool-btn ${greySortMode === 'id' ? 'active' : ''}" onclick="App.setGreySort('id')">[ 依編號 ID SORT ]</button>
+        <button class="tool-btn ${greySortMode === 'created' ? 'active' : ''}" onclick="App.setGreySort('created')">[ 依建立時間 ARCHIVE CREATED ]</button>
       </div>
-      ${greySortMode === 'created' ? `<div class="dim mono" style="font-size:12px;margin-top:10px">紀錄順序已更新 RECORD ORDER UPDATED<br>1 筆紀錄改變了位置。</div>` : ''}
+      ${greySortMode === 'created' ? `<div class="dim mono" style="font-size:12px;margin-top:10px">紀錄順序已更新 RECORD ORDER UPDATED<br>1 筆紀錄改變了位置。</div>` : ''}
       <div class="case-file" style="margin-top:10px;max-width:520px;max-height:520px;overflow-y:auto">${rows}</div>
     </div>
     ${hintBar(!STATE.get('ch2Puzzle01Solved') ? 'ch2Puzzle01' : null)}
@@ -1018,7 +1018,7 @@ const App = (() => {
       ${backLink('#/grey-database', '灰資料庫')}
       <div class="dash-title">灰-${esc(id)}</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        <div class="cf-row"><span class="k">狀態</span><span class="v">使用中 ACTIVE</span></div>
+        <div class="cf-row"><span class="k">狀態</span><span class="v">使用中 ACTIVE</span></div>
         <div class="cf-row"><span class="k">建立時間</span><span class="v">剛剛建立</span></div>
         <div class="cf-row"><span class="k">連線時長</span><span class="v">${formatElapsed(STATE.elapsedMs())}</span></div>
       </div>
@@ -1038,10 +1038,10 @@ const App = (() => {
       ${backLink('#/grey-database', '灰資料庫')}
       <div class="dash-title">灰-128</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        <div class="cf-row"><span class="k">狀態</span><span class="v">已停用 INACTIVE</span></div>
+        <div class="cf-row"><span class="k">狀態</span><span class="v">已停用 INACTIVE</span></div>
         <div class="cf-row"><span class="k">最後活動</span><span class="v">${esc(g.lastActivity)}</span></div>
       </div>
-      <button class="btn" style="margin-top:20px;max-width:320px" onclick="location.hash='#/grey/128/archive'">[ 進入封存 ARCHIVE ]</button>
+      <button class="btn" style="margin-top:20px;max-width:320px" onclick="location.hash='#/grey/128/archive'">[ 進入封存 ARCHIVE ]</button>
     </div>
     ${bottomNav('m', true)}`;
   }
@@ -1052,21 +1052,21 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/grey/128', '灰-128')}
-      <div class="dash-title">灰-128 · 封存 ARCHIVE</div>
+      <div class="dash-title">灰-128 · 封存 ARCHIVE</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        ${g.indexEntries.map(e => `<div class="cf-row"><span class="k">${e.id} ${esc(e.label)}</span><span class="v missing">已刪除 DELETED</span></div>`).join('')}
-        <div class="cf-row"><span class="k">檔案大小 FILE SIZE</span><span class="v">12.4 MB</span></div>
-        <div class="cf-row"><span class="k">帳號雜湊 ACCOUNT HASH</span><span class="v mono">${esc(g.accountHash)}</span></div>
+        ${g.indexEntries.map(e => `<div class="cf-row"><span class="k">${e.id} ${esc(e.label)}</span><span class="v missing">已刪除 DELETED</span></div>`).join('')}
+        <div class="cf-row"><span class="k">檔案大小 FILE SIZE</span><span class="v">12.4 MB</span></div>
+        <div class="cf-row"><span class="k">帳號雜湊 ACCOUNT HASH</span><span class="v mono">${esc(g.accountHash)}</span></div>
       </div>
       ${!checksumOpen
-        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.toggleChecksum()">[ 查看校驗碼 CHECKSUM ]</button>`
+        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.toggleChecksum()">[ 查看校驗碼 CHECKSUM ]</button>`
         : `<div class="metadata-panel" style="margin-top:14px;max-width:420px">
-             <div class="row"><span class="k">預期雜湊 EXPECTED HASH</span><span class="v">${g.checksumExpected}</span></div>
-             <div class="row"><span class="k">封存雜湊 ARCHIVE HASH</span><span class="v">${g.checksumArchive}</span></div>
-             <div class="row"><span class="k">比對結果 RESULT</span><span class="v" style="color:var(--success)">相符 MATCH</span></div>
+             <div class="row"><span class="k">預期雜湊 EXPECTED HASH</span><span class="v">${g.checksumExpected}</span></div>
+             <div class="row"><span class="k">封存雜湊 ARCHIVE HASH</span><span class="v">${g.checksumArchive}</span></div>
+             <div class="row"><span class="k">比對結果 RESULT</span><span class="v" style="color:var(--success)">相符 MATCH</span></div>
            </div>
-           <div class="dim mono" style="font-size:12px;margin-top:10px">結構完整 STRUCTURE INTACT</div>`}
-      <button class="btn" style="margin-top:20px;max-width:320px" onclick="location.hash='#/grey/128/integrity'">[ 查看索引 INDEX → ]</button>
+           <div class="dim mono" style="font-size:12px;margin-top:10px">結構完整 STRUCTURE INTACT</div>`}
+      <button class="btn" style="margin-top:20px;max-width:320px" onclick="location.hash='#/grey/128/integrity'">[ 查看索引 INDEX → ]</button>
     </div>
     ${bottomNav('m', true)}`;
   }
@@ -1079,20 +1079,20 @@ const App = (() => {
     const rows = g.indexEntries.map(e => {
       const opened = !!openedIndexEntries[e.id];
       const missing = opened && e.body === 'MISSING';
-      const bodyZh = e.body === 'MISSING' ? '缺失 MISSING' : '存在 PRESENT';
+      const bodyZh = e.body === 'MISSING' ? '缺失 MISSING' : '存在 PRESENT';
       const valueText = opened
-        ? `內容 BODY：${bodyZh}${missing ? ` <span class="irregular-tag" title="內容無法讀取 CONTENT UNAVAILABLE">!</span>` : ''}`
-        : '標頭 HEADER：存在 · 索引 INDEX：存在';
-      const note = missing ? `<div class="dim mono" style="font-size:11px;padding:2px 16px 10px">內容無法讀取，索引仍存在 CONTENT UNAVAILABLE · INDEX ENTRY REMAINS</div>` : '';
+        ? `內容 BODY：${bodyZh}${missing ? ` <span class="irregular-tag" title="內容無法讀取 CONTENT UNAVAILABLE">!</span>` : ''}`
+        : '標頭 HEADER：存在 · 索引 INDEX：存在';
+      const note = missing ? `<div class="dim mono" style="font-size:11px;padding:2px 16px 10px">內容無法讀取，索引仍存在 CONTENT UNAVAILABLE · INDEX ENTRY REMAINS</div>` : '';
       return `<div><div class="cf-row clickable" onclick="App.openIndexEntry('${e.id}')"><span class="k">${e.id} ${esc(e.label)}</span><span class="v ${missing ? 'missing' : ''}">${valueText}</span></div>${note}</div>`;
     }).join('');
     const solved = STATE.get('ch2Puzzle02Solved');
     return `
     <div class="view view-wide">
       ${backLink('#/grey/128/archive', '灰-128 封存')}
-      <div class="dash-title">檔案完整性 FILE INTEGRITY</div>
+      <div class="dash-title">檔案完整性 FILE INTEGRITY</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
-      ${solved ? `<div class="observation-box" style="margin-top:14px">標頭 Header 完整、索引 Index 還在，但 02、03 的內容 Body 都消失了——有人只清掉了內容，卻沒有清掉索引。</div>
+      ${solved ? `<div class="observation-box" style="margin-top:14px">標頭 Header 完整、索引 Index 還在，但 02、03 的內容 Body 都消失了——有人只清掉了內容，卻沒有清掉索引。</div>
       <button class="btn" style="margin-top:14px;max-width:360px" onclick="location.hash='#/grey/128/chen'">[ 繼續調查 → ]</button>` : ''}
     </div>
     ${hintBar(!solved ? 'ch2Puzzle02' : null)}
@@ -1112,7 +1112,7 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/grey/128/archive', '灰-128 封存')}
-      <div class="dash-title">陳奕辰 · 封存 ARCHIVE</div>
+      <div class="dash-title">陳奕辰 · 封存 ARCHIVE</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
         <div class="cf-row"><span class="k">姓名</span><span class="v">陳奕辰</span></div>
         <div class="cf-row"><span class="k">帳號</span><span class="v">@chen_yc</span></div>
@@ -1147,13 +1147,13 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/grey/128/chen', '陳奕辰 封存')}
-      <div class="dash-title">身分片段重建 IDENTITY FRAGMENT RECONSTRUCTION</div>
-      <p class="dim" style="font-size:13px">點選任兩個「裝置雜湊 DEVICE HASH」欄位試著把它們對上。</p>
+      <div class="dash-title">身分片段重建 IDENTITY FRAGMENT RECONSTRUCTION</div>
+      <p class="dim" style="font-size:13px">點選任兩個「裝置雜湊 DEVICE HASH」欄位試著把它們對上。</p>
       ${cardHtml('a')}${cardHtml('b')}${cardHtml('c')}
       ${fragMessage ? `<div class="observation-box ${fragMessageOk ? '' : 'warn'}" style="max-width:420px">${esc(fragMessage)}</div>` : ''}
       ${solved ? `
       <div class="observation-box" style="max-width:420px;margin-top:14px">已建立 1 筆封存關聯 1 ARCHIVE RELATION ESTABLISHED<br><span class="dim mono" style="font-size:12px">灰-128 → CASE #0917</span></div>
-      <button class="btn" style="margin-top:14px;max-width:360px" onclick="location.hash='#/case/0917'">[ 前往案件 CASE #0917 → ]</button>` : ''}
+      <button class="btn" style="margin-top:14px;max-width:360px" onclick="location.hash='#/case/0917'">[ 前往案件 CASE #0917 → ]</button>` : ''}
     </div>
     ${hintBar(!solved ? 'ch2Puzzle03' : null)}
     ${bottomNav('m', true)}`;
@@ -1173,10 +1173,10 @@ const App = (() => {
       const row2 = DATA.ch2.fragments[fragSelected.fragKey].rows[fragSelected.idx];
       if (row.type === 'device' && row2.type === 'device' && fragKey !== fragSelected.fragKey) {
         fragConnections.device = true;
-        fragMessage = '裝置雜湊相同 COMMON DEVICE HASH · 可能有關聯 RELATION POSSIBLE';
+        fragMessage = '裝置雜湊相同 COMMON DEVICE HASH · 可能有關聯 RELATION POSSIBLE';
         fragMessageOk = true;
       } else {
-        fragMessage = '無法建立關聯 RELATION UNSUPPORTED / 沒有共同來源 NO COMMON SOURCE';
+        fragMessage = '無法建立關聯 RELATION UNSUPPORTED / 沒有共同來源 NO COMMON SOURCE';
       }
       fragSelected = null;
     }
@@ -1210,7 +1210,7 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/case/0917', '案件檔案')}
-      <div class="dash-title">封存版本比對 ARCHIVE VERSION COMPARE</div>
+      <div class="dash-title">封存版本比對 ARCHIVE VERSION COMPARE</div>
       <p class="dim" style="font-size:13px">找出每一版跟前一版不一樣的字。</p>
       <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
       ${foundDiffs > 0 ? `<div class="dim mono" style="font-size:12px;margin-top:12px">偵測到 ${foundDiffs} 處修改 ${foundDiffs} EDIT${foundDiffs > 1 ? 'S' : ''} DETECTED</div>` : ''}
@@ -1235,9 +1235,9 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/case/0917', '案件檔案')}
-      <div class="dash-title">修改紀錄 EDIT HISTORY</div>
+      <div class="dash-title">修改紀錄 EDIT HISTORY</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        ${versions.map(v => `<div class="cf-row"><span class="k">${v.version.toUpperCase()} 修改者 AUTHOR</span><span class="v evidence-color">${esc(author)}</span></div>`).join('')}
+        ${versions.map(v => `<div class="cf-row"><span class="k">${v.version.toUpperCase()} 修改者 AUTHOR</span><span class="v evidence-color">${esc(author)}</span></div>`).join('')}
       </div>
       <div class="observation-box" style="margin-top:14px">這三版都不是陳奕辰留下的——是灰-127。不同代灰之間，似乎會互相留言。</div>
       <button class="btn" style="margin-top:14px;max-width:360px" onclick="location.hash='#/grey/chain'">[ 繼續調查 → ]</button>
@@ -1265,7 +1265,7 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/grey/128/edit-history', '修改紀錄')}
-      <div class="dash-title">灰之鏈 GREY CHAIN</div>
+      <div class="dash-title">灰之鏈 GREY CHAIN</div>
       <p class="dim" style="font-size:13px">依建立時間，由舊到新依序點選。</p>
       <div class="case-file" style="margin-top:10px;max-width:420px">${nodes}</div>
       <div class="board-toolbar" style="margin-top:14px">
@@ -1306,10 +1306,10 @@ const App = (() => {
       ${backLink('#/grey-database', '灰資料庫')}
       <div class="dash-title">灰-000</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        <div class="cf-row"><span class="k">狀態</span><span class="v missing">已刪除 DELETED</span></div>
-        <div class="cf-row"><span class="k">最後修改 LAST MODIFIED</span><span class="v">不明 UNKNOWN</span></div>
+        <div class="cf-row"><span class="k">狀態</span><span class="v missing">已刪除 DELETED</span></div>
+        <div class="cf-row"><span class="k">最後修改 LAST MODIFIED</span><span class="v">不明 UNKNOWN</span></div>
       </div>
-      <button class="btn" style="margin-top:20px;max-width:340px" onclick="App.startGreyRecovery()">[ 還原封存 RECOVER ARCHIVE ]</button>
+      <button class="btn" style="margin-top:20px;max-width:340px" onclick="App.startGreyRecovery()">[ 還原封存 RECOVER ARCHIVE ]</button>
     </div>
     ${bottomNav('m', true)}`;
   }
@@ -1324,7 +1324,7 @@ const App = (() => {
   function runGreyRecoverySequence() {
     const el = document.getElementById('recovery-seq');
     if (!el) return;
-    el.innerHTML = `<div class="label">正在還原封存 RECOVERING ARCHIVE</div><div class="big" id="recovery-pct">04%</div>`;
+    el.innerHTML = `<div class="label">正在還原封存 RECOVERING ARCHIVE</div><div class="big" id="recovery-pct">04%</div>`;
     const pcts = [18, 31, 52, 71, 89, 99];
     let i = 0;
     (function step() {
@@ -1334,7 +1334,7 @@ const App = (() => {
         i++;
         setTimeout(step, 350);
       } else {
-        el.innerHTML = `<div class="label" style="color:var(--warning)">還原失敗 RECOVERY FAILED</div><div class="id-line" style="margin-top:20px"><span class="dim" style="cursor:pointer;text-decoration:underline" onclick="App.showRecoveredFragment()">已還原 1 個片段 1 FRAGMENT RECOVERED</span></div>`;
+        el.innerHTML = `<div class="label" style="color:var(--warning)">還原失敗 RECOVERY FAILED</div><div class="id-line" style="margin-top:20px"><span class="dim" style="cursor:pointer;text-decoration:underline" onclick="App.showRecoveredFragment()">已還原 1 個片段 1 FRAGMENT RECOVERED</span></div>`;
       }
     })();
   }
@@ -1347,7 +1347,7 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/grey/000', '灰-000')}
-      <div class="dash-title">殘留片段 FRAGMENT_000_A</div>
+      <div class="dash-title">殘留片段 FRAGMENT_000_A</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
         ${DATA.ch2.evidence.map(e => `<div class="cf-row"><span class="k">${e.label}</span><span class="v dim">未比對</span></div>`).join('')}
       </div>
@@ -1357,7 +1357,7 @@ const App = (() => {
   }
 
   let evidenceRevealed = {};
-  const evidenceLabel = { match: '相符 MATCH', partial: '部分相符 PARTIAL', unresolved: '無法判定 UNRESOLVED' };
+  const evidenceLabel = { match: '相符 MATCH', partial: '部分相符 PARTIAL', unresolved: '無法判定 UNRESOLVED' };
   const evidenceColor = { match: 'var(--success)', partial: 'var(--evidence)', unresolved: 'var(--text-dim)' };
   function viewIdentityEvidenceMatching() {
     if (!STATE.get('ch2RecoveryPlayed')) return ch2Locked();
@@ -1372,7 +1372,7 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/grey/000/fragment', '殘留片段')}
-      <div class="dash-title">身分證據比對 IDENTITY EVIDENCE MATCHING</div>
+      <div class="dash-title">身分證據比對 IDENTITY EVIDENCE MATCHING</div>
       <p class="dim" style="font-size:13px">逐項比對灰-000 的殘留資料跟林予安的既有資料。</p>
       <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
       ${allRevealed ? `
@@ -1400,24 +1400,24 @@ const App = (() => {
     const options = [
       { key: 'A', text: '灰-000 就是林予安' },
       { key: 'B', text: '林予安與灰-000 有關聯' },
-      { key: 'C', text: '證據不足 INSUFFICIENT EVIDENCE' },
+      { key: 'C', text: '證據不足 INSUFFICIENT EVIDENCE' },
     ];
     return `
     <div class="view view-wide">
       ${backLink('#/grey/000/evidence', '證據比對')}
-      <div class="dash-title">封存衝突 ARCHIVE CONFLICT</div>
+      <div class="dash-title">封存衝突 ARCHIVE CONFLICT</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        <div class="cf-row"><span class="k">相符 MATCH</span><span class="v" style="color:var(--success)">${counts.match}</span></div>
-        <div class="cf-row"><span class="k">部分相符 PARTIAL</span><span class="v" style="color:var(--evidence)">${counts.partial}</span></div>
-        <div class="cf-row"><span class="k">無法判定 UNRESOLVED</span><span class="v dim">${counts.unresolved}</span></div>
-        <div class="cf-row"><span class="k">身分信心值 IDENTITY CONFIDENCE</span><span class="v evidence-color">${conf}%</span></div>
+        <div class="cf-row"><span class="k">相符 MATCH</span><span class="v" style="color:var(--success)">${counts.match}</span></div>
+        <div class="cf-row"><span class="k">部分相符 PARTIAL</span><span class="v" style="color:var(--evidence)">${counts.partial}</span></div>
+        <div class="cf-row"><span class="k">無法判定 UNRESOLVED</span><span class="v dim">${counts.unresolved}</span></div>
+        <div class="cf-row"><span class="k">身分信心值 IDENTITY CONFIDENCE</span><span class="v evidence-color">${conf}%</span></div>
       </div>
       <div class="dash-nav-title" style="margin-top:20px">調查判斷</div>
       <div class="case-file" style="margin-top:8px;max-width:420px">
         ${options.map(o => `<div class="cf-row clickable ${judgement === o.key ? 'active' : ''}" onclick="App.submitJudgement('${o.key}')"><span class="k">${o.key}</span><span class="v">${o.text}</span></div>`).join('')}
       </div>
-      ${judgement && judgement !== 'C' ? `<div class="observation-box warn" style="margin-top:14px;max-width:420px">結論證據不足 CONCLUSION UNSUPPORTED<br>身分相符 ≠ 身分確認 IDENTITY MATCH ≠ IDENTITY CONFIRMED</div>` : ''}
-      ${judgement === 'C' ? `<div class="observation-box" style="margin-top:14px;max-width:420px">調查狀態：暫定 INVESTIGATION STATUS: PROVISIONAL</div>
+      ${judgement && judgement !== 'C' ? `<div class="observation-box warn" style="margin-top:14px;max-width:420px">結論證據不足 CONCLUSION UNSUPPORTED<br>身分相符 ≠ 身分確認 IDENTITY MATCH ≠ IDENTITY CONFIRMED</div>` : ''}
+      ${judgement === 'C' ? `<div class="observation-box" style="margin-top:14px;max-width:420px">調查狀態：暫定 INVESTIGATION STATUS: PROVISIONAL</div>
       <button class="btn" style="margin-top:14px;max-width:360px" onclick="App.ch2FinalReveal()">[ 繼續 → ]</button>` : ''}
     </div>
     ${hintBar(judgement !== 'C' ? 'ch2Conflict' : null)}
@@ -1439,12 +1439,12 @@ const App = (() => {
   function runGrey130Sequence() {
     const el = document.getElementById('ch2-seq');
     if (!el) return;
-    el.innerHTML = `<div class="label">灰-130</div><div class="id-line" id="successor-status">接班人 SUCCESSOR<br>未找到 NOT FOUND</div>`;
+    el.innerHTML = `<div class="label">灰-130</div><div class="id-line" id="successor-status">接班人 SUCCESSOR<br>未找到 NOT FOUND</div>`;
     setTimeout(() => {
       const s = document.getElementById('successor-status');
-      if (s) s.innerHTML = '接班人 SUCCESSOR<br>已找到 FOUND';
+      if (s) s.innerHTML = '接班人 SUCCESSOR<br>已找到 FOUND';
       setTimeout(() => {
-        el.innerHTML = `<div class="label">灰-130</div><div class="id-line">調查者 INVESTIGATOR<br>不明 UNKNOWN</div><div class="big" style="font-size:18px;margin-top:24px;letter-spacing:0.02em">已經有人在找你了。</div>`;
+        el.innerHTML = `<div class="label">灰-130</div><div class="id-line">調查者 INVESTIGATOR<br>不明 UNKNOWN</div><div class="big" style="font-size:18px;margin-top:24px;letter-spacing:0.02em">已經有人在找你了。</div>`;
         setTimeout(showCh2Complete, 2600);
       }, 1400);
     }, 1400);
@@ -1469,9 +1469,9 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/archive', '封存庫')}
-      <div class="dash-title">新封存偵測 NEW ARCHIVE DETECTED · 灰-130</div>
+      <div class="dash-title">新封存偵測 NEW ARCHIVE DETECTED · 灰-130</div>
       <p class="dim mono" style="margin-top:10px">${esc(DATA.ch3.entryTime)}</p>
-      <p class="dim" style="margin-top:16px;max-width:420px">系統偵測到一筆新的封存紀錄，狀態：使用中 ACTIVE。</p>
+      <p class="dim" style="margin-top:16px;max-width:420px">系統偵測到一筆新的封存紀錄，狀態：使用中 ACTIVE。</p>
       <button class="btn" style="margin-top:24px;max-width:320px" onclick="location.hash='#/grey-database'">[ 進入 ]</button>
     </div>
     ${bottomNav('m', true)}`;
@@ -1494,8 +1494,8 @@ const App = (() => {
         <div class="cf-row"><span class="k">調查者</span><span class="v dim">${esc(g.investigator)}</span></div>
       </div>
       ${!solved
-        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.compareGrey130Time()">[ 比對建立時間 COMPARE CREATED TIME ]</button>`
-        : `<div class="observation-box" style="margin-top:14px;max-width:420px">灰-130 建立時間 ≈ 你開始本章調查的時間<br><span class="dim mono" style="font-size:12px">時間差 TIME DELTA：幾乎重疊 NEAR-ZERO</span></div>
+        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.compareGrey130Time()">[ 比對建立時間 COMPARE CREATED TIME ]</button>`
+        : `<div class="observation-box" style="margin-top:14px;max-width:420px">灰-130 建立時間 ≈ 你開始本章調查的時間<br><span class="dim mono" style="font-size:12px">時間差 TIME DELTA：幾乎重疊 NEAR-ZERO</span></div>
         <button class="btn" style="margin-top:14px;max-width:360px" onclick="location.hash='#/grey/130/observer-log'">[ 查看觀察紀錄 → ]</button>`}
     </div>
     ${hintBar(!solved ? 'ch3Puzzle01' : null)}
@@ -1514,13 +1514,13 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/grey/130', '灰-130')}
-      <div class="dash-title">觀察紀錄 OBSERVER LOG</div>
+      <div class="dash-title">觀察紀錄 OBSERVER LOG</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
         ${log.map(l => `<div class="cf-row"><span class="k mono">${esc(l.t)}</span><span class="v">${esc(l.action)}</span></div>`).join('')}
       </div>
       ${!observerLogExpanded
-        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.expandObserverLog()">[ 展開紀錄對象 SUBJECT ]</button>`
-        : `<div class="observation-box" style="margin-top:14px;max-width:420px">紀錄對象 SUBJECT：${esc(DATA.ch3.observerSubject)}</div>
+        ? `<button class="tool-btn" style="margin-top:14px" onclick="App.expandObserverLog()">[ 展開紀錄對象 SUBJECT ]</button>`
+        : `<div class="observation-box" style="margin-top:14px;max-width:420px">紀錄對象 SUBJECT：${esc(DATA.ch3.observerSubject)}</div>
         <button class="btn" style="margin-top:14px;max-width:360px" onclick="location.hash='#/grey/130/observer-log/detail'">[ 繼續 → ]</button>`}
     </div>
     ${hintBar(!solved ? 'ch3Puzzle02' : null)}
@@ -1554,8 +1554,8 @@ const App = (() => {
       ${backLink('#/grey/130/observer-log/detail', '觀察紀錄')}
       <div class="dash-title">灰-128 · 重新檢視</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        <div class="cf-row"><span class="k">前任 PREDECESSOR</span><span class="v evidence-color">${esc(r.predecessor)}</span></div>
-        <div class="cf-row"><span class="k">接班人 SUCCESSOR</span><span class="v evidence-color">${esc(r.successor)}</span></div>
+        <div class="cf-row"><span class="k">前任 PREDECESSOR</span><span class="v evidence-color">${esc(r.predecessor)}</span></div>
+        <div class="cf-row"><span class="k">接班人 SUCCESSOR</span><span class="v evidence-color">${esc(r.successor)}</span></div>
       </div>
       <p class="dim" style="margin-top:16px;max-width:420px">灰不是被指定的。它是遞補的——每一個灰，都同時記著前任和接班人。</p>
       <button class="btn" style="margin-top:20px;max-width:360px" onclick="location.hash='#/grey/128/chen-dual'">[ 查看陳奕辰留下的紀錄 → ]</button>
@@ -1580,7 +1580,7 @@ const App = (() => {
   }
 
   /* ================================================================
-     CHAPTER 03 — SCREEN 08 — 灰-000／林予安 Archive Revisit
+     CHAPTER 03 — SCREEN 08 — 灰-000／林予安 Archive Revisit
      ================================================================ */
   function viewGrey000Revisit() {
     if (!STATE.get('ch3ChenRevisited')) return ch2Locked();
@@ -1589,8 +1589,8 @@ const App = (() => {
       ${backLink('#/grey/128/chen-dual', '陳奕辰 封存紀錄')}
       <div class="dash-title">灰-000 · 重新檢視</div>
       <div class="case-file" style="margin-top:10px;max-width:420px">
-        <div class="cf-row"><span class="k">身分比對 IDENTITY MATCH</span><span class="v evidence-color">87%</span></div>
-        <div class="cf-row"><span class="k">身分確認 IDENTITY CONFIRMED</span><span class="v" style="color:var(--success)">林予安 LIN, YU-AN</span></div>
+        <div class="cf-row"><span class="k">身分比對 IDENTITY MATCH</span><span class="v evidence-color">87%</span></div>
+        <div class="cf-row"><span class="k">身分確認 IDENTITY CONFIRMED</span><span class="v" style="color:var(--success)">林予安 LIN, YU-AN</span></div>
       </div>
       <p class="dim" style="margin-top:16px;max-width:420px">確認的只是「林予安曾經是灰-000」——系統裡沒有任何紀錄顯示她創造了這套遞補機制。</p>
       <button class="btn" style="margin-top:20px;max-width:360px" onclick="location.hash='#/ch3/message-a'">[ 查看她留下的訊息 → ]</button>
@@ -1607,7 +1607,7 @@ const App = (() => {
     const nextHash = key === 'A' ? '#/ch3/message-b' : '#/ch3/message-timeline';
     const nextLabel = key === 'A' ? '[ 查看下一份片段 → ]' : '[ 排列這兩份訊息 → ]';
     const backHash = key === 'A' ? '#/grey/000/revisit' : '#/ch3/message-a';
-    const backLabel = key === 'A' ? '灰-000' : '訊息片段 A';
+    const backLabel = key === 'A' ? '灰-000' : '訊息片段 A';
     return `
     <div class="view view-wide">
       ${backLink(backHash, backLabel)}
@@ -1636,8 +1636,8 @@ const App = (() => {
     }).join('');
     return `
     <div class="view view-wide">
-      ${backLink('#/ch3/message-b', '訊息片段 B')}
-      <div class="dash-title">訊息時間軸 MESSAGE TIMELINE</div>
+      ${backLink('#/ch3/message-b', '訊息片段 B')}
+      <div class="dash-title">訊息時間軸 MESSAGE TIMELINE</div>
       <p class="dim" style="font-size:13px">依建立時間，由舊到新依序點選這兩份訊息。</p>
       <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
       <div class="board-toolbar" style="margin-top:14px"><button class="tool-btn" onclick="App.resetMsgOrder()">[ 重設 ]</button></div>
@@ -1688,12 +1688,12 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/ch3/message-timeline', '訊息時間軸')}
-      <div class="dash-title">灰之鏈重建 GREY CHAIN RECONSTRUCTION</div>
+      <div class="dash-title">灰之鏈重建 GREY CHAIN RECONSTRUCTION</div>
       <p class="dim" style="font-size:13px">已知的鏈到灰-128 為止。依建立時間，把灰-129、灰-130 接到鏈尾。</p>
       <div class="case-file" style="margin-top:10px;max-width:420px">${baseHtml}${appendHtml}</div>
       <div class="board-toolbar" style="margin-top:14px"><button class="tool-btn" onclick="App.resetCh3Chain()">[ 重設 ]</button></div>
       ${ch3ChainWrong ? `<div class="observation-box warn" style="max-width:420px">順序不對，再試一次。</div>` : ''}
-      ${solved ? `<div class="observation-box" style="max-width:420px">灰-001 → 灰-027 → 灰-063 → 灰-091 → 灰-128 → 灰-129 → 灰-130<br><span class="dim mono" style="font-size:12px">前一個節點 PREVIOUS NODE：灰-129 ／ 目前觀察者 CURRENT OBSERVER：不明 UNKNOWN</span></div>
+      ${solved ? `<div class="observation-box" style="max-width:420px">灰-001 → 灰-027 → 灰-063 → 灰-091 → 灰-128 → 灰-129 → 灰-130<br><span class="dim mono" style="font-size:12px">前一個節點 PREVIOUS NODE：灰-129 ／ 目前觀察者 CURRENT OBSERVER：不明 UNKNOWN</span></div>
       <button class="btn" style="margin-top:14px;max-width:360px" onclick="location.hash='#/ch3/identity-evidence'">[ 繼續調查 → ]</button>` : ''}
     </div>
     ${hintBar(!solved ? 'ch3Chain' : null)}
@@ -1732,7 +1732,7 @@ const App = (() => {
     return `
     <div class="view view-wide">
       ${backLink('#/ch3/chain-rebuild', '灰之鏈重建')}
-      <div class="dash-title">身分證據 IDENTITY EVIDENCE</div>
+      <div class="dash-title">身分證據 IDENTITY EVIDENCE</div>
       <p class="dim" style="font-size:13px">逐項比對灰-130 的紀錄，跟你自己這一路以來的操作。</p>
       <div class="case-file" style="margin-top:10px;max-width:420px">${rows}</div>
       ${allRevealed ? `<button class="btn" style="margin-top:14px;max-width:360px" onclick="location.hash='#/ch3/judgment'">[ 做出判斷 → ]</button>` : ''}
@@ -1756,8 +1756,8 @@ const App = (() => {
       <div class="case-file" style="margin-top:10px;max-width:420px">
         ${options.map(o => `<div class="cf-row clickable ${judgement === o.key ? 'active' : ''}" onclick="App.submitCh3Judgement('${o.key}')"><span class="k">${o.key}</span><span class="v">${esc(o.text)}</span></div>`).join('')}
       </div>
-      ${judgement && judgement !== 'C' ? `<div class="observation-box warn" style="margin-top:14px;max-width:420px">結論尚未成立 CONCLUSION NOT YET SUPPORTED<br>再檢查一次五項證據之間的關係。</div>` : ''}
-      ${judgement === 'C' ? `<div class="observation-box" style="margin-top:14px;max-width:420px">結論已接受 CONCLUSION ACCEPTED<br>對象 SUBJECT：灰-130<br>關係 RELATION：觀察者 → 調查對象 OBSERVER → SUBJECT</div>
+      ${judgement && judgement !== 'C' ? `<div class="observation-box warn" style="margin-top:14px;max-width:420px">結論尚未成立 CONCLUSION NOT YET SUPPORTED<br>再檢查一次五項證據之間的關係。</div>` : ''}
+      ${judgement === 'C' ? `<div class="observation-box" style="margin-top:14px;max-width:420px">結論已接受 CONCLUSION ACCEPTED<br>對象 SUBJECT：灰-130<br>關係 RELATION：觀察者 → 調查對象 OBSERVER → SUBJECT</div>
       <button class="btn" style="margin-top:14px;max-width:360px" onclick="App.ch3FinalReveal()">[ 繼續 → ]</button>` : ''}
     </div>
     ${hintBar(judgement !== 'C' ? 'ch3Judgment' : null)}
@@ -1779,13 +1779,13 @@ const App = (() => {
   function runCh3FinalSequence() {
     const el = document.getElementById('ch3-seq');
     if (!el) return;
-    el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">對象 SUBJECT<br>YOU</div>`;
+    el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">對象 SUBJECT<br>YOU</div>`;
     setTimeout(() => {
-      el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">調查者 INVESTIGATOR<br>灰-130</div>`;
+      el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">調查者 INVESTIGATOR<br>灰-130</div>`;
       setTimeout(() => {
-        el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">狀態 STATUS<br>使用中 ACTIVE</div>`;
+        el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">狀態 STATUS<br>使用中 ACTIVE</div>`;
         setTimeout(() => {
-          el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">下一個觀察者 NEXT OBSERVER<br>不明 UNKNOWN</div><button class="btn" style="margin-top:30px;max-width:340px" onclick="App.ch3ReturnToCase()">[ 返回案件 ]</button>`;
+          el.innerHTML = `<div class="label">案件結案 CASE CLOSED</div><div class="big">灰-130</div><div class="id-line">下一個觀察者 NEXT OBSERVER<br>不明 UNKNOWN</div><button class="btn" style="margin-top:30px;max-width:340px" onclick="App.ch3ReturnToCase()">[ 返回案件 ]</button>`;
         }, 1600);
       }, 1600);
     }, 1600);
@@ -1793,7 +1793,7 @@ const App = (() => {
   function ch3ReturnToCase() {
     const el = document.getElementById('ch3-seq');
     if (!el) return;
-    el.innerHTML = `<div class="label">案件 CASE #0917</div><div class="id-line" style="margin-top:10px">最後查看者 LAST VIEWED BY<br>灰-131</div>`;
+    el.innerHTML = `<div class="label">案件 CASE #0917</div><div class="id-line" style="margin-top:10px">最後查看者 LAST VIEWED BY<br>灰-131</div>`;
     setTimeout(() => {
       const msgs = DATA.ch3.endingMessages;
       el.innerHTML = `<div class="message-panel"><div class="mp-body" id="ch3-mp-body"></div></div>`;
@@ -1815,14 +1815,14 @@ const App = (() => {
   function showCh3Complete() {
     const div = document.createElement('div');
     div.className = 'ending-screen';
-    div.innerHTML = `<div class="label">灰-131</div><div style="height:6px"></div><div style="font-size:16px;color:var(--warning)">新調查已開始 NEW INVESTIGATION STARTED</div>`;
+    div.innerHTML = `<div class="label">灰-131</div><div style="height:6px"></div><div style="font-size:16px;color:var(--warning)">新調查已開始 NEW INVESTIGATION STARTED</div>`;
     document.body.appendChild(div);
     setTimeout(() => {
       STATE.set('ch3Final', true);
       div.innerHTML = `
-        <div class="label">案件結案 CASE CLOSED</div>
+        <div class="label">案件結案 CASE CLOSED</div>
         <div style="height:4px"></div>
-        <div style="font-size:18px;letter-spacing:0.08em">案件 CASE #0917</div>
+        <div style="font-size:18px;letter-spacing:0.08em">案件 CASE #0917</div>
         <div style="max-width:400px;font-size:15px;line-height:1.9;color:var(--text);margin-top:16px">「你以為你正在調查他。<br>其實你也正在成為證據。」</div>
         <div style="font-size:13px;letter-spacing:0.16em;color:var(--evidence);margin-top:18px">CHAPTER 01 — 03</div>
         <button class="btn" style="margin-top:32px;max-width:280px" onclick="App.shareResult()">[ 分享調查結果 → ]</button>

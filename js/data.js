@@ -295,25 +295,25 @@ const DATA = {
       checksumArchive: 'A93F-71C2-88DE',
       accountHash: 'A91F',
       indexEntries: [
-        { id: '01', label: '個人檔案 PROFILE', body: 'PRESENT' },
+        { id: '01', label: '個人檔案 PROFILE', body: 'PRESENT' },
         { id: '02', label: 'CASE #0917', body: 'MISSING' },
         { id: '03', label: 'CASE #000', body: 'MISSING' },
-        { id: '04', label: '訊息 MESSAGE', body: 'PRESENT' },
+        { id: '04', label: '訊息 MESSAGE', body: 'PRESENT' },
       ],
     },
     fragments: {
-      a: { title: '殘片 FRAGMENT A', rows: [
-        { field: '姓名 NAME', value: 'CHEN YI-CHEN', type: 'name' },
-        { field: '裝置雜湊 DEVICE HASH', value: '7F21-██', type: 'device' },
+      a: { title: '殘片 FRAGMENT A', rows: [
+        { field: '姓名 NAME', value: 'CHEN YI-CHEN', type: 'name' },
+        { field: '裝置雜湊 DEVICE HASH', value: '7F21-██', type: 'device' },
       ] },
-      b: { title: '殘片 FRAGMENT B', rows: [
-        { field: '帳號雜湊 ACCOUNT HASH', value: 'A91F', type: 'account' },
-        { field: '年齡 AGE', value: '24', type: 'age' },
-        { field: '裝置雜湊 DEVICE HASH', value: '██-7F21', type: 'device' },
+      b: { title: '殘片 FRAGMENT B', rows: [
+        { field: '帳號雜湊 ACCOUNT HASH', value: 'A91F', type: 'account' },
+        { field: '年齡 AGE', value: '24', type: 'age' },
+        { field: '裝置雜湊 DEVICE HASH', value: '██-7F21', type: 'device' },
       ] },
-      c: { title: '殘片 FRAGMENT C', rows: [
-        { field: '灰編號 GREY ID', value: '128', type: 'greyid' },
-        { field: '裝置雜湊 DEVICE HASH', value: '7F21-████', type: 'device' },
+      c: { title: '殘片 FRAGMENT C', rows: [
+        { field: '灰編號 GREY ID', value: '128', type: 'greyid' },
+        { field: '裝置雜湊 DEVICE HASH', value: '7F21-████', type: 'device' },
       ] },
     },
     case0917Revisit: {
@@ -329,12 +329,12 @@ const DATA = {
     editHistoryAuthor: '灰-127',
     greyChainIds: [1, 27, 63, 91, 128],
     evidence: [
-      { key: 'photo', label: '照片 PHOTO', result: 'match' },
-      { key: 'device', label: '裝置 DEVICE', result: 'match' },
-      { key: 'location', label: '地點 LOCATION', result: 'match' },
-      { key: 'archivePattern', label: '封存模式 ARCHIVE PATTERN', result: 'partial' },
-      { key: 'date', label: '日期 DATE', result: 'unresolved' },
-      { key: 'name', label: '姓名 NAME', result: 'unresolved' },
+      { key: 'photo', label: '照片 PHOTO', result: 'match' },
+      { key: 'device', label: '裝置 DEVICE', result: 'match' },
+      { key: 'location', label: '地點 LOCATION', result: 'match' },
+      { key: 'archivePattern', label: '封存模式 ARCHIVE PATTERN', result: 'partial' },
+      { key: 'date', label: '日期 DATE', result: 'unresolved' },
+      { key: 'name', label: '姓名 NAME', result: 'unresolved' },
     ],
   },
 
@@ -347,15 +347,15 @@ const DATA = {
   ch3: {
     entryTime: '08/27/2026 · 08:17',
     grey130: {
-      status: '使用中 ACTIVE',
+      status: '使用中 ACTIVE',
       created: '08/27/2026 · 08:17',
-      investigator: '不明 UNKNOWN',
+      investigator: '不明 UNKNOWN',
     },
     observerLog: [
-      { t: '08:19', action: '開啟灰資料庫 OPENED GREY DATABASE' },
+      { t: '08:19', action: '開啟灰資料庫 OPENED GREY DATABASE' },
       { t: '08:24', action: '開啟灰-128 OPENED 灰-128' },
-      { t: '08:31', action: '查看檔案完整性 VIEWED FILE INTEGRITY' },
-      { t: '08:44', action: '使用提示 USED HINT' },
+      { t: '08:31', action: '查看檔案完整性 VIEWED FILE INTEGRITY' },
+      { t: '08:44', action: '使用提示 USED HINT' },
       { t: '09:02', action: '開啟灰-000 OPENED 灰-000' },
     ],
     observerSubject: '灰-129',
@@ -364,20 +364,20 @@ const DATA = {
       predecessor: '灰-127',
     },
     chenDualMessages: [
-      { key: 'stop', label: '訊息 STOP', text: '不要讓下一個人接手。' },
-      { key: 'handoff', label: '訊息 HANDOFF', text: '如果你看到這則，代表交接已經完成。' },
+      { key: 'stop', label: '訊息 STOP', text: '不要讓下一個人接手。' },
+      { key: 'handoff', label: '訊息 HANDOFF', text: '如果你看到這則，代表交接已經完成。' },
     ],
     yuanMessages: [
-      { key: 'A', label: '訊息片段 A', text: '不要相信灰。', created: '08/17/2026 · 22:50', sortRank: 1 },
-      { key: 'B', label: '訊息片段 B', text: '如果你已經看到這裡，就不要試著離開。', created: '08/17/2026 · 23:41', sortRank: 2 },
+      { key: 'A', label: '訊息片段 A', text: '不要相信灰。', created: '08/17/2026 · 22:50', sortRank: 1 },
+      { key: 'B', label: '訊息片段 B', text: '如果你已經看到這裡，就不要試著離開。', created: '08/17/2026 · 23:41', sortRank: 2 },
     ],
     chainAppendIds: [129, 130],
     identityEvidence: [
-      { key: 'created', label: '建立時間 CREATED TIME', result: 'match' },
-      { key: 'observerLog', label: '觀察紀錄 OBSERVER LOG', result: 'match' },
-      { key: 'accessHistory', label: '存取歷史 ACCESS HISTORY', result: 'match' },
-      { key: 'subjectData', label: '灰-129 資料 SUBJECT DATA', result: 'match' },
-      { key: 'actionSequence', label: '操作序列 ACTION SEQUENCE', result: 'match' },
+      { key: 'created', label: '建立時間 CREATED TIME', result: 'match' },
+      { key: 'observerLog', label: '觀察紀錄 OBSERVER LOG', result: 'match' },
+      { key: 'accessHistory', label: '存取歷史 ACCESS HISTORY', result: 'match' },
+      { key: 'subjectData', label: '灰-129 資料 SUBJECT DATA', result: 'match' },
+      { key: 'actionSequence', label: '操作序列 ACTION SEQUENCE', result: 'match' },
     ],
     endingMessages: [
       '如果你正在看這個檔案，代表灰-130 已經完成了。',
@@ -398,7 +398,7 @@ const DATA = {
     ],
     timeline: [
       '案件記錄的失蹤時間，跟這張照片的建立時間，兜不起來。',
-      '試著把 IMG_0917 這個項目，拖到它實際被建立的那一天。',
+      '試著把 IMG_0917 這個項目，拖到它實際被建立的那一天。',
       '08/19 —— 那是貼文出現之後才發生的事。'
     ],
     accessPrompt: [
@@ -416,7 +416,7 @@ const DATA = {
     ch2Puzzle01: [
       '檔案的編號，真的代表它建立的先後順序嗎？',
       '試著切換排序方式，看看灰-000 的位置有沒有改變。',
-      '切換到「依建立時間 ARCHIVE CREATED」後，注意灰-000 的建立日期。它並不是最早建立的封存。',
+      '切換到「依建立時間 ARCHIVE CREATED」後，注意灰-000 的建立日期。它並不是最早建立的封存。',
     ],
     ch2Puzzle02: [
       '有些東西消失了，但不代表它留下的痕跡也消失了。',
@@ -463,7 +463,7 @@ const DATA = {
     ch3Puzzle03: [
       '同一個人，語氣卻完全不一樣，是誰先寫的？',
       '比較兩則訊息的建立時間，不要只看語氣。',
-      'A 比 B 早——她從想逃離，變成已經接受。',
+      'A 比 B 早——她從想逃離，變成已經接受。',
     ],
     ch3Chain: [
       '鏈還沒結束，接下來輪到誰？',
